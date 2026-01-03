@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/yangchuansheng/argocd-lab.git
+    repoURL: https://github.com/katentake/X-Code.git
     targetRevision: HEAD
     path: dev
   destination: 
