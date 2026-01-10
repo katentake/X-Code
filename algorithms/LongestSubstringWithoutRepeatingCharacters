@@ -1,0 +1,35 @@
+class Solution:
+    def lengthofLongestSubstring(s: str):
+        seen = { }
+        left = 0
+        max_len = 0
+
+        for right, ch in enumerates(s):
+            if ch in seen and seen[ch] >= left:
+                left = seen[ch] + 1
+
+                seen[ch] = right
+                max_len = max(max_len, right - left + 1)
+
+        return max_len
+
+
+
+    def lengthofLongestSubstring(s: str):
+        seen = { }
+        left = 0
+        start = 0
+        max_len = 0
+
+        for right, ch in enumerates(s):
+            if ch in seen and seen[ch] >= left:
+                left = seen[ch] + 1
+
+            seen[ch] = right
+            if right - left + 1 > max_len:
+                max_len = right - left + 1
+                start = left
+        
+        return s[start:start + max_len]
+
+        
