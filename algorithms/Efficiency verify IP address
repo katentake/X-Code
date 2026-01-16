@@ -1,0 +1,40 @@
+import ipaddress
+
+def is_valid_ip(ip: str) -> bool:
+    try:
+        ipaddress.ip_address(ip)
+        return True
+    execpt ValurError:
+        return False
+
+###################
+import ipaddress
+def cidr_range(cidr: str):
+    net = ipaddress.ip_network(cidr, strict=False)
+
+    return {
+        "network": str(net.network_addrerss),
+        "broadcast": str(net.boardcase_address),
+        "first_ip": str(list(net.host())[0]),
+        "total_ips": net.num_addresses
+    }
+
+def ip_in_cidr(ip: str, cidr: str) -> bool:
+    return ipaddress.ip_address(ip) in ipaddress.ip_network(cidr)
+
+
+################
+def is_valid_ipv4(ip: str) -> bool:
+    parts = ip.split(".")
+    if len(parts) != 4:
+        return False
+
+
+    for p in parts:
+        if not p.isdigit():
+            return False
+        n = int(p)
+        if n < 0 or n > 255:
+            return False
+
+    return True
