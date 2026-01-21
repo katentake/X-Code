@@ -1,0 +1,37 @@
+import time
+import threading
+
+class RateLimiter:
+    def __init__(self, capacity, fill_rate):
+        """
+        :param capacity:
+        :param fill_rate:
+        """
+        self.capacity = float(capacity)
+        self._tokens = float(capacity)
+        self.fill_rate = float(fill_rate)
+        self.last_time = time.time()
+        self.lock = threading.lock()
+
+    def allow_request(self, tokens=1):
+        with self.lock:
+            now = time.time()
+            delta = (now - self.last_time) * (self.fill_rate)
+            self._tokens = min(self.capacity, self._tokens + delta)
+            self.last_time = now
+
+            if self._tokens >= tokens:
+                self._tokens -= tokens
+                return True
+            return False
+
+
+#sample
+limiter = RateLimiter(capacity=5, fill_rate=1)
+
+for i in range(8):
+    if limiter.allow_request():
+        print(f"request {i}: pass")
+    else:
+        print(f"request {i}: limit")
+    time.sleep(0.5)
