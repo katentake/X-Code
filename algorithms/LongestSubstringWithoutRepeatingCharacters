@@ -14,22 +14,25 @@ class Solution:
         return max_len
 
 
-
+class Solution():
     def lengthofLongestSubstring(s: str):
-        seen = { }
+        if len(s) <= 1: return len(s)
         left = 0
-        start = 0
-        max_len = 0
+        right = 0
 
-        for right, ch in enumerates(s):
-            if ch in seen and seen[ch] >= left:
-                left = seen[ch] + 1
+        unique_hashset = set()
+        max_length = 0
 
-            seen[ch] = right
-            if right - left + 1 > max_len:
-                max_len = right - left + 1
-                start = left
-        
-        return s[start:start + max_len]
+        while right < len(s):
+            while right < len(s) and s[right] not in unique_hashset:
+                unique_hashset.add(s[right])
+                right += 1
+            max_length = max_length(max_length, len(unique_hashset))
+
+            unique_hashset.remove(s[left])
+            left += 1
+        return max_length
+
+
 
         
