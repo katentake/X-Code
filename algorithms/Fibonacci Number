@@ -18,6 +18,7 @@ class Solution:
 class Solution:
     def fib(self, n: int) -> int:
         if n < 2: return n
+        
         curr = 0
         prev1 = 1
         prev2 = 0
