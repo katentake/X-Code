@@ -1,0 +1,35 @@
+class Solution:
+    def sortArray(self, nums: List[int]) -> List[int]:
+        nums.sort()
+        return nums
+
+##############
+#Method2 D&C
+class Solution:
+    def sortArray(self, nums: List[int]) -> List[int]:
+        if len(nums) <= 1:
+            return nums
+    #base case
+        mid = len(nums) // 2
+        left_half = self.sortArray(nums[:mid])
+        right_half = self.sortArray(nums[mid:])  
+    #find the mid position
+        return self.merge(left_half, right_half)
+
+    def merge(self, left: List[int], right: List[int]) -> List(int):
+        res = 0
+        i = j = 0
+
+        while 1 < len(left)) and j < len(right):
+            if left[i] < right[j]:
+                res.append(left[i])
+                i += 1
+            else:
+                res.append(right[j])
+                j += 1
+        
+        res.extend(left[i:])
+        res.extend(right[j:])
+        return res
+
+    
