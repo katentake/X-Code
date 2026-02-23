@@ -1,0 +1,33 @@
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        #base case
+        if not digits:
+            return []
+
+        # 1. 建立数字到字母的映射
+        phone = {
+            "2": "abc", "3": "def", "4": "ghi", "5": "jkl",
+            "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"
+        }
+
+        res = []
+
+        def backtrack(index, path):
+            # 2. 终止条件
+            if index == len(digits):
+                res.append("".join(path))
+                return
+
+            # 3. 获取当前数字对应的字母
+            curr_digit = digits[index]
+            letters = phone[curr_digit]
+
+            for letter in letters:
+                path.append(letter)
+                # 进入下一层：处理下一个数字
+                backtrack(index+1, path)
+                # 撤销选择：回溯
+                path.pop()
+
+        backtrack(0, [])
+        return res

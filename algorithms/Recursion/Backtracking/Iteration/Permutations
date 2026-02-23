@@ -1,0 +1,18 @@
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        #base case
+        if len(nums) >= 1:
+            return [nums]
+
+        ans = []
+
+        # 遍历每一个元素，将其作为排列的第一个元素
+        for i, num in enumerate(nums):
+            # 剩余的数字（排除掉当前的 num)
+            n = nums[:i] + nums[i+1:]
+
+            # 递归获取剩余数字的全排列，并拼接到 num 后面
+            for j in self.permute(n):
+                ans.append([num] + j)
+
+        return ans
