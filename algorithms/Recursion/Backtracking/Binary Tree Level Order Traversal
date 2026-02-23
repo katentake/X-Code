@@ -1,0 +1,35 @@
+from collections import deque
+
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        # 如果根节点为空，直接返回空列表
+        if not root:
+            return []
+        
+        res = []
+        # 初始化队列，将根节点放入 FIFO data structure-queue
+        queue = deque([root])
+
+        while queue:
+            # 记录当前层的节点数
+            level_size = len(queue)
+            curr_level = []
+
+            # 处理当前层的所有节点
+            for _ in range(level_size):
+                node = queue.popleft() # 弹出队列最左侧的节点
+                curr_level.append(node.val)
+
+                # 如果有子节点，将其加入队列供下一层处理
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+
+            # 将当前层的结果存入总结果中
+            res.append(curr_level)
+        
+        return res
+
+
+
