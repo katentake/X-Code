@@ -1,0 +1,24 @@
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        res = []
+
+        def backtrack(start, path):
+            if len(path) == k:
+                res.append(list(path))
+                return
+
+            for i in range(start, n - (k - len(path)) + 2):
+                path.append(i)
+                backtrack(i+1, path)
+                path.pop()
+
+        backtrack(1, [])
+        return res
+
+
+#####################
+import itertools
+
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        return list(itertools.combinations(range(1, n+1), k))
