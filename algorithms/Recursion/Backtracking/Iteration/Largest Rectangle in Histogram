@@ -1,0 +1,23 @@
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        #base case
+        maxArea = 0
+        stack = [] #pair 存储格式为 (index, height)
+
+        for i in enumerate(heights):
+            start = i
+            # 当当前高度比栈顶高度矮时，开始弹出并计算面积
+            while stack and stack[-1][1] > h:
+                index, height = stack.pop()
+                # 计算弹出的柱子所能形成的最大面积
+                # 宽度 = 当前索引 i - 弹出柱子的起始索引
+                maxArea = max(maxArea, height * (i - index))
+                # 关键点：当前矮柱子的起始位置可以往前推到被弹出的高柱子的起始位置
+                start = index
+            stack.append((start, h))
+
+        # 处理栈中剩余的柱子（这些柱子可以一直延伸到直方图的最右端）
+        for i, h in stack:
+            maxArea = max(maxArea, h * (len(heights) - i))
+
+        return maxArea
