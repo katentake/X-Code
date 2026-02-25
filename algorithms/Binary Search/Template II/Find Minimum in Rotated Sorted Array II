@@ -1,0 +1,19 @@
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        if not nums:
+            return None
+        
+        left, right = 0, len(nums)-1
+
+        while left < right:
+            mid = (left+right) // 2
+            if nums[mid] < nums[right]: # 情况 1：mid 比右端点小，说明右半部分是有序的，最小值在左边（含mid）
+                right = mid
+            elif nums[mid] > nums[right]: # 情况 2：mid 比右端点大，说明旋转点在右边，最小值在右边（不含mid）
+                left = mid +1
+            # 情况 3：关键！nums[mid] == nums[right]
+            # 此时无法判断，但可以肯定让 right 向左移一位是安全的
+            else:
+                right -= 1
+            
+        return nums[left]
