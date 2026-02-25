@@ -1,34 +1,34 @@
+# class Solution:
+#     def myPow(self, x: float, n: int) -> float:
+#         if n < 0:
+#             x = 1 / x
+#             n = -n
+#         return self.fastPow(x, n)
+    
+#     def fastPow(self, x: float, n: int) -> float:
+#         if n == 0:
+#             return 1.0
+        
+#         half = self.fastPow(x, n // 2)
+        
+#         if n % 2 == 0:
+#             return half * half
+#         else:
+#             return half * half * x
+        
+
 class Solution:
-    def myPow(self, x: float, n: int) -> float: 
-        if n < 0:
+    def myPow(self, x: float, n: int) -> float:    
+        if n < 0: #1. 处理负指数情况
             x = 1 / x
             n = -n
-
-        res = 1
-        curr_product = x
-        while n > 0:
-            if n % 2 == 1:
+            
+        res = 1 #2. 初始化变量, 累乘的结果，初始值为 1（乘法的单位元）。
+        curr_product = x #当前的乘数基数，初始为 $x$。在循环中，它会不断进行平方操作（$x \to x^2 \to x^4 \to x^8 \dots$）。
+        while n > 0: #只要指数还没被处理完，就继续循环。
+            if n % 2 == 1: #判断当前 $n$ 的二进制最后一位是否为 1（即 $n$ 是否为奇数）。如果是奇数，说明当前的 curr_product 需要计入最终结果 res 中。例如计算 $x^7$，二进制是 $111_2$，拆解为 $x^4 \cdot x^2 \cdot x^1$，每一位是 1 的时候都要乘到 res 里。
                 res *= curr_product
-            curr_product *= curr_product
-            n //= 2
+            curr_product *= curr_product #这是快速幂的核心。每次循环将底数平方。这样我们不需要乘 $n$ 次 $x$，而是通过不断平方快速达到高次幂。
+            n //= 2 #将 $n$ 右移一位（除以 2 并取整）。这配合上面的平方操作，实现了对 $n$ 的二进制位的逐位扫描。
         return res
-
-
-class Solution:
-    def myPow(self, x: float, n: int) -> float: 
-        if n < 0:
-            x = 1 / x
-            n = -n
-
-        return self.fastPow(x, n)
-
-    def fastPow(self, x:float, n:int) -> float:
-        if n == 0:
-            return 1.0
-
-        half = self.fastPow(x, n // 2)
-
-        if n % 2 == 0:
-            return half * half
-        else:
-            return half * half * x
+            

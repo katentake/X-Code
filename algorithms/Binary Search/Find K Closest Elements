@@ -1,13 +1,27 @@
 class Solution:
     def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:
         #binary search
+        # 1. 初始化二分查找的范围
+        # 因为我们要找的是长度为 k 的窗口的“起点”，
+        # 所以起点的最大可能位置是 len(arr) - k
         left, right = 0, len(arr)-k
 
+        # 2. 开始二分查找（标准 Template II 变体）
         while left < right:
+            # 取中间索引作为潜在的窗口起点
             mid = (left + right) // 2
+            # 3. 核心逻辑：比较窗口两端的“距离”
+            # 我们比较当前窗口起点 arr[mid] 和窗口右侧紧邻的一个元素 arr[mid + k]
+            # 谁距离 x 更远？
+            # 如果 x 距离左端的 arr[mid] 比距离右端的 arr[mid + k] 还要远：
+            # 说明 [mid, mid + k - 1] 这个窗口太靠左了
             if x - arr[mid] > arr[mid +k] -x:
+                # 迫使起点向右移动
                 left = mid +1
             else:
-                right = mid
+                right = mid # 否则，说明右边的元素并没有更好，或者左边更好，窗口向左收缩
+
+        # 4. 最终 left 就是我们要找的最优窗口的起始索引
+        # 返回从 left 开始，长度为 k 的切片
         return arr[left: left+k]
 
