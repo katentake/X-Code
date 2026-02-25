@@ -1,0 +1,20 @@
+# The isBadVersion API is already defined for you.
+# def isBadVersion(version: int) -> bool:
+
+class Solution:
+    def firstBadVersion(self, n: int) -> int:
+        start, end = 1, n+1
+
+        while start < end:
+            mid = start + (end - start) // 2 #find the mid number
+            if isBadVersion(mid):
+                end = mid - 1
+            else:
+                start = mid + 1
+            
+        if isBadVersion(start) == True: #base case
+            return start
+        if isBadVersion(end) == True: #base case
+            return end
+
+    return -1

@@ -1,0 +1,37 @@
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        if not nums: return [-1,-1]
+
+        res = [-1,-1]
+
+        left, right = 0, len(nums)-1
+
+        while left+1 < right:
+            mid = (left + right) // 2
+            if nums[mid] >= target: # 重点：>= 迫使右指针向左收缩
+                right = mid
+            else:
+                left = mid
+
+        # 退出循环后，剩下 left 和 right，优先检查 left
+        if nums[left] == target: res[0] = left
+        elif nums[right] == target: res[0] = right
+        else:
+            return [-1,-1] # 连左边界都找不到，直接结束
+        
+        # 2. 寻找右边界
+        left, right = 0, len(nums)-1
+        while left +1 < right:
+            mid = (left + right) // 2
+            if nums[mid] <= target: # 重点：<= 迫使左指针向右收缩
+                left = mid
+            else:
+                right = mid
+        
+        # 退出循环后，优先检查 right
+        if nums[right] == target: res[1] = right
+        elif nums[left] == target: res[1] = left
+
+        return res
+
+

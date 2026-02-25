@@ -1,0 +1,15 @@
+class Solution:
+    def findPeakElement(self, nums: List[int]) -> int:
+        left, right = 0, len(nums)-1
+
+        while left < right: # 使用 Template II: left < right
+            mid = left + (right - left) // 2
+
+            # 核心逻辑：比较 mid 和右相邻元素
+            if nums[mid] < nums[mid+1]:
+                # 处于上坡，峰值在右边（不含 mid）
+                left = mid +1
+            else:
+                right = mid # 处于下坡，mid 自己可能是峰值，峰值在左边（含 mid）
+    
+        return left # 循环结束时，left == right，指向其中一个峰值
