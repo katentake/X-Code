@@ -1,0 +1,25 @@
+class Solution:
+    def splitArray(self, nums: List[int], k: int) -> int:
+        left, right = max(nums), sum(nums)
+
+        while left < right:
+            mid = (left + right) // 2
+            # 贪心判断：以 mid 为上限，至少需要多少个子数组
+            curr_sum = 0
+            count = 1 # 初始至少有 1 个子数组
+
+            for num in nums:
+                if curr_sum + num > mid:
+                    # 超过上限，必须另起一个子数组
+                    count += 1
+                    curr_sum = num
+                else:
+                    curr_sum += num
+
+            # 如果分割出的子数组数量大于 k，说明上限 mid 太小了
+            if count > k:
+                left = mid +1
+            else:
+                right = mid  # 否则说明 mid 足够大，尝试继续收缩寻找更小的答案
+            
+        return left
