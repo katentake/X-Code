@@ -1,0 +1,32 @@
+class Solution:
+    def smallestDistancePair(self, nums: List[int], k: int) -> int:
+        # 1. 排序是使用双指针的前提
+        nums.sort()
+
+        # 2. 定义二分查找的边界：距离的范围
+        low = 0
+        high = nums[-1] - nums[0]
+
+        # 辅助函数：统计距离小于等于 mid 的数字对数量
+        def count_pairs(mid):
+            count = 0
+            left = 0
+            for right in range(len(nums)):
+                # 如果当前距离大于 mid，左指针右移直到满足条件
+                while nums[right] - nums[left] > mid:
+                    left += 1
+                # 此时 [left, right-1] 里的所有数与 right 的距离都 <= mid
+                count += right - left
+            return count
+
+        # 3. 对“距离值”进行二分查找 (Template II)
+        while low < high:
+            mid = (low + high) // 2
+            if count_pairs(mid) >= k:
+                # 数量够了，尝试更小的距离
+                high = mid
+            else:
+                # 数量不够，必须增大距离
+                low = mid +1
+    
+        return low
