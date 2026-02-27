@@ -1,0 +1,29 @@
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        pointer = root
+
+        while pointer:
+            if p.val > pointer.val and q.val > pointer.val:
+                pointer = pointer.right
+            elif p.val < pointer.val and q.val < pointer.val:
+                pointer = pointer.left
+            else:
+                return pointer
+
+#################
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        # 1. 递归终止条件
+        if not root or root == p or root == q:
+            return root
+        
+        # 2. 递归去左子树和右子树找
+        left = self.lowestCommonAncestor(root.left, p, q)
+        right = self.lowestCommonAncestor(root.right, p, q)
+
+        # 3. # 如果左右子树各返回了一个节点，说明 p 和 q 分居 root 两侧，root 就是 LCA
+        if left and right:
+            return root
+
+        # 如果只有一边有结果，说明 p 和 q 都在那一侧，或者只找到了其中一个
+        return left if left else right
