@@ -1,0 +1,35 @@
+class MyHashMap:
+
+    def __init__(self):
+        # 选一个质数作为桶的数量
+        self.base = 769
+        self.table = [[] for _ in range(self.base)] # 初始化桶数组，每个位置是一个空列表
+
+    def _hash(self, key: int) -> int:
+        return key % self.base
+
+    def put(self, key: int, value: int) -> None:
+        bucket_id = self._hash(key)
+        # 遍历对应的桶
+        for item in self.table[bucket_id]:
+            # 如果 key 已存在，更新 value
+            if item[0] == key:
+                item[1] = value
+                return
+        # 如果 key 不存在，添加新键值对
+        self.table[bucket_id].append([key, value])
+
+    def get(self, key: int, value: int) -> int:
+        bucket_id = self._hash(key)
+        for item in self.table[bucket_id]:
+            if item[0] == key:
+                return item[1]
+        return -1
+
+    def remove(self, key: int) -> None:
+        bucket_id = self._hash(key)
+        for i, intem in enumerate(self.table[bucket_id]):
+            if item[0] == key:
+                # 找到后删除该元素并退出
+                self.table[bucket_id].pop(i)
+                return
