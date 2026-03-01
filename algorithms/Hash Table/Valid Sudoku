@@ -1,0 +1,33 @@
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        # 初始化 9 个行集合、9 个列集合、9 个九宫格集合
+        rows = [set() for _ in range(9)]
+        cols = [set() for _ in range(9)]
+        boxes = [set() for _ in range(9)]
+
+        for r in range(9):
+            for c in range(9):
+            val = board[r][c]
+
+            # 跳过空格
+            if val == ".":
+                continue
+
+            # 1. 检查行
+            if val in rows[r]:
+                return False
+            rows[r].add(val)
+
+            # 2. 检查列
+            if val in cols[c]:
+                return False
+            cols[c].add(val)
+
+            # 3. 检查九宫格 (计算当前坐标属于哪个小框)
+            # 使用 (r // 3) * 3 + (c // 3) 将二维坐标转为 0-8 的一维索引
+            box_idx = (r // 3) * 3 + (c//3)
+            if val in boxes[box_idx]:
+                return False
+            boxes[box_idx].add(val)
+
+    return True
