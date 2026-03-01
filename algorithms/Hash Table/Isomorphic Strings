@@ -1,0 +1,26 @@
+class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        return len(set(s)) == len(set(t)) == len(set(zip(s, t)))
+#len(set(s)) == len(set(t)) 保证了去重后的字符种类数量一致
+#len(set(zip(s, t))) 保证了每一个不同的配对关系只出现了一次。如果一个s字符对应了两个不同的t字符，这个长度就会增加，导致不相等
+
+class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+        
+        return self.helper(s, t) and self.helper(t, s)
+
+    def helper(self, s, t):
+        lookup = {} # 创建一个哈希表（字典），用来记录字符的映射关系
+        for i in range(len(s)):
+            if s[i] not in lookup: # 如果当前字符 s[i] 之前从未出现过
+                lookup[s[i]] = t[i] # 在哈希表中建立映射：s[i] 应该变成 t[i]
+            # 如果 s[i] 之前出现过，检查它当时映射的字符
+            # 是否和现在的 t[i] 相同
+            elif lookup[s[i]] != t[i]:
+                return False
+        
+        # 如果遍历完都没发现冲突，说明这个方向的映射是合法的
+        return True
+
