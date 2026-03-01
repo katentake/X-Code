@@ -1,0 +1,16 @@
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        # 哈希表存：{数值: 索引}
+        prev_map = {}
+
+        for i, n in enumerate(nums):
+            diff = target - n
+            # 如果补数已经在哈希表里了
+            if diff in prev_map:
+                # 返回 [补数的索引, 当前索引]
+                return [prev_map[diff], i]
+
+            # 否则，把当前数字和索引存入哈希表
+            prev_map[n] = i
+
+        return []

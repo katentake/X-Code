@@ -1,0 +1,20 @@
+class Solution:
+def isHappy(self, n: int) -> bool:
+    # 辅助函数：计算数位平方和
+    def helper(num):
+        total_sum = 0
+        while num > 0:
+            # 取末位并计算平方
+            num, digit = divmod(num, 10)
+            total_sum += digit ** 2
+        return total_sum
+
+    # 用于记录出现过的数字
+    seen = set()
+
+    # 只要还没变成 1，且还没进入循环
+    while n != 1 and n not in seen:
+        seen.add(n)
+        h = helper(n)
+
+    return n == 1

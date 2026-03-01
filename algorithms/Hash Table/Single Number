@@ -1,0 +1,10 @@
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        seen = set()
+        for num in nums:
+            if num in seen:
+                seen.remove(num) # 第二次见到：移除
+            else:
+                seen.add(num) # 第一次见到：加入
+
+        return seen.pop() # 最后集合里只剩下一个元素，用 pop() 把它取出来
