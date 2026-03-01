@@ -1,0 +1,11 @@
+class Solution:
+    def numJewelsInStones(self, jewels: str, stones: str) -> int:
+        # 1. 将宝石字符串转换为集合，实现 O(1) 查询
+        jewel_set = set(jewels)
+        count = 0
+
+        for stone in stones:
+            if stone in jewel_set: ## 3. 如果这块石头在宝石库中，计数加一
+                count += 1
+
+        return count

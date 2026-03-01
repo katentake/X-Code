@@ -1,0 +1,23 @@
+class Solution:
+    def finiduplicateSubtrees(self, root: Optional[TreeNode]) -> List[Optional[TreeNode]]:
+        res = []
+        # count 存储：{子树序列化字符串 : 出现次数}
+        count = collections.defaultdict(int)
+
+        def collect(node):
+            if not node:
+                return "#"
+            
+            # 1. 递归获取左、右子树的序列化表示
+            # 格式：根值,左序列,右序列
+            serial = f"{node.val}, {collect(node.left)}, {collect(node.right)}"
+            count += 1
+            
+            # 3. 如果次数正好为 2，说明发现了重复（且只记录一次
+            if count[serial] == 2:
+                res.append(node)
+
+            return serial
+        
+        collect(root)
+        return res
