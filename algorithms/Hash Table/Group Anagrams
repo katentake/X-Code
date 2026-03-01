@@ -1,0 +1,19 @@
+from collections import defaultdict
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        # 使用 defaultdict 避免手动初始化空列表
+        groups = defaultdict(list)
+
+        for s in strs:
+            # 1. 将字符串排序，并转回 tuple 作为字典的 Key
+            # 注意：list 不能做 Key，因为它是不可变对象，tuple 可以
+            key = tuple(sorted(s))
+
+            # 2. 将原字符串归类
+            groups[key].append(s)
+
+        # 3. 返回所有分组后的列表
+        return list(group.values())
+
+#hash map #sort 
