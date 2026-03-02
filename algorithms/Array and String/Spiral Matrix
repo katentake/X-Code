@@ -1,0 +1,11 @@
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        res = []
+        while matrix:
+            # 1. 取出当前的第一行
+            res += matrix.pop(0)
+            # 2. 将剩下的矩阵进行转置并反转（等同于逆时针旋转 90 度）
+            # *matrix 解包，zip 重新组合，[::-1] 翻转顺序
+            matrix = list(zip(*matrix))[::-1]
+
+        return res
