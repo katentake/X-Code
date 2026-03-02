@@ -1,0 +1,16 @@
+class Solution:
+    def pivotIndex(self, nums: List[int]) -> int:
+        total_sum = sum(nums) #1. 先计算数组的总和
+        left_sum = 0 #2. 记录当前遍历位置左侧的累加和
+
+        for i, x in enumerate(nums):
+            # 3. 逻辑判断：左侧和 == 右侧和
+            # 右侧和 = 总和 - 左侧和 - 当前数字
+            if left_sum == (total_sum - left_sum -x):
+                return i 
+            # 4. 更新左侧和，供下一个位置使用
+            left_sum += x
+
+        return -1
+
+
