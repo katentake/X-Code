@@ -1,0 +1,17 @@
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        min_heap = [] #初始化一个空列表，用作最小堆。在最小堆中，min_heap[0] 永远是最小的元素。
+
+        for num in nums: 
+            if len(min_heap) < k: #如果堆的大小还没到 $k$，直接把当前数字放进去。
+                heapq.heappush(min_heap, num)
+            else:
+                heapq.heappushpop(min_heap, num) #将新元素加入堆，同时弹出堆中最小的元素。这样能保证堆内始终保留着目前为止最大的 $k$ 个数
+        return min_heap[0]
+
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        num_sorted = sorted(nums)
+
+        return num_sorted(len(nums) - k)
