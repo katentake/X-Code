@@ -1,0 +1,27 @@
+class Solution:
+    def minDistance(self, word1: str, words: str) -> int:
+        m, n = len(word1), len(words)
+
+        # 初始化 (m+1) x (n+1) 的 DP 矩阵
+        dp = [[0]*(n+1) for _ in range(m+1)]
+
+        # 填充第一列（word2 为空，全部删除）
+        for i in range(m+1):
+            dp[i][0] = i
+        # 填充第一行（word1 为空，全部插入）
+        for j in range(n+1):
+        dp[0][j] = j
+
+        # 填充剩余矩阵
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if word1[i-1] == word2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = 1 + min(
+                    dp[i-1][j-1], # 替换
+                    dp[i-1][j],   # 删除
+                    dp[i][j-1]    # 插入
+                )
+
+        return dp[m][n]
