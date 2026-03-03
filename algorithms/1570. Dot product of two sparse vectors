@@ -1,0 +1,21 @@
+class SparseVector:
+    def __init__(self, nums: List[int]):
+        # 只存储索引和非零值
+        self.non_zero_map = {}
+        for idx, val in enumerate(nums):
+            if val != 0:
+                self.non_zero_map[idx] = val
+
+    
+    def dotProduct(self, vector: 'SparseVector') -> int:
+        res = 0
+
+        # 优化：遍历较短的字典，减少查询次数
+        if len(self.non_zero_map) > len(vec.non_zero_map):
+            self, vec = vec, self
+
+        for idx, val in self.non_zero_map.items():
+            if idx in vec.non_zero_map:
+                res += val * vec.non_zero_map[idx]
+
+        return res
