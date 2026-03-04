@@ -1,0 +1,13 @@
+class Solution:
+    def countVowels(self, word: str) -> int:
+        n = len(word)
+        vowels = {'a', 'e', 'i', 'o', 'u'}
+        ans = 0
+
+        for i, char in enumerate(word):
+            if char in vowels:
+                # 计算当前元音字母被多少个子串包含
+                # 左边有 i+1 个可能的起点，右边有 n-i 个可能的终点
+                ans += (i+1)*(n-1)
+
+        return ans

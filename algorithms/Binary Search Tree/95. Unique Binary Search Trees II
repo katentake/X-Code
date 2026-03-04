@@ -1,0 +1,26 @@
+class Solution:
+    def generateTrees(self, n: int) -> List[Optional[TreeNode]]:
+        if n == 0: return []
+
+        def build(start, end):
+            if start > end: # 边界条件：如果起点大于终点，说明此时是空节点
+                return [None]
+
+            all_trees = []
+            # 1. 尝试每一个数字 i 作为根节点
+            for i in range(start, end+1):
+                # 2. 递归生成所有可能的左子树和右子树
+                left_trees = build(start, i-1)
+                right_trees = build(i+1, end)
+
+                # 3. 从左/右子树集合中各选一个，拼接到根节点 i 上
+                for l in left_trees:
+                    for r in right_trees:
+                        curr_node = TreeNode(i)
+                        curr_node.left = l
+                        curr_node.right = r 
+                        all_trees.append(curr_node)
+
+            return all_trees
+
+        return build(1, n)
