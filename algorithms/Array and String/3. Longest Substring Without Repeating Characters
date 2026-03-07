@@ -23,7 +23,7 @@ class Solution():
         left = 0
         right = 0
 
-        unique_hashset = set() #哈希集合，用于存储当前窗口内的所有字符，方便以 $O(1)$ 的时间复杂度判断某个字符是否重复
+        unique_hashset = set() #哈希集合，用于存储当前窗口内的所有字符，方便以 O(1) 的时间复杂度判断某个字符是否重复
         max_length = 0 #记录遍历过程中出现过的最大窗口长度
 
         while right < len(s): #只要右指针还没走完整个字符串，就继续尝试寻找更长的子串
