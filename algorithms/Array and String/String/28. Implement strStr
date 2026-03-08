@@ -1,0 +1,27 @@
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        #关键点：为什么范围是 len(haystack) - len(needle) + 1？
+        #假设 haystack 长度为 10，needle 长度为 3。如果你从索引 8 开始往后数，后面只剩 2 个字符了，不可能匹配上长度为 3 的 needle。因此，循环只需要进行到剩余字符长度刚好等于 needle 长度的地方即可
+        for i in range(len(haystack) - len(needle) + 1):
+            #细节：haystack[i : i + len(needle)] 会从当前的索引 i 开始，向后截取一个与 needle 长度完全相同的子串
+            #逻辑：如果截取出来的这段字符正好等于 needle，说明我们找到了匹配项。
+            if  haystack[i:i + len(needle)] == needle:
+                return i
+
+        return -1
+
+
+#Method 2:
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        if not strs: 
+            return ""
+
+        strs.sort() #核心逻辑：将字符串数组按字典序（Alphabetical order）进行升序排序
+        #排序后，数组中的第一个字符串 strs[0] 与最后一个字符串 strs[-1] 之间的差异是最大的。如果这两个字符串有共同的字母，那么中间所有的字符串在对应位置也一定有相同的字母
+
+        first, last = strs[0], strs[-1]
+        while i < len(first) and i < len(last) and first[i] == last[i]:
+            i += 1
+
+        return first[:i] #利用切片操作，返回从开头到索引 i（不含 i）的子串。这就是找到的最长公共前缀
