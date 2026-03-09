@@ -1,0 +1,50 @@
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        1: 0, n-1
+        2: 0, k-1
+        3: k, n-1
+        """
+        n = len(nums)
+        k = k % n #如果旋转步数 k 大于数组长度 n，旋转 $n$ 次相当于没转。取模运算确保 k 始终在有效范围内（$0$ 到 $n-1$）
+
+        def helper(left, right):
+            left, right = 0, len(nums)-1
+
+            while left < right:
+                nums[left], nums[right] = nums[right], nums[left] #原地交换两个索引位的值
+                #指针向中间靠拢
+                left += 1 
+                right -= 1
+
+            helper(0, n-1) #全部翻转
+
+            helper(0, k-1) #翻转第一部分
+
+            helper(k, n-1) #翻转第二部分
+
+            return nums
+
+############## 下面是helper function的原理
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        k = k % len(nums) #in case k > n
+        
+        l, r = 0, len(nums)-1
+        while l < r:
+            nums[l], nums[r] = nums[r], nums[l]
+            l = l +1
+            r = r -1
+        
+        l, r = 0, k-1
+        while l < r:
+            nums[l], nums[r] = nums[r], nums[l]
+            l = l +1
+            r = r -1
+            
+        l, r = k, len(nums)-1
+        while l < r:
+            nums[l], nums[r] = nums[r], nums[l]
+            l = l +1
+            r = r -1

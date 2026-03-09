@@ -1,0 +1,12 @@
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+    slow = 0
+
+    for fast in range(len(nums)): # 1. 快指针遍历整个数组
+        if nums[fast] != 0: # 2. 如果发现非零元素 
+            # 3. 将非零元素与慢指针位置交换
+            # 这样可以保证非零元素的相对顺序不变
+            nums[slow], nums[fast] = nums[fast], nums[slow]
+            slow += 1 # 4. 慢指针后移
+
+    return slow
