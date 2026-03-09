@@ -1,0 +1,7 @@
+class Solution:
+    def reverseString(self, s: List[str]) -> None:
+        """
+        Do not return anything, modify s in-place instead.
+        """
+        s[:] = s[::-1] #在原地址上，将原数组翻转并填入新内容
+        return s[]
