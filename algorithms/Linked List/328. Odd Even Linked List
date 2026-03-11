@@ -1,0 +1,22 @@
+class Solution:
+    def oddEvenList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head:
+            return None
+        # 2. 初始化指针
+        # odd 指向第一个节点（奇数位
+        # even 指向第二个节点（偶数位）
+        # even_head 记录偶数链表的起点，用于最后拼接
+        odd, even, even_head = head, head.next, head.next
+
+        # 3. 循环条件：只要偶数节点及其下一个节点存在，就可以继续分离
+        while even and even.next:
+            # --- 维护奇数链表 ---
+            odd.next = even.next
+            odd = odd.next
+            # --- 维护偶数链表 ---
+            even.next = odd.next
+            even = even.next
+        # 4. 拼接：将奇数链表的末尾指向保存好的偶数链表头
+        odd.next = even_head
+        # 5. 返回原 head（因为 head 始终是奇数链表的头）
+        return head

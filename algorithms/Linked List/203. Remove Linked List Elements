@@ -1,0 +1,18 @@
+class Solution:
+    def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
+        # 1. 初始化哨兵节点
+        dummy_head = ListNode(0)
+        dummy_head.next = head
+        # 2. curr 指针从哨兵节点开始
+        curr = dummy_head
+
+        # 3. 遍历链表，直到没有下一个节点
+        while curr.next:
+        # 发现目标，跳过该节点
+        if curr.next.val == val:
+            curr.next = curr.next.next # 注意：这里不需要移动 curr，因为要继续检查新的 curr.next
+        # 没发现目标，移动到下一个位置
+        else:
+            curr = curr.next
+        # 4. 返回哨兵节点指向的真实头节点
+        return dummy_head.next

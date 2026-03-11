@@ -2,5 +2,15 @@ class Solution:
     def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]
         if not head or not head.next:
             return head
-            
+        # 2. 递归调用
+        # 假设 head 后面剩下的链表已经被成功反转了，new_head 是反转后的新头（原链表的尾） 
         new_head = self.reverseList(head.next)
+
+        # 此时 head.next 指向的是原链表里的下一个节点
+        # 我们让“下一个节点”的 next 指向“当前节点 head”
+        head.next.next = head
+        # 防止 1 <-> 2 形成死循环，让 1 暂时指向 None
+        # 随着递归向上传递，这个 None 会被上一层的操作覆盖
+        head.next = None
+
+        return new_head # 5. 返回新链表的头
