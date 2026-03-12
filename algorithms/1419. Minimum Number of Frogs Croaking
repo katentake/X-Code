@@ -1,0 +1,19 @@
+class Solution:
+    def minNumberOfFrogs(self, croakOfFrogs: str) -> int:
+        # 记录每个字母当前的计数
+
+        #initial 青蛙的数量
+
+        #initial最多青蛙的数量
+
+
+        #for 循环每一个字母，并计数
+
+
+
+
+
+
+
+
+        #最后必须保证所有青蛙都完成了"croak"
