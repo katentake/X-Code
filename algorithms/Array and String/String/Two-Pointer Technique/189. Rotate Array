@@ -7,7 +7,7 @@ class Solution:
         3: k, n-1
         """
         n = len(nums)
-        k = k % n #如果旋转步数 k 大于数组长度 n，旋转 $n$ 次相当于没转。取模运算确保 k 始终在有效范围内（$0$ 到 $n-1$）
+        k = k % n #如果旋转步数 k 大于数组长度 n，旋转n次相当于没转。取模运算确保 k 始终在有效范围内（0 到 n-1）
 
         def helper(left, right):
             left, right = 0, len(nums)-1

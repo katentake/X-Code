@@ -1,0 +1,28 @@
+class Solution:
+    def rotateRight(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        if not head or not head.next or k == 0:
+            return None
+        
+        # 1. 计算长度并找到尾节点
+        n = 1 #初始化长度 n = 1
+        curr = head
+        while curr.next:
+            curr = curr.next
+            n += 1
+
+        # 2. 连成环
+        curr.next = head #将原尾节点的 next 指向 head。此时，链表变成了一个环
+
+        # 3. 找到新尾节点的位置
+        # 旋转 k 次相当于从头走 n - (k % n) - 1 步
+        k = k % n 
+        step_to_new_tail = n - k -1 #我们要找的是旋转后的新尾节点
+        new_tail = head
+        for _ in range(step_to_new_tail): #从 head 开始走 step_to_new_tail 步，找到旋转后应该作为末尾的那个节点
+            new_tail = new_tail.next
+
+        # 4. 设定新头节点并断开环
+        new_head = new_tail.next #新尾节点的下一个节点就是新的头节点
+        new_tail.next = None #切断环，将其恢复为单链表结构
+
+        return new_head #返回新的链表头
