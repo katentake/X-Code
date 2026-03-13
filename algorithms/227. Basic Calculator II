@@ -6,9 +6,10 @@ class Solution:
 
         for i in range(len(s)):
             char = s[i]
+            # 累加数字（处理多位数的情况）
             if char.isdigit():
                 num = num*10+int(char)
-
+            # 如果是运算符或者是字符串末尾，开始结算
             if (not char.isdigit() and char != ' ') or i == len(s)-1:
                 if sign == "+":
                     stack.append(num)
@@ -17,9 +18,11 @@ class Solution:
                 elif sign == "*":
                     stack.append(stack.pop()*num)
                 elif sign == "/":
+                    # 注意 Python 的负数整除行为，这里需要向零截断
                     prev = stack.pop()
                     stack.append(int(prev/num))
                 
+                # 重置数字，更新当前运算符
                 sign = char
                 num = 0
 
