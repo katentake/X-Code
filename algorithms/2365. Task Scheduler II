@@ -1,0 +1,22 @@
+class Solution:
+    def taskSchedulerII(self, tasks: List[int], space: int) -> int:
+        # last_occurrence 存储 {任务类型: 上次完成的具体天数}
+        last_occurrence = {}
+        curr_day = 0
+        
+        for task in tasks:
+            # 每一天至少前进 1 天
+            curr_day += 1
+            
+            # 如果这个任务之前做过
+            if task in last_occurrence:
+                # 计算该任务最早可以再次执行的日期：上次日期 + space + 1
+                next_available_day = last_occurrence[task] + space + 1
+                # 如果当前日期还没到这个最早日期，直接“跳”到那一天（相当于中间在休息）
+                if curr_day < next_available_day:
+                    curr_day = next_available_day
+            
+            # 记录当前任务完成的日期
+            last_occurrence[task] = curr_day
+            
+        return curr_day
