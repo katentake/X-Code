@@ -1,0 +1,19 @@
+from collections import Counter
+
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        # 1. 统计每个任务出现的频率
+        count = Counter(tasks)
+        # 【修复】必须先定义 freq 才能在后面使用 values()
+        freq = list(count.values())
+        max_freq = max(freq)
+
+        # 2. 统计有多少个任务的频率等于最高频率
+        max_count = freq.count(max_freq)
+
+        # 3. 计算公式结果
+        # 【修复】公式中应为 (n + 1)，代表“1个任务 + n个冷却位”
+        ans = (max_freq -1)*(n+1)+max_count
+
+        # 4. 最终结果不能小于任务总数
+        return max(ans, len(tasks))
