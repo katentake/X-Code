@@ -17,3 +17,11 @@ class Solution:
 
 
         #最后必须保证所有青蛙都完成了"croak"
+
+
+        #test function
+if __name__ == "__main__":
+    sol = Solution()
+    test_input = "cccccc"
+    result = sol.min_Number_Of_Frogs(test_input)
+    print(f"input: {test_input} -> output: {result}")
