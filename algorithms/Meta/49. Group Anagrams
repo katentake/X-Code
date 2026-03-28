@@ -1,0 +1,12 @@
+from collections import defaultdict
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        res = defaultdict(list) # 使用 defaultdict 避免检查 key 是否存在的繁琐步骤
+
+        for s in strs:
+            key = tuple(sorted(s)) # 将字符串排序并转回 tuple 或 string 作为 key（list 不可哈希，不能做 key）
+
+            res[key].append(s) #将原字符串归类
+
+        return list(res.values()) #返回所有分组后的列表
