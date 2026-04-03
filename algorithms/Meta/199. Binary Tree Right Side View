@@ -3,7 +3,7 @@ class Solution:
         res = []
 
         def dfs(node, depth):
-            if not node:
+            if not node: #如果节点为空，直接返回
                 return
 
             # 如果当前深度等于结果集的长度，说明这是我们第一次来到这一层
@@ -15,6 +15,6 @@ class Solution:
             dfs(node.right, depth+1)
             dfs(node.left, depth+1)
 
-        dfs(root, 0)
+        dfs(root, 0) # 从根节点开始，初始深度为 0
 
         return res
