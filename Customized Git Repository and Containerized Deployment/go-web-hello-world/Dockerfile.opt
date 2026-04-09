@@ -1,0 +1,14 @@
+# build
+FROM golang:1.22-alpine AS builder
+WORKDIR /app
+COPY . .
+# CGO_ENABLED=0
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o go-app main.go
+
+# running base image
+FROM scratch
+WORKDIR /
+# copy binary only
+COPY --from=builder /app/go-app /go-app
+EXPOSE 8081
+ENTRYPOINT ["/go-app"]

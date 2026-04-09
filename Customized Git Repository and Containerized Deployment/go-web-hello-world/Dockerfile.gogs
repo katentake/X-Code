@@ -1,0 +1,7 @@
+FROM gogs/gogs:latest
+
+# copy data and mount it
+COPY gogs-data-backup/ /data/
+
+# make sure user "git" has permission to access the data
+RUN chown -R git:git /data
