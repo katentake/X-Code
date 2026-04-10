@@ -1,0 +1,9 @@
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+    seen = {}
+
+    for i, num in enumerate(nums):
+        need = target - num
+        if need in seen:
+            return [seen[need], i] #如果找到了，就返回 need 的索引和当前数字的索引 i
+        seen[num] = i #没找到，就把当前的数字 num 和它的下标 i 存进“记录本"
