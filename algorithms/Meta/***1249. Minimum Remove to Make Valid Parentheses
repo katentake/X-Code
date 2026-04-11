@@ -1,0 +1,19 @@
+class Solution:
+    def minRemoveToMakeValid(self, s: str) -> str:
+        s_list = list(s)
+        stack = [] # 存储左括号 '(' 的下标
+
+        for i, char in enumerate(s_list):
+            if char == '(':
+                stack.append(i)
+            elif char == ')':
+                if stack:
+                    stack.pop() # 匹配成功
+                else:
+                    s_list[i] = "" # 多余的右括号，标记删除
+                    
+        # 栈中剩下的索引是没能匹配到右括号的左括号
+        while stack:
+            s_list[stack.pop()] = ""
+
+        return "".join(s_list)
