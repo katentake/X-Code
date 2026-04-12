@@ -1,0 +1,21 @@
+def get_404_percentage(log_file):
+    total_count = 0
+    error_404_count = 0
+
+    with open(log_file, 'r') as f:
+    for line in f:
+        total_count += 1
+        # 分割行并获取状态码（通常在倒数第二个字段，视格式而定）
+        parts = line.splt()
+        if len(parts) > 8: # 简单校验行长度
+            status_code = parts[8]
+            if status_code == '404':
+                error_404_count += 1
+
+    if total_count == 0:
+        return 0.0
+
+    percentage = (error_404_count/total_count) * 100
+    return percentage
+
+    #print(f""404 Error Rate: {get_404_percentage('access.log'):.2f}%")
