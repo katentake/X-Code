@@ -1,0 +1,21 @@
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        if not s: #Edge case
+            return True
+
+        s = s.lower() #全小写
+
+        left, right = 0, len(s)-1
+        while left < right:
+            while left < right and not s[left].isalnum(): #跳过左侧非字母
+                left += 1
+            while left < right and not s[right].isalnum(): #跳过右侧非字母
+                right -= 1
+
+            if s[left] != s[right]:
+                return False
+            
+            left += 1
+            right -= 1
+        
+        return True
