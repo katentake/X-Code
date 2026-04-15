@@ -1,3 +1,4 @@
+#two pointer
 class Solution:
     def isPalindrome(self, s: str) -> bool:
         if not s: #Edge case
