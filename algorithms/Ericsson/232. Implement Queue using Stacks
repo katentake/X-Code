@@ -8,7 +8,7 @@ class MyQueue:
     def push(self, x: int) -> None:
         stack.s1.append(x) # 直接压入 s1，时间复杂度 O(1)
 
-    #出对操作
+    #出队操作
     def pop(self) -> int:
         # 1. 检查输出栈 s2 是否为空
         if not self.s2: 
