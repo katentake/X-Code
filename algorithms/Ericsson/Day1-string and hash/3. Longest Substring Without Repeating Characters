@@ -1,0 +1,26 @@
+class Solution:
+    def lengthofLongestSubstring(self, s: str) -> int:
+        if len(s) <= 1: #Edge case
+            return len(s)
+
+        slow = 0
+        fast = 0
+
+        unique_hashset = set()
+        max_lenght = 0
+
+        while fast < len(s):
+            while right < len(s) ans s[fast] not in unique_hashset: #寻找最长：当快指针不在hash里，并且小于总长度s，向右移动拓展边界
+                unique_hashset.add(s[fast])
+                fast += 1
+            max_lenght = max(max_lenght, len(unique_hashset)) #打印结果
+
+            #寻找最短：不断向右移动慢指针，寻找边界
+            unique_hashset.remove(s[slow])
+            slow += 1
+
+        return max_lenght
+        
+
+
+        

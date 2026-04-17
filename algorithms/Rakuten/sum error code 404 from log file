@@ -19,3 +19,25 @@ def get_404_percentage(log_file):
     return percentage
 
     #print(f""404 Error Rate: {get_404_percentage('access.log'):.2f}%")
+
+
+    def get_500_error(log_file):
+    error_count = 0  # 1. 在函数内部初始化计数器
+    try:
+        with open(log_file, 'r') as f: # 2. 使用传入的变量名
+            for line in f:
+                parts = line.split()
+                # 3. 增加长度检查防止空行报错，并将状态码转为字符串比较
+                if len(parts) > 8: 
+                    # 根据你的日志格式，状态码通常在索引 8 或 9
+                    # 假设是索引 8: [15/Apr/2026...] "GET /... HTTP/1.1" 500
+                    status_code = parts[8] 
+                    if status_code == "500":
+                        error_count += 1
+    except FileNotFoundError:
+        print(f"错误：找不到文件 {log_file}")
+    
+    return error_count
+
+# 4. 调用时传入字符串路径
+print(get_500_error("massive_log.log"))
