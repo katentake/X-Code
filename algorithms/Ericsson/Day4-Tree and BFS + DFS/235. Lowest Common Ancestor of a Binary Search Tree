@@ -1,0 +1,14 @@
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        #this tree is BST, so left < root, right > root
+        pointer = root
+
+        while pointer:
+            #情况1： 都在右边
+            if p.val > pointer.val and q.val > pointer.val:
+                pointer = pointer.right
+            #情况2： 都在左边
+            elif p.val < pointer.val and q.val < pointer.val:
+                pointer = pointer.left
+            else:
+                return pointer
