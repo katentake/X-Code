@@ -1,0 +1,23 @@
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = []
+
+        for token in tokens:
+            if token in "+-*/":
+                # 后入先出：第二个弹出的是左操作数，第一个弹出的是右操作数
+                num2 = stack.pop()
+                num1 = stack.pop()
+                if token == '+':
+                    stack.append(num1+num2)
+                elif token == '-':
+                    stack.append(num1-num2)
+                elif token == '*':
+                    stack.append(num1*num2)
+                else:
+                    # 使用 int() 实现向零截断的除法
+                    stack.append(int(num1/num2))
+            else:
+                #int(token)：由于输入的 tokens 是字符串列表，我们需要先用 int() 将其转换为整数，这样才能进行数学运算
+                #stack.append(...)：将转换后的整数压入栈顶。在逆波兰表达式中，数字总是先被存起来，等待后面的运算符来调用它们
+                stack.append(int(token))
+        return stack[-1]
