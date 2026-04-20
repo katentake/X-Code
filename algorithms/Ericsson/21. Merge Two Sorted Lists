@@ -2,7 +2,7 @@ class Solution:
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
         #base case
         if not list1:
-            return list
+            return list2
         if not list2:
             return list1
         #如果l1当前值更小，总和就是l1的剩余部分与l2的合并
