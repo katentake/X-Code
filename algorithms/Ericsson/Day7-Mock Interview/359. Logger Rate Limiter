@@ -1,0 +1,7 @@
+#Method: Hasp Map 
+#用一个 dict 存储 {消息内容: 下一次可以打印的时间戳}
+class Logger:
+    def __init__(self):
+        
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -> bool:

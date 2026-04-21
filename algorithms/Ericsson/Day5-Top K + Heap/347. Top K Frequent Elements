@@ -7,7 +7,7 @@ class Solution:
 
         # 2. 维护一个大小为 k 的最小堆
         min_heap = []
-        #count.items() 会返回一个个元组，比如 (数字1, 频次3), (数字2, 频次1)。我们依次检查每一个数字及其对应的频次
+        #counter.items() 会返回一个个元组，比如 (数字1, 频次3), (数字2, 频次1)。我们依次检查每一个数字及其对应的频次
         for num, freq in counter.items:
             if len(min_heap) < k:
                 heapq.heappush(min_heap, (freq, num))
@@ -16,5 +16,5 @@ class Solution:
         # 3. 提取结果
         res = []
         for item in min_heap:
-            res.append(item[1]) # 只把元组里的第二个元素（数字）拿出来
+            res.append(item[1]) # 只把元组里的第二个元素（数字）拿出来，即打印出频率
         return res
