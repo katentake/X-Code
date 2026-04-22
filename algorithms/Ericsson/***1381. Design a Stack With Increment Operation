@@ -9,7 +9,7 @@ class CustomStack:
 
     def pop(self) -> int:
         if self.stack:
-            returnself.stack.pop()
+            return self.stack.pop()
         else:
             return -1
 
