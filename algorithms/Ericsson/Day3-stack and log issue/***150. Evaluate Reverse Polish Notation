@@ -20,4 +20,5 @@ class Solution:
                 #int(token)：由于输入的 tokens 是字符串列表，我们需要先用 int() 将其转换为整数，这样才能进行数学运算
                 #stack.append(...)：将转换后的整数压入栈顶。在逆波兰表达式中，数字总是先被存起来，等待后面的运算符来调用它们
                 stack.append(int(token))
+        #栈中只会剩下唯一一个元素
         return stack[-1]

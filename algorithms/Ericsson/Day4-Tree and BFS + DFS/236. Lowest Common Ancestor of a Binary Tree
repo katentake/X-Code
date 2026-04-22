@@ -4,7 +4,7 @@ class Solution:
         if not root or p == root or q == root:
             return root
 
-        #情况2：p, q分居root两侧
+        #情况2：p, q分居root两侧, root就是LCA
         left = self.lowestCommonAncestor(root.left, p, q)
         right = self.lowestCommonAncestor(root.right, p, q)
 

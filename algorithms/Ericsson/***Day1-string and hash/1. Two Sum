@@ -6,6 +6,7 @@ class Solution:
             need = target - nums
             if need in seen:
                 return[seen[need], i]
-            seen[num] = i #否则记录当前索引
+            else:
+                seen[num] = i #否则记录当前索引
 
 

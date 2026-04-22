@@ -23,3 +23,6 @@ class Solution:
             current_level = next_level
 
         return res
+
+#TC：O(N)
+#SC: O(N)
