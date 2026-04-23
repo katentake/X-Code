@@ -13,3 +13,6 @@ class Solution:
                 return False
         
         return not stack #for case like this "(("
+
+#TC: O(N)
+#SC: O(N)

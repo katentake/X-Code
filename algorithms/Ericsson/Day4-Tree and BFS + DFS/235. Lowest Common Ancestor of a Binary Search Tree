@@ -12,3 +12,6 @@ class Solution:
                 pointer = pointer.left
             else:
                 return pointer
+
+#TC: O(H)
+#SC: O(1)/O(N)
