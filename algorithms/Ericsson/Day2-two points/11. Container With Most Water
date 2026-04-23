@@ -18,3 +18,8 @@ class Solution:
                 right -= 1
 
         return max_water
+
+
+
+        TC: O(N)
+        SC: O(1)

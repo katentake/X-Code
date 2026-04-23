@@ -9,3 +9,6 @@ class Solution:
                 slow += 1 #move to right
 
         return slow
+
+TC: O(N)
+SC: O(1)
