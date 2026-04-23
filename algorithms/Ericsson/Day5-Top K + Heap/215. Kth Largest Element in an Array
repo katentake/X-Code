@@ -12,4 +12,5 @@ class Solution:
 
         return min_heap[0] ## 堆顶就是
 
-
+#TC: O(n log k)
+#SC: O(k)

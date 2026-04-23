@@ -21,3 +21,6 @@ class KthLargest:
             heapq.heappop(self.min_heap)
         # 5. 返回当前的堆顶，即为第 k 大
         return self.min_heap[0]
+
+#TC: O(n log k)
+#SC: O(k)

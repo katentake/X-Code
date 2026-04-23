@@ -18,3 +18,6 @@ class LRUCache:
         if len(self.cache) > self.capacity:
             #last=False 弹出最左侧（最早进入）的元素
             self.cache.popitem(last=False)
+
+#TC: O(1)
+#SC: O(capacity)

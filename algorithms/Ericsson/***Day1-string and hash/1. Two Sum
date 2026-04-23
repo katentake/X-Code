@@ -3,7 +3,7 @@ class Solution:
         seen = {}
 
         for i, num in enumerate(nums):
-            need = target - nums
+            need = target - num
             if need in seen:
                 return[seen[need], i]
             else:

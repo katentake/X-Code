@@ -5,7 +5,7 @@ class Solution:
 
         for interval in intervals:
             # 如果表为空（完全无交集），或是当前区间与上一个区间不重叠
-            if not merged and merged[-1][1] < interval[0]:
+            if not merged or merged[-1][1] < interval[0]:
                 merged.append(interval)
             else: #区间重叠，合并当前区间和最后一个区间
                 merged[-1][1] = max(merged[-1][1], interval[1])

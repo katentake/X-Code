@@ -7,7 +7,7 @@ class Solution:
         while left < right:
             #计算当前窗口的容量（right - left）* height
             current_height= min(height[left], height[right]) #取两者中的最小值
-            current_water = (right - left) * height
+            current_water = (right - left) * current_height
 
             max_water = max(max_water, current_water)
 

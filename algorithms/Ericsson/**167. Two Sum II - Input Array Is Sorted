@@ -13,3 +13,6 @@ class Solution:
                 left += 1
 
         return []
+
+#TC: O(N)
+#SC: O(1)
