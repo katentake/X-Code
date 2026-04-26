@@ -11,3 +11,6 @@ class Solution:
                 res[j] += r[j-1]
 
         return res
+
+#TC: O(n*n)
+#SC: O(N)
