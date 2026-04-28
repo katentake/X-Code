@@ -6,9 +6,9 @@ class Solution:
 
         # 起点初始化
         if grid[0][0] == 0:
-            return dp[0] = 1 #代表到达起点游戏开始
-        else:
-            return dp[0] = 0 #起点就是障碍物（值为 1）
+            dp[0] = 1 #代表到达起点游戏开始
+        else:         # grid[0][0] == 1
+            dp[0] = 0 #起点就是障碍物（值为 1）
 
         for i in range(m):
             for j in range(n):

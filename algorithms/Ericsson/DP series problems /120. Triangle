@@ -10,7 +10,6 @@ class Solution:
             # 递归基准：到达最后一行
             if row == n -1:
                 return triangle[row][col]
-
             # 往左下走或右下走，选小的
             return triangle[row][col] + min(dfs(row+1, col), dfs(row+1, col+1))
 

@@ -8,7 +8,7 @@ class Solution:
             # 内层循环：从 i 位置倒序更新到 1 位置
             for j in range(i, 0, -1):
                 # 当前值 = 上一行的当前位置 + 上一行的前一个位置
-                res[j] += r[j-1]
+                res[j] += res[j-1]
 
         return res
 

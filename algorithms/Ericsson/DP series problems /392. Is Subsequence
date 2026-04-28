@@ -10,3 +10,6 @@ class Solution:
             j += 1
         # 如果 i 能够走到 s 的末尾，说明 s 是 t 的子序列
         return i == len(s)
+
+TC: O(T)
+SC: O(1)
