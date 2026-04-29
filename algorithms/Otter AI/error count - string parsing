@@ -1,0 +1,23 @@
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        #corner case
+        if len(s) <= 1:
+            return len(s)
+        #two pointer    
+        left = 0
+        right = 0
+        #hashset 
+        unique_hashset = set()
+        max_length = 0
+
+        while right < len(s):
+            while right < len(s) and s[right] not in unique_hashset: 
+                unique_hashset.add(s[right]) #if not in hashset, add it in
+                right += 1 #move to right, find the bolder
+            max_length = max(max_length, len(unique_hashset)) #compare and find the max one
+
+            unique_hashset.remove(s[left]) #find the left bolder
+            left += 1
+
+        return max_length
+                
