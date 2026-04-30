@@ -1,0 +1,24 @@
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if not s:
+            return ""
+
+        res = ""
+
+        def expand(left, right):
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return s[left+1:right] #即 s[-1 + 1 : 5] -> s[0:5]
+
+        for i in range(len(s)):
+            # 奇数长度扩展 (如 "aba")
+            p1 = expand(i, i)
+            # 偶数长度扩展 (如 "abba")
+            p2 = expand(i, i+1)
+            res = max(res, p1, p2, key=len)
+
+        return res
+
+TC: O(n*n)
+SC: O(1)
