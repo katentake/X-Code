@@ -1,3 +1,18 @@
+import heapq
+
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> list[int]:
-        
+    res = []
+    counter = Counter(nums)
+
+    min_heap = []
+
+    for num, freq in counter.items():
+        if len(min_heap) < k:
+            heapq.heappush(min_heap, (freq, num))
+        else:
+            heapq.heappushpop(min_heap, (freq, num))
+
+    for item in min_heap:
+        res.append(items[1])
+    return res
