@@ -1,0 +1,30 @@
+class RandomizedSet:
+    def __init__(self):
+        #initial 
+        self.list = []
+        self.dict = {}
+
+    def insert(self, val: int) -> bool:
+        if val in self.dict:
+            return False
+        #将新元素加到末尾， 并在哈希表中记录索引
+        self.dict[val] = len(self.list)
+        self.list.append(val)
+        return True
+
+    def remove(self, val: int) -> bool:
+        if val not in self.dict:
+            return False
+        # 1. 获取要删除元素的索引和当前数组最后一个元素
+        last, idx = self.list[-1], self.dict[val]
+        # 2. 将最后一个元素移动到要删除的位置
+        # 注意：这里是用 self.list[idx] 指向最后一个值
+        self.list[idx], self.dict[last] = last, idx
+        # 3. 删除最后一个元素及其在字典中的旧记录
+        self.list.pop()
+        del self.dict[val]
+        
+        return True
+
+    def getRandom(self) -> int:
+        return random.choice(self.list)
