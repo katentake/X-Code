@@ -5,7 +5,7 @@ class Solution:
         dummy.next = head
         prev = dummy
 
-        # 1. 移动 pre 到待反转区间的前一个节点
+        # 1. 移动pre到待反转区间的前一个节点
         for _ in range(left - 1):
             prev = prev.next
 
@@ -19,3 +19,7 @@ class Solution:
             prev.next = nxt
 
         return dummy.next
+
+
+TC: O(N)
+SC: O(1)
