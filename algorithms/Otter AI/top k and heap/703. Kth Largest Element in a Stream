@@ -15,3 +15,5 @@ class KthLargest:
 
         return self.min_heap[0]
 
+#TC: O(n log k)
+#SC: O(k)

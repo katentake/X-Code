@@ -16,3 +16,9 @@ class Solution:
     for item in min_heap:
         res.append(items[1])
     return res
+
+#TC: O(n log k)
+#SC: O(N)
+
+nums = []
+print(topKFrequent(nums, k=2))
