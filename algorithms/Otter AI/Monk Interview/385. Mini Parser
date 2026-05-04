@@ -1,0 +1,3 @@
+calss Solution:
+    def deserialize(self, s: str) -> NestedInteger:
+    

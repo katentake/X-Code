@@ -1,0 +1,25 @@
+from collections import Counter
+import heapq
+
+class Solution:
+    def topKfrequent(self, nums: list[int], k: int) -> list[int]:
+        counter = Counter(nums)
+        res = []
+
+        min_heap = []
+        for num, freq in counter.items():
+            if len(min_heap) < k:
+                heapq.heappush()
+            else:
+                heapq.heappushpop() 
+
+        for item in min_heap:
+            res.append(item[1])
+        return res
+
+nums = []
+print(topKfrequent(nums, k=2))
+
+TC: O(n log k)
+SC: O(n+k)
+

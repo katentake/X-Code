@@ -7,3 +7,6 @@ class Solution:
             key = "".join(sorted(s))
             res[key].append(s)
         return list(res.values())
+
+TC: O(N.KlogK)
+SC: O(N.K)
