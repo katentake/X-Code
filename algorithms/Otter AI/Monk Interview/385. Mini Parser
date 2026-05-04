@@ -1,3 +1,27 @@
 calss Solution:
     def deserialize(self, s: str) -> NestedInteger:
-    
+        if s[0] != '[':
+            return NestedInteger(int())
+        
+        stack = []
+        num, sign = None, 1
+        for i, char in enumerate(s):
+            if char == '-':
+                sign = -1
+            elif char.isdight():
+                if num is None: num = 0
+                num = num*10+int(char)
+            elif char == '[':
+                stack.append(NestedInteger())
+            elif char in ',]':
+                if num is not None:
+                    stack[-1].add(NestedInteger(num*sign))
+                    num, sign = None, 1
+                if char == ']' and len(stack) > 1:
+                    last = stack.pop()
+                    stack[-1].add(last)
+
+        return stack[0]
+
+TC: O(N)
+SC: O(N)
