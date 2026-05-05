@@ -1,3 +1,23 @@
 class Solution:
     def lengthLongestPath(self, input: str) -> int:
-        
+        # depth_map[d] 存储深度为 d 的目录的绝对路径长度
+        # 初始化 -1 是为了抵消第一层级计算路径时多加的那个 '/'
+        depth_map = {-1: 0}
+        max_len = 0
+
+        for line in input.split('\n'):
+            depth = line.rfind('\t') + 1 # 另一种计算深度的方法
+            name = line[depth:]
+
+            if '.' in name:
+                # 文件长度 = 父目录长度 + '/' + 文件名长度
+                full_path_len = depth_map[depth-1] + len(name) + depth
+                max_len = max(max_len, full_path_len)
+            else:
+                # 记录当前目录的长度（不包括 '/'，在计算文件时统一处理）
+                depth_map[depth] = depth_map[depth-1] + len(name)
+
+        return max_len
+
+TC: O(N)
+SC: O(N)

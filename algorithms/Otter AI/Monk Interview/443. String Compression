@@ -1,3 +1,25 @@
 class Solution:
     def compress(self, chars: List[str]) -> int:
-        
+        left = 0  # 写入位置的指针
+        right = 0 # 读取位置的指针
+
+        while right < len(chars):
+            char = chars[right]
+            count = 0
+            # 统计连续重复字符的数量
+            while right < len(chars) and chars[right] == char:
+                right += 1
+                count += 1
+            # 写入字符
+            chars[left] = char
+            left += 1
+            # 如果数量大于 1，写入数字
+            if count > 1:
+                for digit in str(count):
+                    chars[left] = digit
+                    left += 1
+
+        return left
+
+TC: O(N)
+SC: O(1)
