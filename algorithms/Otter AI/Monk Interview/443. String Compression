@@ -4,14 +4,14 @@ class Solution:
         right = 0 # 读取位置的指针
 
         while right < len(chars):
-            char = chars[right]
+            char = chars[right] #赋值给right
             count = 0
             # 统计连续重复字符的数量
             while right < len(chars) and chars[right] == char:
                 right += 1
                 count += 1
             # 写入字符
-            chars[left] = char
+            char = chars[left] #赋值给left
             left += 1
             # 如果数量大于 1，写入数字
             if count > 1:

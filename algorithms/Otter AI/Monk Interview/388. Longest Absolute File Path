@@ -6,16 +6,18 @@ class Solution:
         max_len = 0
 
         for line in input.split('\n'):
-            depth = line.rfind('\t') + 1 # 另一种计算深度的方法
+            # 1. 计算当前深度（即 \t 的个数）
+            depth = line.rfind('\t') + 1 # rfind 是 "Reverse Find" 的缩写，意为从右向左查找指定的字符, 如果没有 \t，rfind 返回 -1，depth 为 0
+            # 2. 获取去掉 \t 之后的文件名或目录名
             name = line[depth:]
 
             if '.' in name:
-                # 文件长度 = 父目录长度 + '/' + 文件名长度
-                full_path_len = depth_map[depth-1] + len(name) + depth
+                # 文件长度 = 父目录总长 + 当前文件名长度
+                full_path_len = depth_map[depth-1] + len(name)
                 max_len = max(max_len, full_path_len)
             else:
-                # 记录当前目录的长度（不包括 '/'，在计算文件时统一处理）
-                depth_map[depth] = depth_map[depth-1] + len(name)
+                # 这里的 +1 是为了在目录后面补一个斜杠 '/'
+                depth_map[depth] = depth_map[depth-1] + len(name) + 1
 
         return max_len
 

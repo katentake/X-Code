@@ -9,9 +9,9 @@ class Solution:
         min_heap = []
         for num, freq in counter.items():
             if len(min_heap) < k:
-                heapq.heappush()
+                heapq.heappush(min_heap, (freq, num))
             else:
-                heapq.heappushpop() 
+                heapq.heappushpop(min_heap, (freq, num)) 
 
         for item in min_heap:
             res.append(item[1])

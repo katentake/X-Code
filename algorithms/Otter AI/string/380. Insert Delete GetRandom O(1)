@@ -16,15 +16,19 @@ class RandomizedSet:
         if val not in self.dict:
             return False
         # 1. 获取要删除元素的索引和当前数组最后一个元素
-        last, idx = self.list[-1], self.dict[val]
+        last, idx = self.list[-1], self.dict[val] #找到替死鬼 (last)：先通过 self.list[-1] 拿到数组里最后一个值； 定位要删的位置 (idx)：通过 self.dict[val] 瞬间找到你要删的那个值在数组的哪个下标
         # 2. 将最后一个元素移动到要删除的位置
         # 注意：这里是用 self.list[idx] 指向最后一个值
         self.list[idx], self.dict[last] = last, idx
         # 3. 删除最后一个元素及其在字典中的旧记录
-        self.list.pop()
-        del self.dict[val]
+        self.list.pop() #删掉末尾那个last
+        del self.dict[val] #从字典里彻底抹除被删掉的 val
         
         return True
 
     def getRandom(self) -> int:
         return random.choice(self.list)
+
+
+TC: O(1)
+SC: O(N)
