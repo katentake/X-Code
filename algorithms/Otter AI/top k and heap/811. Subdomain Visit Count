@@ -3,8 +3,8 @@ class Solution:
         res = Counter()
 
         for cp in cpdomains:
-            count, domain = cp.split()
-            count = int(count)
+            count, domain = cp.split() #第一个元素赋值给变量 count，第二个元素赋值给 domain
+            count = int(count) #转换成int利于之后的数字统计
             frags = domain.split('.')
 
             # 另一种提取子域名的方法：通过 '.' 的位置查找
@@ -19,7 +19,7 @@ SC:
 #res 是一个 Counter（或字典），里面存储的数据结构类似于：{"com": 951, "leetcode.com": 9001}。
 #.items() 会将字典转换成一个可遍历的列表，每个元素是一个元组：[("com", 951), ("leetcode.com", 9001)]。
 
-#在 for k, v in ans.items() 中：
+#在 for k, v in res.items() 中：
 #k (key) 代表域名，如 "com"。
 #v (value) 代表访问次数，如 951。
 #"{} {}".format(v, k)这是字符串格式化操作，用来构造题目要求的 "次数 域名" 格式。
