@@ -42,5 +42,6 @@ class Solution:
             dfs(node.left, level+1)
             dfs(node.right, level+1)
             
-        dfs(root, 0)
+        dfs(root, 0) #表示从root根节点，0是起始层开始
+        
         return res

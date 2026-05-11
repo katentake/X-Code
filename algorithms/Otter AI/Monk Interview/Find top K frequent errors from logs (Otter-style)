@@ -8,7 +8,7 @@ def get_top_k_errors(logs: list[str], k: int) -> list[str]:
         if log.startswith("ERROR "): #startswith("ERROR") 表达的是：“我正在寻找错误类型的日志。”
             # split(" ", 1) 表示只分割第一个空格，取索引 1 的部分即为消息体
             parts = log.split(" ", 1)
-            if len(parts) > 1:
+            if len(parts) >= 1:
                 error_msgs.append(parts[1])
     
     # 2. 使用 Counter 进行计数
@@ -45,18 +45,20 @@ import heapq
 
 def get_top_k_errors_large_file(file_path, k):
     counts = Counter()
-    
+    # 增加 try-except 保护，处理编码或读取错误
+    try:
     # 优化点 1: 流式读取文件，内存占用与文件大小无关
-    with open(file_path, 'r', encoding='utf-8') as f:
-        for line in f:
-            # 优化点 2: 快速过滤，只处理 ERROR 行
-            if line.startswith("ERROR "):
-                # 提取错误消息
-                parts = line.split(" ", 1)
-                if len(parts) > 1:
-                    msg = parts[1].strip()
-                    counts[msg] += 1
-
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                # 优化点 2: 快速过滤，只处理 ERROR 行
+                if line.startswith("ERROR "):
+                    # 提取错误消息
+                    parts = line.split(" ", 1)
+                    if len(parts) >= 1:
+                        msg = parts[1].strip()
+                        counts[msg] += 1
+    except IndexError:
+        return "File not found"
     # 优化点 3: 使用 heap 取得 Top K
     # 如果错误种类也非常多，使用 counts.most_common(k) 
     # 它的内部实现是基于堆的，复杂度为 O(M log K)
