@@ -52,12 +52,17 @@ def get_top_k_errors_large_file(file_path, k):
             for line in f:
                 # 优化点 2: 快速过滤，只处理 ERROR 行
                 if line.startswith("ERROR "):
-                    # 提取错误消息
-                    parts = line.split(" ", 1)
-                    if len(parts) >= 1:
-                        msg = parts[1].strip()
-                        counts[msg] += 1
-    except IndexError:
+                    # 第二层防护：确保这行日志格式正确
+                    try:
+                        # 提取错误消息
+                        parts = line.split(" ", 1)
+                        if len(parts) >= 1:
+                            msg = parts[1].strip() #剔除包括空格、制表符 \t、换行符 \n
+                            counts[msg] += 1
+                    except IndexError:
+                        # 如果这一行格式不对（只有 ERROR 没有内容），跳过它读下一行
+                        continue
+    except FileNotFoundError:
         return "File not found"
     # 优化点 3: 使用 heap 取得 Top K
     # 如果错误种类也非常多，使用 counts.most_common(k) 
