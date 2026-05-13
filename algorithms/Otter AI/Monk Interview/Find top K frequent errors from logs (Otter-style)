@@ -35,6 +35,9 @@ k = 2
 print(get_top_k_errors(logs, k))
 # 输出: ['disk full', 'timeout']
 
+TC: O(n log k)
+SC: O(n+k)
+
 # 面对海量（Massive/Huge）日志数据，面试官考察的是你对内存管理和处理效率的理解。
 # 当日志文件大到无法一次性读入内存（比如 100GB 的 .log 文件）时，直接使用 logs = [...] 这种列表存储方式会导致程序崩溃（OOM - Out of Memory）。
 # 以下是针对海量数据的优化方案：
