@@ -13,8 +13,8 @@ class Solution:
 
         return ["{} {}".format(v, k) for k, v in res.items()]
 
-TC: 
-SC: 
+TC: O(L)
+SC: O(L)
 
 #res 是一个 Counter（或字典），里面存储的数据结构类似于：{"com": 951, "leetcode.com": 9001}。
 #.items() 会将字典转换成一个可遍历的列表，每个元素是一个元组：[("com", 951), ("leetcode.com", 9001)]。
