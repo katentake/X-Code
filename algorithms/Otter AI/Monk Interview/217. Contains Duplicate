@@ -1,0 +1,13 @@
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        #创建一个哈希集合，用于存放已经看到的数字
+        seen = set()
+
+        for num in nums:
+            # 如果当前数字已经在集合里，说明重复
+            if num in seen:
+                return True
+            else: #不在就把当前数字存入集合
+                seen.add(num)
+        return False
+        
