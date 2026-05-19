@@ -3,7 +3,7 @@ class Solution:
         res = Counter()
 
         for cp in cpdomains:
-            count, domain = cp.split() #第一个元素赋值给变量 count，第二个元素赋值给 domain
+            count, domain = cp.split() #第一个元素赋值给变量count，第二个元素赋值给domain
             count = int(count) #转换成int利于之后的数字统计
             frags = domain.split('.')
 
