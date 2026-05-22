@@ -1,0 +1,31 @@
+with open("file.txt", 'r) as f:
+    for line in f:
+        cols = line.strip().split()
+
+        if len(cols) >= 8:
+            key, value = cols[7].split("=")
+            print(key, value)
+
+
+#如果没有 = 怎么办？
+with open("file.txt", 'r') as f:
+    for line in file:
+        cols = line.strip().split()
+
+        if len(cols) >= 8 and "=" in cols[7]:
+            key, value = cols[7].split("=", 1)
+            print(key, value)
+
+#统计 key 出现次数
+from collections import Counter
+
+counter = Counter()
+
+with open("file.txt", 'r') as f:
+    for line in file:
+        cols = line.strip().split()
+
+        if len(cols) >= 8 and "=" in cols[7]:
+            key, value = cols[7].split("=", 1)
+            counter[key] += 1
+print(counter)

@@ -1,0 +1,15 @@
+#实现 tail -f app.log
+
+import time
+
+with open(PATH, 'r') as file:
+    file.seek(0, 2)
+
+    while True:
+        line = file.readline()
+
+        if not line:
+            time.sleep(1)
+            continue
+
+        print(line.strip())
