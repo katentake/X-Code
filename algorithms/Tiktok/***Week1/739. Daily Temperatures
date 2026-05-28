@@ -1,0 +1,17 @@
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        n = len(temperatures)
+        res = [0]*n 
+        stack = [] # 存索引
+
+        for i, t in enumerate(temperatures):
+            # 当栈不为空，且当前温度大于栈顶温度时
+            while stack and t > temperatures[stack[-1]]:
+                prev_index = stack.pop()
+                res[prev_index] = i - prev_index
+            stack.append(i)
+
+        return res
+
+TC: O(N)
+SC: O(N)
