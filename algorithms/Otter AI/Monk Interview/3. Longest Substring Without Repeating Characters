@@ -9,7 +9,7 @@ class Solution:
         max_length = 0
 
         while right < len(s):
-            if right < len(s) and s[right] not in unique_hashset:
+            while right < len(s) and s[right] not in unique_hashset:
                 unique_hashset.add(s[right])
                 right += 1
             max_length = max(max_length, len(unique_hashset))

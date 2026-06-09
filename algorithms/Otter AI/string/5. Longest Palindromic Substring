@@ -9,7 +9,7 @@ class Solution:
             while left >= 0 and right < len(s) and s[left] == s[right]:
                 left -= 1
                 right += 1
-            return s[left+1:right] #即 s[-1 + 1 : 5] -> s[0:5]
+            return s[left+1:right] #即 s[-1 + 1 : 5] -> s[0:5] = s[:5]
 
         for i in range(len(s)):
             # 奇数长度扩展 (如 "aba")
