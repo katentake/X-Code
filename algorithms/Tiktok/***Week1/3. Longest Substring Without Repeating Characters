@@ -21,5 +21,5 @@ class Solution:
         return max_lenght
 
 TC: O(N)
-SC: O(min(m, n)
+SC: O(min(m, n))
 
