@@ -8,8 +8,8 @@ class Solution:
             # 当栈不为空，且当前温度大于栈顶温度时
             while stack and t > temperatures[stack[-1]]:
                 prev_index = stack.pop()
-                res[prev_index] = i - prev_index
-            stack.append(i)
+                res[prev_index] = i - prev_index # 计算天数差
+            stack.append(i) # 当前索引入栈
 
         return res
 
