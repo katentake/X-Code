@@ -1,0 +1,30 @@
+class HitCounter:
+
+    def __init__(self):
+        # 固定大小为 300 的数组
+        self.times = [0] * 300
+        self.counts = [0] * 300
+
+
+    def hit(self, timestamp: int) -> None:
+        index = timestamp % 300
+        # 如果当前格子的时间戳和当前一样，说明是同一秒内的多次点击，累加计数
+        if self.times[index] == timestamp:
+            self.counts[index] += 1
+        else:
+            # 如果不是，说明之前的那个 300 秒周期的数据已经过期，直接覆盖
+            self.times[index] = timestamp
+            self.counts[index] = 1 # 重置计数为 1
+
+
+    def getHits(self, timestamp: int) -> int:
+        total_hits = 0
+        # 遍历 300 个桶，只累加没有过期的有效点击
+        for i in range(300):
+            if timestamp - self.times[i] < 300:
+                total_hits += self.counts[i]
+
+        return total_hits
+
+TC: O(1) #hit O(1); getHits: O(300) = O(1)
+SC: O(1)

@@ -1,0 +1,45 @@
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        if not heights or not heights[0]:
+            return []
+
+        m, n = len(heights), len(heights[0])
+        pacific = [[False]*n for _ in range(m)]
+        atlantic = [[False]*n for _ in range(m)]
+
+        def dfs(r, c, reachable):
+            # 标记当前格子可达
+            reachable[r][c] = True
+            # 四个方向扩散：上下左右
+            directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+            for dr, dc in directions:
+                nr, nc = r+dr, c+dc
+                # 检查边界条件
+                if 0 <= nr < m and 0 <= nc < n:
+                    # 只有未被访问过，且高度“大于等于”当前格子（逆流而上），才能继续扩散
+                    if not reachable[nr][nc] and heights[nr][nc] >= heights[r][c]:
+                        dfs(nr, nc, reachable)
+
+        
+        # 1. 从左右边界出发扩散
+        for i in range(m):
+            dfs(i, 0, pacific)  # 左边界 -> 太平洋
+            dfs(i, n-1, atlantic)  # 右边界 -> 大西洋
+
+        # 2. From 上下边界出发扩散
+        for j in range(n):
+            dfs(0, j, pacific)  # 上边界 -> 太平洋
+            dfs(m-1, j, atlantic)  # 下边界 -> 大西洋
+
+        # 3. 找出交集
+        res = []
+        for i in range(m):
+            for j in range(n):
+                if pacific[i][j] and atlantic[i][j]:
+                    res.append([i, j])
+        return res
+
+TC: O(m*n)
+SC: O(m*n)
+
+
