@@ -1,0 +1,75 @@
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        # 哨兵节点，方便处理头部边界
+        dummy = ListNode(0)
+        dummy.next = head
+        prev_group_end = dummy
+
+        while True:
+            # 1. 检查接下来是否有足够的 k 个节点
+            curr_group_end = prev_group_end
+            for _ in range(k):
+                curr_group_end = curr_group_end.next
+                if not curr_group_end:
+                    return dummy.next  # 不足 k 个，剩下的不翻转，直接返回
+
+            # 记录下一组的起点以及当前组的起点
+            next_group_start = curr_group_end.next
+            curr_group_start = prev_group_end.next
+
+            # 2. 翻转当前长为 k 的局部链表
+            prev = next_group_start  # 翻转后的尾部直接指向下一组的开头
+            curr = curr_group_start
+            for _ in range(k):
+                nxt = curr.next
+                curr.next = prev
+                prev = curr
+                curr = nxt
+
+            # 3. 将上一组的尾部连接到当前翻转后的新头部（即原来的 curr_group_end）
+            prev_group_end.next = curr_group_end
+
+            # 4. 移动指针，让原来的起点成为下一轮的“上组尾部”
+            prev_group_end = curr_group_start
+
+TC: O(N)
+SC: O(1)
+
+###不足k个也要翻转，代码如下
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        dummy = ListNode(0)
+        dummy.next = head
+        prev_group_end = dummy
+        
+        while prev_group_end.next:
+            # 1. 统计接下来这一组实际有多少个节点（最多计算到 k 个）
+            curr_group_end = prev_group_end
+            actual_count = 0
+            for _ in range(k):
+                if curr_group_end.next:
+                    curr_group_end = curr_group_end.next
+                    actual_count += 1
+                else:
+                    break
+            
+            # 记录下一组的起点以及当前组的起点
+            next_group_start = curr_group_end.next
+            curr_group_start = prev_group_end.next
+            
+            # 2. 翻转当前局部链表（步数改为实际统计出来的 actual_count）
+            prev = next_group_start
+            curr = curr_group_start
+            for _ in range(actual_count):  # 👈 核心修改：按实际剩余数量翻转
+                nxt = curr.next
+                curr.next = prev
+                prev = curr
+                curr = nxt
+                
+            # 3. 将上一组的尾部连接到新头部
+            prev_group_end.next = curr_group_end
+            
+            # 4. 移动指针，进入下一轮
+            prev_group_end = curr_group_start
+            
+        return dummy.next
