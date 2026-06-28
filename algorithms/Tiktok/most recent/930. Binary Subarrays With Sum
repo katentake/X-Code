@@ -1,0 +1,17 @@
+class Solution:
+    def numSubarraysWithSum(self, nums: List[int], goal: int) -> int:
+        count = {0:1}
+        res = 0
+        curr_sum = 0
+
+        for num in nums:
+            curr_sum += num&1
+            if curr_sum - k in count:
+                res += count[curr_sum - k]
+            count[curr_sum] = count.get(curr_sum, 0) + 1
+
+        return res
+
+
+TC: O(N)
+SC: O(N)

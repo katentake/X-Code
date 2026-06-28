@@ -73,3 +73,6 @@ class Solution:
             prev_group_end = curr_group_start
             
         return dummy.next
+
+TC: O(N)
+SC: O(1)

@@ -1,0 +1,14 @@
+class Solution:
+    def majorityElement(self, nums: List[int]) -> List[int]:
+        count = Counter(nums)
+        res = []
+        target = len(nums) // 3
+
+        for num, freq in count.items():
+            if freq > target:
+                res.append(num)
+
+        return res
+
+TC: O(N)
+SC: O(N)
