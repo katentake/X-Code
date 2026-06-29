@@ -6,8 +6,8 @@ class Solution:
 
         for num in nums:
             curr_sum += num&1
-            if curr_sum - k in count:
-                res += count[curr_sum - k]
+            if curr_sum - goal in count:
+                res += count[curr_sum - goal]
             count[curr_sum] = count.get(curr_sum, 0) + 1
 
         return res

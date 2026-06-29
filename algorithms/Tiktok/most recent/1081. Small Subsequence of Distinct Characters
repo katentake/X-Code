@@ -1,0 +1,24 @@
+#Same answer with LC: 316 remove duplicate remove Duplicate Letters
+Method: 频数统计的单调栈
+class Solution:
+    def smallestSubsequence(self, s: str) -> str:
+        count = Counter(s)
+        stack = []
+        visited = set()
+
+        for char in s:
+            count[char] -= 1
+
+            if char in visited:
+                while stack and char < stack[-1] and count[stack[-1]] > 0:
+                    removed_char = stack.pop()
+                    visited.remove(removed_char)
+
+                stack.append(char)
+                visited.add(char)
+
+        return "".join(stack)
+
+TC: O(N)
+SC: O(1)
+
