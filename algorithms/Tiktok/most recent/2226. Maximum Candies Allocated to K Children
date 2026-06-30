@@ -1,0 +1,27 @@
+class Solution:
+    def maximumCandies(self, candies: List[int], k: int) -> int:
+        # 如果所有糖果加起来都少于 k，每个人连 1 个都分不到
+        if sum(candies) < k:
+            return 0
+
+        # 二分搜索的范围 [1, max(candies)]
+        low, high = 1, max(candies)
+        res = 0
+
+        while low <= high:
+            mid = (low + high) // 2
+            # 计算以当前每个孩子 mid 个糖果分配，一共可以分给多少个孩子
+            total_piles = sum(c // mid for c in candies)
+
+            if total_piles >= k:
+                # 能够满足 k 个孩子，记录当前可行解，并尝试更大的分配数
+                res = mid
+                low = mid +1
+            else:
+                high = mid -1
+
+        return res 
+
+
+TC: O(n log m)
+SC: O(1)
