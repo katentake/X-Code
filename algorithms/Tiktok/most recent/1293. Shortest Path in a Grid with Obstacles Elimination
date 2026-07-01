@@ -5,11 +5,15 @@ from collections import deque
 class Solution:
     def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
         n = len(grid)
-
+        #边界情况：如果起点或是终点本身就是1(障碍物)，直接无解
         if grid[0][0] == 1 or grid[n-1][n-1] == 1:
             return -1
-
+        #队列存储：（行，列，当前长度）
+        #从起点（0,0）开始，初始长度为1
         queue = deque([(0, 0, 1)])
+        #将起点标记为已访问（通过将其修改为1）
+        grid[0][0] = 1
+        #定义8个方向
         directions = [
             (-1, -1), (-1, 0), (-1, 1),
             (0, -1),           (0, 1),
@@ -18,13 +22,15 @@ class Solution:
 
         while queue:
             r, c, path = queue.popleft()
+            #如果到达了右下角终点，因为是BFS, 这必然是最短路径。直接返回
             if r == n-1 and c == n-1:
                 retrun path
             
             for dr, dc in directions:
                 nr, nc = r+dr, c+dc
-
+                #检查边界条件，并且下一个格子必须是0（通路）
                 if 0 <= nr < n and 0 <= nc < n and grid[nr][nc] == 0:
+                    #标记为已访问，防止重复入队
                     grid[nr][nc] = 1
                     queue.append((nr, nc, path+1))
 
