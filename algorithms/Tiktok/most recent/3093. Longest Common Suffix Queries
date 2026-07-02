@@ -1,0 +1,57 @@
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        # 记录经过当前节点的最优字符串索引
+        self.best_idx = -1
+
+    
+class Solution:
+    def stringIndices(self, wordsContainer: list[str], wordsQuery: list[str]) -> list[int]:
+        root = TrieNode
+
+        # 预先找到全局最优的索引（用于没有任何公共后缀时的兜底答案）
+        global_best_idx = 0
+        for i in range(1, len(wordsContainer)):
+            if len(wordsContainer[i]) < len(wordsContainer[global_best_idx]):
+                global_best_idx = i 
+
+        root.best_idx = global_best_idx
+
+        # 1. 构建字典树
+        for i, word in enumerate(wordsContainer):
+            curr = root
+            # 反转字符串，从后往前遍历
+            for char in reversed(word):
+                if char not in curr.children:
+                    curr.children[char] = TrieNode()
+                curr = curr.children[char]
+
+                # 更新当前节点的最优索引
+                if curr.best_idx == -1:
+                    curr.best_idx = i 
+                else:
+                    curr_len = len(wordsContainer[curr.best_idx])
+                    new_len = len(wordsContainer[i])
+                    # 长度更小，或者长度相同但出现更早
+                    if new_len < curr_len:
+                        curr.best_idx = i 
+
+        # 2. 查询最优后缀
+        ans = []
+        for query in wordsQuery:
+            curr = root
+            res_idx = root.best_idx 
+            # 同样反转查询字符串
+            for char in reversed(query):
+                if char in curr.children:
+                    curr = curr.children[char]
+                    res_idx = curr.best_idx
+                else:
+                    break
+            ans.append(res_idx)
+
+        return ans
+
+
+TC: O(Σ|W_c|+Σ|W_q|)
+SC: O(Σ.Σ|W_c|)

@@ -1,3 +1,4 @@
+#解法一：迭代法
 class Solution:
     def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
         # 哨兵节点，方便处理头部边界
