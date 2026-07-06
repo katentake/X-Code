@@ -188,4 +188,4 @@ order:
 
 payment:
   replicaCount: 2
-  image: "mini-payment:v1.0.0.v"
+  image: "mini-payment:v1.0.0"
