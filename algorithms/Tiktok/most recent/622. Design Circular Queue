@@ -1,0 +1,46 @@
+class MyCircularQueue:
+
+    def __init__(self, k: int):
+        self.k = k
+        self.queue = [0] * k
+        self.head = 0
+        self.count = 0  # 当前队列里的有效元素个数
+
+    def enQueue(self, value: int) -> bool:
+        if self.isFull():
+            return False
+        # 队尾插入位置：(队头 + 当前个数) % 容量
+        tail_index = (self.head + self.count) % self.k
+        self.queue[tail_index] = value
+        self.count += 1
+        return True
+
+    def deQueue(self) -> bool:
+        if self.isEmpty():
+            return False
+        # 队头向后移动一位，注意循环取模
+        self.head = (self.head + 1) % self.k
+        self.count -= 1
+        return True
+
+    def Front(self) -> int:
+        if self.isEmpty():
+            return -1
+        return self.queue[self.head]
+
+    def Rear(self) -> int:
+        if self.isEmpty():
+            return -1
+        # 队尾真实索引
+        tail_index = (self.head + self.count - 1) % self.k
+        return self.queue[tail_index]
+
+    def isEmpty(self) -> bool:
+        return self.count == 0
+
+    def isFull(self) -> bool:
+        return self.count == self.k
+        
+
+TC: O(1)
+SC: O(k)
