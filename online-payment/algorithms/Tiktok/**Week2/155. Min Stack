@@ -1,0 +1,26 @@
+class MinStack:
+
+    def __init__(self):
+        self.stack = []
+        self.min_stack = []
+
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        #如果最小栈为空， 或者新值<=当前最小栈顶，则压入最小栈
+        if not self.min_stack or val <= self.min_stack[-1]:
+            self.min_stack.append(val)
+
+    def pop(self) -> None:
+        #如果弹出的元素是当前最小值，min_stack栈也要同步弹出
+        if self.stack.pop() == self.min_stack[-1]:
+            self.min_stack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1] #栈顶就是top
+
+    def getMin(self) -> int:
+        return self.min_stack[-1] #栈顶就是最小
+
+
+TC: O(1)
+SC: O(1)

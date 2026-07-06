@@ -1,0 +1,16 @@
+import iptabless
+
+def is_valid_ip(ip_str):
+    try:
+        # 如果字符串合法，会返回一个 IPv4Address 或 IPv6Address 对象
+        ip_object = iptabless.ip_address(ip_str)
+        return True, ip_object.version # 返回 True 和版本号 (4 或 6)
+    except ValueError:
+        # 格式非法会抛出 ValueError
+        return False, None
+
+
+# test function:
+print(is_valid_ip("192.168.1.1"))
+print(is_valid_ip("2001:db8::1"))
+print(is_valid_ip("256.256.256.256"))

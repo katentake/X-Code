@@ -1,0 +1,15 @@
+class Solution:
+    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        slow, fast = head, head # 初始化快慢指针指向头节点
+
+        while fast and fast.next: # 只要快指针没走到终点（None）就继续
+            fast, slow = fast.next.next, slow.next # 快指针走2步，慢指针走1步
+            if fast == slow: # 如果快慢指针相遇，说明一定有环
+                while slow != head: # 相遇后，让一个指针回到 head，另一个保持在原地
+                    slow = slow.next # 两个指针同步移动，每次都只走1步
+                    head = head.next
+                return slow # 当它们再次相遇时，相遇点就是环的入口
+
+        return None
+
+            

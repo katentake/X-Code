@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: default
+spec:
+  serviceName: "postgres-service" # ⚡️必须指定绑定上面那个 Headless Service 的名字
+  replicas: 1                     # 练手先起 1.0 个节点，后续面试可以吹怎么扩容成主从
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine # 选一个轻量稳定的官方 Postgres 镜像
+        ports:
+        - containerPort: 5432
+          name: dbport
+        env:
+        # ⚡️生产环境这些应该进 Secret，这里为了极简练手直接写明
+        - name: POSTGRES_DB
+          value: "ecommerce"
+        - name: POSTGRES_USER
+          value: "terry"
+        - name: POSTGRES_PASSWORD
+          value: "supersecretpwd"
+        
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        
+        # 容器内挂载点：Postgres 默认的数据存储路径
+        volumeMounts:
+        - name: pg-data
+          mountPath: /var/lib/postgresql/data
+  
+  # ⚡️大厂面试核心：声明式动态存储供给模板
+  volumeClaimTemplates:
+  - metadata:
+      name: pg-data               # 对应上面 volumeMounts 的 name
+    spec:
+      accessModes: [ "ReadWriteOnce" ] # 该卷只能被单个 Node 挂载进行读写
+      resources:
+        requests:
+          storage: 1Gi            # 本地练手，给 1GB 足够了

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service # 它的名字就是集群内的 DNS 域名
+  namespace: default
+spec:
+  type: ClusterIP # 默认类型，仅集群内部可访问，安全！
+  selector:
+    app: order-service # ⚡️极其重要：靠这个标签去勾搭上面 Pod 里的 labels.app
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80         # Service 暴露的端口（集群内其他服务访问它时敲 80）
+    targetPort: 5000 # 对应后端 Pod 容器里真正监听的端口（Flask 的 5000）

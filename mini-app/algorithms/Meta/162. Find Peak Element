@@ -1,0 +1,13 @@
+#方法：二分查找
+class Solution:
+    def findPeakElement(self, nums: List[int]) -> int:
+        left, right = 0, len(nums)-1
+
+        while left < right: #condition left < right
+            mid = (left + right) // 2  #find the mid number
+            if nums[mid] < nums[mid+1]: #上升趋势：峰值在右边
+                left = mid+1 #左边要向右移动
+            else: #向下趋势：峰值在中间或是左边
+                right = mid
+
+        return left #当left == right时，返回left就是峰值

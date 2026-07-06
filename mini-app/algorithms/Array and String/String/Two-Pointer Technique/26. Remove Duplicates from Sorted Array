@@ -1,0 +1,10 @@
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        count = 0 #这是慢指针，用来记录“下一个不重复元素”应该存放的位置下标，第一个元素 nums[0] 肯定是不重复的，所以我们从 0 开始
+
+        for i in range(len(nums)): #i 是快指针，用来遍历整个数组，寻找与当前 count 位置不同的新元素
+            if nums[count] != nums[i]: #如果它们不等，说明快指针找到了一个新的不同元素
+                count += 1 
+                nums[count] = nums[i] #将快指针找到的新元素值，覆盖复制到慢指针的新位置上。这就实现了原地修改（In-place）
+
+        return count + 1 #由于 count 是索引（从 0 开始），而题目要求返回的是新数组的长度，所以需要返回 count + 1

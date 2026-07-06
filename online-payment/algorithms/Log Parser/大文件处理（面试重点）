@@ -1,0 +1,7 @@
+# 如果日志 100GB 怎么办？
+#用streaming,这样内存不会爆掉
+
+with open(file_path, 'r') as f:
+    for line in f:
+        process(line)
+ 

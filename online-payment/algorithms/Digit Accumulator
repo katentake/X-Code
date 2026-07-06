@@ -1,0 +1,16 @@
+class Solution:
+    def sum_of_digits(s: str) -> int:
+        """
+        计算字符串中所有数字位的总和。
+        即使格式非法（如 "1.2.3" 或 "a1b2"），也会提取所有数字进行累加。
+        """
+        if not s:
+            return 0
+
+        total_sum = 0
+        # 遍历字符串中的每一个字符
+        for char in s:
+            if char.isdigit():
+                total_sum += int(char) # 将字符转为整数并累加
+        
+        return total_sum

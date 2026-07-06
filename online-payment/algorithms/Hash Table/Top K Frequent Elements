@@ -1,0 +1,21 @@
+from collections import Counter
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        # 1. 统计频率：{数字: 次数}
+        count = Counter(nums)
+
+        # 2. 桶排序：下标 i 表示出现次数，内容是出现 i 次的数字列表
+        # 长度为 len(nums) + 1，因为次数可能从 0 到 n
+        buckets = [[] for _ in range(len(nums)+1)]
+
+        for num, freq in count.items():
+            buckets[freq].append(num)
+
+        # 3. 倒序收集结果（从出现次数最高的桶开始
+        res = []
+        for i in range(len(buckets)-1, 0, -1):
+            for n in buckets:
+                res.append(n)
+                if len(res) == k:
+                    return res

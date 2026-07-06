@@ -1,0 +1,28 @@
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        #Edge case
+        if not root:
+            return []
+
+        res = []
+        current_level = [root]
+
+        while current_level:
+            # 记录当前层所有节点的值
+            vals = []
+            for node in current_level:
+                vals.append(node.val)
+            res.append(vals)
+            # 构建下一层节点的列表
+            next_level = []
+            for node in current_level:
+                if node.left:
+                    next_level.append(node.left)
+                if node.right:
+                    next_level.append(node.right)
+            current_level = next_level
+
+        return res
+
+#TC：O(N)
+#SC: O(N)

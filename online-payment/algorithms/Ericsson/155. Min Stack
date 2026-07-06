@@ -1,0 +1,22 @@
+class Solution:
+    def __init__(self):
+        self.stack = []
+        self.min_stack = []
+
+    def push(self, val: int) -> None:
+        #先把值加入第一个栈
+        self.stack.append(val)
+        # 如果最小栈为空，或者新值小于等于当前最小栈顶，则压入最小栈
+        if not self.min_stack or val <= self.min_stack[-1]:
+            self.min_stack.append(val)
+
+    def pop(self) -> None:
+        # 如果弹出的元素正好是当前的最小值，最小栈也要同步弹出
+        if self.stack.pop() == self.min_stack[-1]:
+            self.min_stack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.min_stack[-1]

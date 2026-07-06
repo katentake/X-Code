@@ -1,0 +1,27 @@
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val: int = 0, left: 'Node' = None, right: 'Node' = None, next: 'Node' = None):
+        self.val = val
+        self.left = left
+        self.right = right
+        self.next = next
+"""
+#DFS
+class Solution:
+    def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
+        if not root or not root.left:
+            return root
+
+        # 连接左右子节点
+        root.left.next = root.right
+
+        # 如果当前节点有 next（即有右邻居），则连接跨越父节点的两个子节点
+        if root.next:
+            root.right.next = root.next.left
+
+        # 递归处理左子树和右子树
+        self.connect(root.left)
+        self.connect(root.right)
+
+        return root

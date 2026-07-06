@@ -1,0 +1,20 @@
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        # 初始化两个指针，分别指向两条链表的头
+        p1 = headA
+        p2 = headB
+
+        while p1 != p2: # 只要两个指针指向的节点不同，就继续循环
+            if not p1:
+                p1 = headB # 如果指针 1 走到 A 的末尾（None），则跳到链表 B 的头
+            else:
+                p1 = p1.next # 否则，向后移一步
+
+            if not p2:
+                p2 = headA # 如果指针 2 走到 B 的末尾（None），则跳到链表 A 的头
+            else:
+                p2 = p2.next # 否则，向后移一步
+        # 退出循环有两种情况：
+        # 1. pointer1 == pointer2 (找到相交点)
+        # 2. pointer1 == pointer2 == None (两条链表不相交，都走完了 A+B 的全程)
+        return p2

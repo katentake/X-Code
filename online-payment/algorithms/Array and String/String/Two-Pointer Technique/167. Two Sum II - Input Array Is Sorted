@@ -1,0 +1,14 @@
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        left, right = 0, len(numbers)-1 ##初始化两个指针。left 指向数组的第一个元素（下标 0），right 指向数组的最后一个元素
+
+        while left < right:
+            curr_sum = numbers[left]  + numbers[right] #计算当前左右指针所指向的两个数字之和
+            if curr_sum = target:
+                return [left+1, right+1] #题目要求返回 从 1 开始计数 的索引（1-indexed），而 Python 数组下标是从 0 开始的，所以需要给 left 和 right 分别加 1
+            elif curr_sum < target:
+                left += 1
+            else:
+                right -= 1
+        
+        return [] #如果在整个循环结束后都没有找到目标值（虽然题目保证了必有一解），则返回空列表

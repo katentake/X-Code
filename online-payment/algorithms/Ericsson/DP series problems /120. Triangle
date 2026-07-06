@@ -1,0 +1,19 @@
+#自顶向下递归 + 记忆化（Top-down）
+from functools import lru_cache
+
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        n = len(triangle)
+
+        @lru_cache(None)
+        def dfs(row, col):
+            # 递归基准：到达最后一行
+            if row == n -1:
+                return triangle[row][col]
+            # 往左下走或右下走，选小的
+            return triangle[row][col] + min(dfs(row+1, col), dfs(row+1, col+1))
+
+        return dfs(0, 0) #从三角形的“顶点”（即第 0 行，第 0 列）开始向下寻找最小路径和
+
+TC: O(n*n)
+SC: O(n*n)

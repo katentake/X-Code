@@ -1,0 +1,23 @@
+from typing import List, Dict, Any
+
+class HealthAggregator:
+    def aggregate_health_check(self, health_checks: List[Dict[str, Any]]) --> Dict[str, str]:
+        status_weights = {"Critical": 3, "Warning": 2, "Healthy": 1, "Unknown": 0}
+
+        weight_to_status = {v: k for k, v in status_weights.item()}
+
+        service_summary = {}
+
+        for check in health_checks:
+            name = check.get("service_name")
+            status = check.get("status","Unknown")
+            weight = status_weights.get(status, 0)
+
+            if name not in service_summary:
+                service_summary[name] = weight
+            else:
+                service_summary[name] = max(service_summary[name], weight)
+        return {
+            name: weight_to_status.get(weight, "Unknown")
+            for name, weight in service_summary.items()
+        }

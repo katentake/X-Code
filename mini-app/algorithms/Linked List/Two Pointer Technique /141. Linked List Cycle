@@ -1,0 +1,10 @@
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        slow, fast = head, head #两个指针都从head出发
+
+        while fast and fast.next: #快指针每次移动两格，所以需要fast，和fast.next都不为空
+            fast, slow = fast.next.next, slow.next ##快指针每次向后移动 2个节点；慢指针每次向后移动 1个 节点
+            if fast == slow:
+                return True
+        
+        return False

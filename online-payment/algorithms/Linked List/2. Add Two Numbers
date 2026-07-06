@@ -1,0 +1,26 @@
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode(0)
+        p = dummy
+        carry = 0
+        
+    # 只要 l1, l2 没走完，或者还有进位 carry，就继续循环
+    while l1 or l2 or carry:
+        # 获取当前节点的值，如果链表已空则取 0
+        v1 = l1.val if l1 else 0
+        v2 = l2.val if l2 else 0
+
+        # 计算总和与进位
+        total = v1 + v2 + carry
+        carry = total // 10
+        val = total % 10 # 关键：必须取模，确保存入的是个位数
+
+        # 创建新节点
+        p.next = ListNode(val)
+
+        # 移动指针
+        p = p.next
+        if l1: l1 = l1.next
+        if l2: l2 = l2.next
+
+    return dummy.next

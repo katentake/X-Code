@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mini-mall-ingress
+  namespace: default
+  annotations:
+    # ⚡️面试必杀注解：重写路径（Nginx Ingress 核心功能）
+    # 因为前端请求带了 /order，但后端的 Flask 并不知道这个前缀，需要剥离它
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: nginx # 指定使用刚才安装的 Ingress-Nginx Controller
+  rules:
+  - host: mini-mall.local # 我们的测试域名
+    http:
+      paths:
+      # 1. 路由到 Order Service
+      - path: /order/?(.*)   # 匹配 /order 以及后面的所有路径，并捕获为 $1
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: order-service
+            port:
+              number: 80     # 对应 order-service Service 暴露的端口
+      
+      # 2. 路由到 Payment Service
+      - path: /payment/?(.*) # 匹配 /payment 后面的路径
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: payment-service
+            port:
+              number: 80     # 对应 payment-service Service 暴露的端口

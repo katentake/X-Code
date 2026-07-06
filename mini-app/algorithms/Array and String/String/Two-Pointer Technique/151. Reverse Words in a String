@@ -1,0 +1,11 @@
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        s = s.split() #先将string转换成一个list
+
+        left, right = 0, len(s)-1: #用two pointer 指向两端
+        while left < right:
+            s[left], s[right] = s[right], s[left] #前后对调
+            left += 1
+            right -= 1
+
+        return " ".join(s) #将List 转换成 string 

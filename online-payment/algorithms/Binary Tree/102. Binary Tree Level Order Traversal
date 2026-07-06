@@ -1,0 +1,28 @@
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if not root:
+            return []
+        res = []
+        queue = deque([root]) # 初始化队列，将根节点放入
+
+        while queue:
+            level_size = len(queue) # 当前层的节点个数
+            curr_level = [] # 存储当前层节点值的列表
+
+            # 必须固定循环次数为 level_size，以保证只处理当前层的节点
+            for _ in range(level_size):
+                node = queue.popleft() # 弹出最左侧节点
+                curr_level.append(node.val)
+
+                # 将下一层的子节点入队
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+
+            # 当前层处理完毕，加入结果集
+            res.append(curr_level)
+
+        return res
+
+

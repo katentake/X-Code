@@ -1,0 +1,25 @@
+class Solution:
+    def lengthofLongestSubstring(self, s: str) -> int:
+        if len(s) <= 1:
+            return len(s)
+
+        left = 0
+        right = 0
+
+        unique_hashset = set()
+        max_lenght = 0
+
+        while right < len(s):
+            while right < len(s) and s[right] not in unique_hashset:
+                unique_hashset.add(s[right])
+                right += 1
+            max_lenght = max(max_lenght, len(unique_hashset))
+
+            unique_hashset.remove(s[left])
+            left += 1
+
+        return max_lenght
+
+TC: O(N)
+SC: O(min(m, n))
+

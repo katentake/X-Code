@@ -1,0 +1,18 @@
+class Solution:
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        #定义一个函数：如果是平衡的，返回高度；如果不平衡，返回 -1
+        def get_height(root):
+            if not root:
+                return 0
+            left_height, right_height = get_height(root.left), get_height(root.right) #同时对左子节点和右子节点进行递归调用。
+            if left_height == -1: return -1 # 左子树已经不平衡了
+            if right_height == -1: return -1 # 右子树已经不平衡了
+
+            # 核心判断：高度差大于 1 则不平衡
+            if abs(left_height - right_height) > 1:
+                return -1
+
+            # 返回当前节点的高度
+            return max(left_height, right_height) +1
+
+        return get_height(root) != -1

@@ -1,0 +1,57 @@
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        # 1. 合并两个 List 并排序
+        # Python 中合并两个 list 最直接的方法是使用 + 运算符
+        merged = nums1 + nums2
+        merged.sort()
+        
+        n = len(merged)
+        
+        # 2. 找到中间的索引 (使用 // 整除)
+        mid = n // 2
+        # 3. 对长度进行判断
+        if n % 2 == 1:
+            return float(merged[mid])
+        else:
+            # 如果长度是偶数，取中间两个数的平均值
+            # 对应的两个下标分别是 mid-1 和 mid
+            return (merged[mid-1]+merged[mid]) / 2.0
+
+#时间复杂度是 O((m+n) \log(m+n))（因为涉及排序）
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        # 确保 nums1 是较短的数组，这样二分查找更快，且 j 不会变成负数
+        if len(nums1) > len(nums2):
+            return self.findMedianSortedArrays(nums2, nums1)
+        
+        m, n = len(nums1), len(nums2)
+        left, right = 0, m
+        half_len = (m+n+1) // 2
+        
+        while left <= right:
+            # i 是 nums1 的分割点，j 是 nums2 的分割点
+            i = (left+right) // 2
+            j = half_len - i
+            
+            # 边界处理：如果分割点在最左或最右，用无穷大/小代替
+            nums1_left_max = nums1[i-1] if i > 0 else float('-inf')
+            nums1_right_min = nums1[i] if i < m else float('inf')
+            nums2_left_max = nums2[j-1] if j > 0 else float('-inf')
+            nums2_right_min = nums2[j] if j < n else float('inf')
+            
+            # 判断分割是否正确
+            if nums1_left_max <= nums2_right_min and nums2_left_max <= nums1_right_min:
+                # 找到正确的分割点
+                if(m+n)%2 == 1:
+                    return float(max(nums1_left_max, nums2_left_max))
+                else:
+                    return (max(nums1_left_max, nums2_left_max) +  min(nums1_right_min, nums2_right_min)) / 2.0
+                
+            elif nums1_left_max > nums2_right_min:
+                # nums1 左边太大，i 需要左移
+                right = i-1
+            else:
+                # nums1 左边太小，i 需要右移
+                left = i + 1
+            

@@ -1,0 +1,16 @@
+from collections import defaultdict
+
+class Solution:
+    def groupAnagrams(self, str: List[str]) -> List[List[int]]:
+        # 使用 defaultdict 避免手动检查 key 是否存在
+        res = defaultdict(List)
+
+        for s in strs:
+            # sorted(s) 返回列表，list 不能做 key，需转为 tuple
+            key = tuple(sorted(s))
+            res[key].append(s)
+
+        return List(res.values())
+
+#TC: O(n . k log k)$
+#SC: O(n.k)

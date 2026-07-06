@@ -1,0 +1,23 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
+        # 辅助函数：通过左右边界来构建子树
+        def helper(left, right):
+            if left > right: # 终止条件：如果左边界超过右边界，说明区间为空
+                return None
+            
+            mid = (left + right) // 2
+            node = TreeNode(nums[mid])
+
+            node.left = helper(left, mid -1) # 递归构建左子树（区间变为 left 到 mid-1
+            node.right = helper(mid+1, right) # 递归构建右子树（区间变为 mid+1 到 right
+
+            return node
+
+        return helper(0, len(nums)-1)
+

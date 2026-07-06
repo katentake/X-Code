@@ -1,0 +1,24 @@
+import heapq
+
+class KthLargest:
+
+    def __init__(self, k: int, nums: List[int]):
+        self.k = k 
+        self.min_heap = nums
+        # 1. 将初始数组转化为堆
+        heapq.heapify(self.min_heap)
+
+        # 2. 只保留最大的 k 个元素
+        while len(self.min_heap) > k:
+            heapq.heappop(self.min_heap)
+
+    def add(self, val: int) -> int:
+        # 1. 将新值加入堆
+        heapq.heappush(self.min_heap, val)
+
+        # 2. 如果超过了 k 个，弹出最小的那个
+        if len(self.min_heap) > self.k:
+            heapq.heappop(self.min_heap)
+
+        # 3. 现在的堆顶就是第 k 大的元素
+        return self.min_heap[0]

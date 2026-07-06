@@ -1,0 +1,25 @@
+class Solution:
+    def findDiagonalOrder(self, mat: List[List[int]]) -> List[int]:
+        if not mat or not mat[0]:
+            return []
+
+        m, n = len(mat), len(mat[0])
+        # 使用哈希表存储每一条对角线上的元素
+        # Key 是 r + c，Value 是该对角线上的元素列表
+        diagonals = defaultdict(list)
+
+        for r in range(m):
+            for c in range(n):
+                diagonals[r+c].append(mat[r][c])
+
+        res = []
+        # 遍历所有可能的和 (从 0 到 m + n - 2)
+        for s in range(m+n-1):
+            # 偶数对角线：从下往上，需要翻转
+            if s % 2 == 0:
+                res.extend(diagonals[s][::-1]
+            # 奇数对角线：从上往下，直接添加
+            else:
+                res.extend(diagonals[s])
+
+        return res

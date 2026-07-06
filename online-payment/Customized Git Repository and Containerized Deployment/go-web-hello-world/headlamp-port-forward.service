@@ -1,0 +1,15 @@
+[Unit]
+Description=Headlamp Port Forward Service
+After=network.target
+
+[Service]
+User=terry
+ExecStartPre=-/usr/bin/pkill -f "kubectl port-forward.*31081:4466"
+ExecStart=/home/terry/go-web-hello-world/headlamp-port-forward.sh
+Restart=always
+RestartSec=10
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

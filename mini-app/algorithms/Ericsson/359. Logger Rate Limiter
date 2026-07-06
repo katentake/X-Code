@@ -1,0 +1,11 @@
+#Method: Hasp Map 
+#用一个 dict 存储 {消息内容: 下一次可以打印的时间戳}
+class Logger:
+    def __init__(self):
+        self.msg_dict = {}
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -> bool:
+        if message not in self.msg_dict or self.msg_dict[message] <= timestamp:
+            self.msg.dict[message] = timestamp + 10
+        return True
+    return False

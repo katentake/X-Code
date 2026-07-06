@@ -1,0 +1,13 @@
+#Method: dp 
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        a, b = 0, 0
+
+        for num in nums:
+            a, b = b, max(a+num, b)  #新的a = max(不抢当前房， 抢当前房+前前一个房的收益)
+
+        return b
+
+TC: O(n)
+SC: O(1)

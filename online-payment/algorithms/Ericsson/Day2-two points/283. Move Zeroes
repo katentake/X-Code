@@ -1,0 +1,14 @@
+class Solution:
+    def moveZeros(self, nums: List[int]) -> None:
+        slow = 0 #initiate start from index=0
+
+        for fast in range(len(nums)):
+            #if find the valuse not 0, swap the position
+            if nums[fast] != 0: 
+                nums[slow], nums[fast] = nums[fast], nums[slow]
+                slow += 1 #move to right
+
+        return slow
+
+TC: O(N)
+SC: O(1)

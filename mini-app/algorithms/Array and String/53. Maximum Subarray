@@ -1,0 +1,17 @@
+#Kadane 算法
+# 如果 current_sum（到 i-1 为止的和）是正数，那么 nums[i] 应该接在后面
+# 如果 current_sum 是负数，那么接在后面反而会变小，所以 nums[i] 应该自立门户，作为新子数组的开头
+#公式：current_sum = max(nums[i], current_sum + nums[i])
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        # 初始化：当前子数组和与全局最大和都设为第一个元素
+        curr_sum = max_sum = nums[0]
+
+        # 从第二个元素开始遍历
+        for x in nums[1:]:
+            # 决定：是接上前面的和，还是从当前数字重新开始
+            curr_sum = max(x, curr_sum+x)
+            # 更新全局最大值
+            max_sum = max(max_sum, curr_sum)
+
+        return max_sum

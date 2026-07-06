@@ -1,0 +1,16 @@
+#Method: 动态规划
+#设 dp[i] 为抢到第 i 间房屋时能获得的最大金额
+#第 i 间房（金额为 nums[i]）时
+#选择抢这一间：那么你一定不能抢第 i-1 间。你的总收益就是：前 i-2 间房的最大收益 + 当前房屋金额。即 dp[i-2] + nums[i]
+#选择不抢这一间：你的总收益就是：前 i-1 间房的最大收益。即 dp[i-1]
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        # last 代表 dp[i-2]，now 代表 dp[i-1]
+        last, now = 0, 0
+
+        for num in nums:
+            # 在每一步，更新‘前前一个’和‘前一个’状态
+            # 新的 now = max(不抢当前房, 抢当前房 + 前前一个房的收益)
+            last, now = now, max(last + num, now)
+
+        return now

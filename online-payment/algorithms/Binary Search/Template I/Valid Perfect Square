@@ -1,0 +1,19 @@
+class Solution:
+    def isPerfectSquare(self, num: int) -> bool:
+        #base case
+        if num < 1: return False
+        if num == 1: return True
+
+        left, right = 1, num
+        while left <= right:
+            mid = (left+right) // 2
+            sqrt = mid * mid
+
+            if sqrt == num: # 找到了完全平方根
+                return True
+            elif sqrt < num:
+                left = mid +1 # 说明 mid 小了，往右找
+            else:
+                right = mid -1 # 说明 mid 大了，往左找
+        
+        return False

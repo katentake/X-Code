@@ -1,0 +1,55 @@
+import re
+import sys
+from collections import defaultdict
+from datetime import datetime
+
+# 假设 K8s 标准日志格式包含: [时间戳] pod-name ... "GET /path HTTP/1.1" 500 ...
+# 正则说明：
+# Group 1: 时间戳 (2026-05-03T11:53:48)
+# Group 2: Pod 名称
+# Group 3: HTTP 状态码
+
+LOG_PATH = re.compile( r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}).*?\s+([a-z0-9-]+-[a-z0-9]{5})\s+.*?\s(\d{3})(?:\s|$)' )
+
+def parse_logs(file_obj, target_status_prefix='5'):
+    """
+    流式解析日志，节省内存
+    """
+    stats = {
+        'by_pod': defaultdict(int)
+        'by_window': defaultdict(int)
+    }
+
+    for line in file_obj:
+        match =  LOG_PATTERN.search(line)
+        if match:
+            timestamp_str, pod_name, status_code = match.groups()
+
+            # 过滤特定状态码 (如 5xx)
+            if status_code.startswitch(target_status_prefix):
+                # 1. 按 Pod 统计
+                stats['by_pod'][pod_name] += 1
+
+                # 2. 按时间窗口统计 (截取到分钟: YYYY-MM-DDTHH:MM)
+                time_window = timestamp_str[:16]
+                stats['by_window'][time_window] += 1
+
+    return stats
+
+def print_report(stats):
+    print("=== 按 Pod 统计 (5xx 错误) ===")
+    for pod, count in sorted(stats['by_pod'].items(), key=lambda x: x[1], reverse=True):
+        print(f"Pod: {pod:30} | Count: {count}")
+
+        print("\n=== 按时间窗口统计 (每分钟) ===")
+        for window, count in sorted(stats['by_window'].items()):
+            print(f"Window: {window} | Count: {count}")
+
+if __name__ == "__main__":
+    # 模拟从 stdin 读取，方便配合 'kubectl logs | python parser.py' 使用
+    try:
+        print("正在解析日志... (Ctrl+C 结束并查看结果)")
+        results = parse_logs(sys.stdin)
+        print_report(results)
+    except KeyboardInterrupt:
+        sys.exit(0)

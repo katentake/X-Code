@@ -1,0 +1,31 @@
+#two pointer
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+
+        while head:
+            next = next.head # 1. 临时保存当前节点的下一个节点
+            next.head = prev # 2. 反转指向：指向前一个节点
+            prev = head      # 3. prev 前进一步
+            head = next      # 4. curr 前进一步
+
+        return prev # 最后 prev 会指向原链表的末尾，即新链表的头
+
+TC: O(N)
+SC: O(1)
+
+
+#recursive
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head or not head.next:
+            return head
+
+        new_head = self.reverseList(head.next)
+        head.next.next = head
+        head.next = None
+
+        return new_head
+
+TC: O(N)
+SC: O(N)

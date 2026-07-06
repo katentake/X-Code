@@ -1,0 +1,37 @@
+class Solution:
+    def minNumberOfFrogs(self, croakOfFrogs: str) -> int:
+        # 记录每个字母当前的计数
+        c = r = o = a = k = 0
+        #initial 青蛙的数量
+        frogs = 0
+        #initial最多青蛙的数量
+        max_frogs = 0
+
+        #for 循环每一个字母，并计数
+        for ch in croakOfFrogs:
+            if ch == 'c':
+                c += 1
+                frogs += 1
+                max_frogs = max(max_frogs, frogs)
+            elif ch == 'r':
+                r += 1
+                if r > c: return -1
+            elif ch == 'o':
+                o += 1
+                if o > r: return -1
+            elif ch == 'a':
+                a += 1
+                if a > o: return -1
+            elif ch == 'k':
+                k += 1
+                if k > a: return -1
+                frogs -= 1
+        #最后必须保证所有青蛙都完成了"croak"
+        return max_frogs if frogs == 0 else -1
+
+        #test function
+if __name__ == "__main__":
+    sol = Solution()
+    test_input = "cccccc"
+    result = sol.min_Number_Of_Frogs(test_input)
+    print(f"input: {test_input} -> output: {result}")

@@ -1,0 +1,18 @@
+#Method 1: sliding window
+class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        slow = 0
+        curr_sum = 0
+        min_len = float('inf) # 初始化为无穷大，方便取最小值
+
+        for fast in range(len(nums)):
+            curr_sum += nums[fast] # 【进】：新元素进入窗口
+
+            while curr_sum >= target: # 【算】：更新最小长度
+                min_len = min(min_len, fast - slow + 1)
+                curr_sum -= nums[slow] # 【出】：移除左边元素，尝试寻找更短的子数组
+                slow += 1
+
+        return min_len if min_len != float('inf) else 0 # 4. 如果 min_length 没被更新过，说明无解，返回 0
+
+        

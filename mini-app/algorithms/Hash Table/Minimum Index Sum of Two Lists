@@ -1,0 +1,24 @@
+class Solution:
+    def findRestaurant(self, list1: List[str], list2: List[str]) -> List[str]:
+        # 1. 将第一个列表存入哈希表 {餐厅名: 索引}
+        mapping = {res: i for i, res in enumerate(list1)}
+
+        res = []
+        min_sum = float('inf') #初始化最小和为无穷大
+
+        # 2. 遍历第二个列表
+        for j, restaurant in enumerate(list2):
+            if restaurant in mapping:
+            i = mapping[restaurant]
+            curr_sum = i + j
+
+            # 如果发现更小的索引和
+            if curr_sum < min_sum:
+            min_sum = curr_sum
+            res = [restaurant] ## 之前的都不算，重新开始记录
+            # 如果索引和相等，则并列加入结果
+            elif curr_sum == min_sum:
+                res.append(restaurant)
+        
+    return res
+

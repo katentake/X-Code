@@ -1,0 +1,30 @@
+class Solution:
+    def flatten(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        if not head:
+            return None
+        
+        dummy = Node(0, None, head, None) #init__(self, val, prev, next, child):
+        prev = dummy
+
+        stack = [head] #初始化一个栈，并将 head 放入栈中作为起点
+        #只要栈不为空，就弹出栈顶节点作为当前处理的节点 curr
+        while stack:
+            curr = stack.pop()
+            # 建立双向连接
+            prev.next = curr
+            curr.prev = prev
+            #将上一个节点 prev 指向当前节点 curr，同时将 curr.prev 指回 prev
+
+            # 先存 next，再存 child (确保 child 先出栈被处理)
+            if curr.next:
+                stack.append(curr.next)
+            if curr.child:
+                stack.append(curr.child)
+                curr.child = None
+
+            prev = curr #当前节点处理完毕，将 prev 移动到当前节点，为下一轮连接做准备
+
+        dummy.next.prev = None
+        return dummy.next
+
+

@@ -1,0 +1,26 @@
+import heapq
+
+class Solution:
+    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+        # 1. 统计频率 {数字: 频次}
+        counter = Counter(nums)
+        res = []
+        # 2. 维护一个大小为 k 的最小堆
+        min_heap = []
+
+        #counter.items() 会返回一个个元组，比如 (数字1, 频次3), (数字2, 频次1)。我们依次检查每一个数字及其对应的频次
+        for num, freq in counter.items():
+            if len(min_heap) < k:
+                heapq.heappush(min_heap, (freq, num))
+            else: #它会先将当前的 (freq, num) 放入堆中，然后立刻弹出堆中最小的一个
+                heapq.heappushpop(min_heap, (freq, num))
+        # 3. 提取结果
+        for item in min_heap:
+            res.append(item[1]) # 只把元组里的第二个元素（数字）拿出来，即打印出频率
+        return res
+
+#TC: O(n log k)
+#SC: O(N)
+
+nums = []
+print(topKFrequent(nums, k=2))

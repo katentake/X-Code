@@ -1,0 +1,13 @@
+class Solution:
+    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
+        # 创建哈希表，记录 {数值: 最近一次出现的索引}
+        pos_map = {}
+
+        for i, num in enumerate(nums):
+            # 如果数字出现过，且索引距离 <= k
+            if num in pos_map and i - pos_map[num] <= k:
+                return True
+            # 无论是否出现过，都更新为当前的最新索引
+            pos_map[num] = i
+
+        return False

@@ -1,0 +1,32 @@
+#iterative
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        res = []
+        stack = []
+        curr = root
+
+        while curr or stack:
+            while curr: # 步骤 1: 一路向左压栈
+                stack.append(curr)
+                curr = curr.left
+            
+            curr = stack.pop() # 步骤 2: 弹出栈顶节点（即最左下的节点或中间根节点）
+            res.append(curr.val)
+
+            curr = curr.right
+
+        return res
+
+
+#recursion
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        res = []
+        def helper(node):
+            if not node:
+                return
+            helper(node.left) #先遍历左子树
+            res.append(node.val) #访问根节点
+            helper(node.right) #最后遍历右子树
+        helper(root)
+        return res

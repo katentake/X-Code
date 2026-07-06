@@ -1,0 +1,21 @@
+#统计 HTTP Status Code（超高频
+# 200
+# 201
+# 404
+# 500
+from collections import Counter
+
+counter = Counter()
+
+with open("app.log", 'r') as file:
+    for line in file:
+        cols = line.strip().split()
+
+        if len(cols) > 8:
+            status_code = cols[-4]
+            counter[status_code] += 1
+
+print(counter)
+
+
+print(counter.most_common(3)) #如何找 top 3 error？

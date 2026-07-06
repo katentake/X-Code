@@ -1,0 +1,41 @@
+import heapq
+
+class Solution:
+    def minimumEffortPath(self, heights: List[List[int]]) -> int:
+        rows, cols = len(heights), len(heights[0])
+        
+        # 记录到达每个点的最小体力消耗，初始化为无穷大
+        dist = [[float('inf')] * cols for _ in range(rows)]
+        dist[0][0] = 0
+        
+        # 最小堆：(当前体力消耗, x, y)
+        min_heap = [(0, 0, 0)]
+        
+        # 方向向量：上下左右
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        
+        while min_heap:
+            d, r, c = heapq.heappop(min_heap)
+            
+            # 如果当前弹出的消耗已经大于记录的值，跳过（过期路径）
+            if d > dist[r][c]:
+                continue
+            
+            # 到达右下角，直接返回
+            if r == rows - 1 and c == cols - 1:
+                return d
+            
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                
+                if 0 <= nr < rows and 0 <= nc < cols:
+                    # 计算经过当前格(r, c)到达新格(nr, nc)的体力消耗
+                    # 注意：是取路径上的“最大落差”
+                    new_effort = max(d, abs(heights[nr][nc] - heights[r][c]))
+                    
+                    # 如果找到了更小的消耗，则更新并入堆
+                    if new_effort < dist[nr][nc]:
+                        dist[nr][nc] = new_effort
+                        heapq.heappush(min_heap, (new_effort, nr, nc))
+        
+        return 0

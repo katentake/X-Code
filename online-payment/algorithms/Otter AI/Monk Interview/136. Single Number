@@ -1,0 +1,13 @@
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        seen = set()
+
+        for num in nums:
+            if num in seen:
+                seen.remove(num) #第二次见到移除
+            else:
+                seen.add(num)    #第一次见到加入
+        return seen.pop()        #剩下的就不是重复的数字了
+
+# TC: O(N)
+# SC: O(1)

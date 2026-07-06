@@ -1,0 +1,26 @@
+Method: 双端队列 + 动态求和
+
+from collections import deque
+
+class MovingAverage:
+
+    def __init__(self, size: int):
+        self.size = size
+        self.queue = deque
+        self.window_sum = 0 # 实时维护窗口内元素的和
+
+    def next(self, val: int) -> float:
+        # 如果窗口满了，弹出最左边的元素，并从总和中减去它
+        if len(self.queue) == self.size:
+            removed = self.queue.popleft()
+            self.window_sum -= removed
+
+        # 压入新元素并更新总和
+        self.queue.append(val)
+        self.window_sum += val
+
+        # 计算平均值
+        return self.window_sum / len(self.queue)
+
+TC: O(1)
+SC: O(W) #W为窗口大小 size

@@ -1,0 +1,16 @@
+from collections import Counter
+
+def get_top_ips(log_file, top_n=10):
+    ip_counter = Counter()
+
+    with open(log_file, 'r') as f: #'r': 代表 Read（只读模式）
+        for line in f:
+            # 假设 IP 是每行的第一个字段
+            ip = line.split()[0]
+            ip_counter[ip] += 1
+
+    return ip_counter.most_common(top_n)
+
+#input sample
+# top_n = get_top_ips('asscees.log')
+# print(top_10)

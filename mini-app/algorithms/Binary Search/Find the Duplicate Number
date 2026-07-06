@@ -1,0 +1,20 @@
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        left, right = 0, len(nums)-1
+
+        while left < right:
+            mid = left + (right - left) // 2
+
+            # 核心：统计数组中小于等于 mid 的数字个数
+            count = 0
+            for n in nums:
+                if n <= mid:
+                    count +=1
+            
+            # 抽屉原理：如果 count 严格大于 mid，说明重复数字在 [left, mid] 范围内
+            if count > mid:
+                right = mid
+            else:
+                left = mid +1
+
+        return left

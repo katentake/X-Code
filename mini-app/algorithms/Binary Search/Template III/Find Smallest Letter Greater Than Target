@@ -1,0 +1,17 @@
+class Solution:
+    def nextGreatestLetter(self, letters: List[str], target: str) -> str:
+        # 优化：如果 target 比最后一个字符还大或相等，直接返回第一个字符
+        # 这处理了题目要求的 "wrap around" 情况
+        if target >= letters[-1]:
+            return letters[0]
+
+        left, right = 0, len(letters)-1
+        while left < right:
+            mid = (left+right) // 2
+            if letters[mid] <= target:
+                left = mid +1
+            else:
+                right = mid
+
+        return letters[left]
+    

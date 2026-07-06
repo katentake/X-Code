@@ -1,0 +1,23 @@
+class Solution:
+    def __init__(self):
+        # 哈希表：用于存储旧节点到新节点的映射，防止死循环和重复创建
+        self.visitedDict = {} #key is old node, value is new node
+
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        if not head:
+            return None
+
+        # 如果这个节点已经克隆过了，直接返回克隆后的版本
+        if head in self.visitedDict:
+            return self.visitedDict[head]
+
+        # 创建一个值相同的新节点
+        # 注意：这里参数名是 head，不是 node
+        new_node = Node(head.val, None, None)
+        # 先存入哈希表，再进行递归，防止循环引用导致栈溢出
+        self.visitedDict[head] = new_node
+        # 【关键修复】：递归克隆 next 指针和 random 指针，并赋值
+        new_node.next = self.copyRandomList(head.next)
+        new_node.random = self.copyRandomList(head.random)
+
+        return new_node

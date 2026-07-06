@@ -1,0 +1,30 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> Optional[TreeNode]:
+        hash_map = {val: i for i, val in enumerate(inorder)}
+
+        def helper(in_left, in_right):
+            # 如果区间为空，说明没有子节点了
+            if in_left > in_right:
+                return None
+            
+            # 1. 弹出后序遍历的最后一个值作为当前根节点
+            val = postorder.pop()
+            root = TreeNode(val)
+
+            # 2. 找到根节点在中序遍历中的位置
+            index = hash_map[val]
+
+            # 3. 【关键点】必须先构造右子树，再构造左子树
+            # 因为 postorder.pop() 是逆序弹出的，顺序是：根 -> 右 -> 左
+            root.right = helper(index+1, in_right)
+            root.left = helper(in_left, index-1)
+
+            return root
+
+        return helper(0, len(inorder)-1)

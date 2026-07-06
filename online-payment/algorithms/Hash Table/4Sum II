@@ -1,0 +1,18 @@
+class Solution:
+    def fourSumCount(self, nums1: List[int], nums2: List[int], nums3: List[int], nums4: List[int]) -> int:
+        # 1. 创建哈希表，用于存储前两个数组的和及其频率
+        sum_map = defaultdict(int)
+        count = 0
+
+        for a in nums1: # 2. 遍历前两个数组，记录所有组合的和
+            for b in nums2:
+                sum_map[a+b] += 1
+
+        for c in nums3:
+            for d in nums4:
+                target = -(c+d)
+                if target in sum_map:
+                    count += sum_map[target]
+
+        return count
+        

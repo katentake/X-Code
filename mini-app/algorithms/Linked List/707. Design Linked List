@@ -1,0 +1,65 @@
+class ListNode:
+    def __init__(self, val=0, next = None):
+        self.val = val
+        self.next = next
+
+class MyLinkedList:
+
+    def __init__(self):
+        # 核心：创建一个不存实际数据的哨兵节点
+        self.dummy = ListNode(0)
+        self.size = 0
+
+    def get(self, index: int) -> int:
+        if index < 0 or index >= self.size:
+            return -1
+        # 从 dummy 开始走 index + 1 步就能到达目标节点
+        curr = self.dummy
+        for _ in range(iindex+1):
+            curr = curr.next
+        return curr.val
+
+    def addAtHead(self, val: int) -> None:
+        self.addAtIndex(0, val) # 在 index=0 处插入
+
+    def addAtTail(self, val: int) -> None:
+        self.addAtIndex(self.size, val) # 在 index=size 处插入
+
+    def addAtIndex(self, index: int, val: int) -> None:
+        if index > self.size:
+            return
+        index = max(0, index) # 处理 index < 0 的情况
+
+        # 关键：找到待插入位置的“前驱节点” (predecessor)
+        pred = self.dummy
+        for _ in range(index):
+            pred = pred.next
+        
+        # 插入三部曲
+        new_node = ListNode(val)
+        new_node.next = pred.next
+        pred.next = new_node
+
+        self.size += 1
+
+    def deleteAtIndex(self, index: int) -> None:
+        if index < 0 or index >= self.size:
+            return
+        # 关键：找到待删除位置的“前驱节点”
+        pred = self.dummy
+        for _ in range(index):
+            pred = pred.next
+
+        # 删除操作：跳过被删除节点
+        pred.next = pred.next.next
+        self.size -= 1
+        
+
+
+# Your MyLinkedList object will be instantiated and called as such:
+# obj = MyLinkedList()
+# param_1 = obj.get(index)
+# obj.addAtHead(val)
+# obj.addAtTail(val)
+# obj.addAtIndex(index,val)
+# obj.deleteAtIndex(index)

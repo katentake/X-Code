@@ -1,0 +1,16 @@
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        if len(nums1) > len(nums2):
+            return self.intersect(nums2, nums1)
+
+        lookup = collections.defaultdict(int)
+        for i in nums1:
+            lookup[i] += 1
+
+        res = []
+        for i in nums2:
+            if lookup[i] > 0: #检查当前数字 i 是否在 lookup 中且计数大于 0。
+                res.append(i) #将匹配到的数字加入结果列表
+                lookup[i] #每匹配到一个数字，就把哈希表里的计数减 1。这保证了如果 9 在 nums1 出现 1 次，在 nums2 出现 2 次，结果里只会出现 1 次
+    
+        return res

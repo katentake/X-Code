@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: default
+  labels:
+    app: payment-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+      - name: payment-container
+        # 💡 这里完美应用了你的变量引用
+        image: {{ .Values.payment.image }}
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080      # ⚡️ Go 服务监听的端口，不能漏
+          name: http-port
+
+
+        # 💡 习惯上把环境变量放在这里，让容器基础配置更集中
+        env:
+        - name: PAYMENT_API_KEY
+          value: "mock_secret_key_abc123"
+
+        # SRE 面试必杀：资源配额限制
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
+
+        # SRE 面试必杀：双探针机制（零停机滚动升级的关键）
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 10
+

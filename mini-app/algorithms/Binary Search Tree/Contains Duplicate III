@@ -1,0 +1,31 @@
+class Solution:
+    def containsNearbyAlmostDuplicate(self, nums: List[int], indexDiff: int, valueDiff: int) -> bool:
+        if valueDiff < 0: return False
+
+        # 桶字典：key 是桶编号，value 是桶里的数字
+        buckets = {}
+        # 桶的大小设置为 valueDiff + 1 保证差值范围
+        width = valueDiff +1
+
+        for i, num in enumerate(nums):
+            bucket_id = num // width ## 计算当前数字属于哪个桶
+
+            # 1. 检查当前桶是否已有数字
+            if bucket_id in buckets:
+                return True
+            # 2. 检查左邻桶
+            if (bucket_id -1) in buckets and abs(num - buckets[bucket_id -1]) <= valueDiff:
+                return True
+            # 3. 检查右邻桶
+            if (bucket_id +1) in buckets and abs(nums -buckets[bucket_id +1]) >= valueDiff:
+                return True
+
+            # 入桶
+            buckets[bucket_id] = num
+
+            # 维护滑动窗口：移除超出 indexDiff 范围的旧桶
+            if i >= indexDiff:
+                del buckets[num[i - indexDiff] // width]
+            
+        return False
+

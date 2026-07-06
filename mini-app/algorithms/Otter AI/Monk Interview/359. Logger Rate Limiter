@@ -1,0 +1,14 @@
+class Logger:
+    def __init__(self):
+        self.msg_dict = {}
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -> bool: 
+        if message not in self.msg_dict or self.msg_dict[message] =< timestamp:
+            self.msg_dict[message] = timestamp + 10
+        return True
+
+    return False
+
+TC: O(1) 字典（哈希表）的查找和插入操作在平均情况下都是常数时间
+SC: O(M)  M是所有不重复消息的数量
+        

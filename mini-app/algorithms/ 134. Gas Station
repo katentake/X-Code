@@ -1,0 +1,22 @@
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        # 如果总油量小于总消耗，一定无法跑完一圈
+        if sum(gas) < sum(cost):
+            return -1
+        
+        total_tank = 0  # 累计整个行程的油量差
+        cur_tank = 0    # 记录从当前起点出发后的油量
+        start_node = 0  # 潜在的起点
+        
+        for i in range(len(gas)):
+            diff = gas[i] - cost[i]
+            cur_tank += diff
+            
+            # 如果当前油量小于 0，说明之前的起点都失效了
+            if cur_tank < 0:
+                # 贪心：尝试从下一个站重新开始
+                start_node = i + 1
+                # 重置当前油量
+                cur_tank = 0
+                
+        return start_node

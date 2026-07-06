@@ -1,0 +1,21 @@
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+
+        #初始化第一行
+        for i in range(1, m):
+            grid[0][i] += grid[0][i-1]
+        #初始化第一列
+        for j in range(1, n):
+            grid[j][0] += grid[j-1][0]
+
+        for i in range(1, m):
+            for j in range(1, n):
+                # 当前格的值 + min(左方, 上方)
+                grid[i][j] += min(grid[i][j-1], grid[i-1][j])
+        
+        return grid[m-1][n-1]
+
+
+#TC: O(m*n)
+#SC: O(m*n)

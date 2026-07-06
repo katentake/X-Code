@@ -1,0 +1,25 @@
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        # 1. 创建哨兵节点，处理删除头节点的特殊情况
+        dummy_head = ListNode(0)
+        dummy_head.next = head
+        # 2. 初始化双指针
+        left = dummy_head
+        right = dummy_head
+
+        # 3. 让 right 先走 n 步，此时 left 和 right 之间间隔 n 个节点
+        for _ in range(n):
+            right = right.next
+
+        # 4. 同时移动，直到 right 走到最后一个节点
+        # 当 right.next 为 None 时，left 正好处于“待删除节点”的前驱位置
+        while right.next:
+            left = left.next
+            right = right.next
+
+        # 5. 【修复处】执行删除操作：让 left 跨过下一个节点，直接指向下下个
+        # 此时 left.next 是要删的节点，left.next.next 是它的后继
+        left.next = left.next.next
+
+        return dummy_head.next
+

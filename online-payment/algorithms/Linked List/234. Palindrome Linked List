@@ -1,0 +1,30 @@
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        if not head or head.next:
+            return True
+
+        # 1. 寻找中点 (快慢指针)
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        # 2. 反转后半部分链表 (从 slow 开始)
+        prev = None # prev 将作为反转后链表的头
+        curr = slow # 从中点开始反转
+        while curr:
+            next_node = curr.next # 临时保存当前节点的下一个，防止断链
+            curr.next = prev # 【核心】将当前节点指向它的前驱（实现反转）
+            prev = curr # prev 往后移（移到当前节点）
+            curr = next_node # curr 往后移（移到保存的下一个节点）
+
+        # 3. 比较前半部分和后半部分
+        # 此时 prev 是反转后后半部分的头节点
+        left, right = head, prev
+        while right: # 只需要比较后半部分（因为后半部分可能比前半部分短一个或相等）
+            if left.val != right.val: # 如果值不等，说明不是回文
+                return False
+            left = left.next # 两个指针同步向后移动
+            right = right.next
+
+        return True # 全部匹配成功

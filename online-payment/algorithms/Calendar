@@ -1,0 +1,51 @@
+from collections import defaultdict
+
+class SimpleCalendar:
+    def __init__(self):
+        # 使用 defaultdict 自动处理不存在的键，简化 add 逻辑
+        self.events = defaultdict(list)
+
+    def add_event(self, date, event_desc):
+        """添加活动。格式: date='YYYY-MM-DD'"""
+        self.events[date].append(event_desc)
+        print(f"成功添加: [{date}] {event_desc}")
+
+    def get_events(self, date):
+        """查询特定日期的活动"""
+        events = self.events.get(date, [])
+        if not events:
+            return f"{date} 没有安排活动。"
+        return f"{date} 的活动: " + ", ".join(events)
+
+    def remove_event(self, date, event_desc):
+        """删除特定日期的某个活动"""
+        if date in self.events and event_desc in self.events[date]:
+            self.events[date].remove(event_desc)
+            # 如果该日期没活动了，清理掉这个键
+            if not self.events[date]:
+                del self.events[date]
+            print(f"已取消: [{date}] {event_desc}")
+        else:
+            print("未找到该活动。")
+
+    def show_all(self):
+        """按日期排序显示所有活动"""
+        if not self.events:
+            print("日历为空。")
+            return
+        
+        print("\n--- 我的日程表 ---")
+        for date in sorted(self.events.keys()):
+            print(f"{date}: {', '.join(self.events[date])}")
+
+# --- 测试功能 ---
+my_cal = SimpleCalendar()
+my_cal.add_event("2026-03-04", "刷 LeetCode")
+my_cal.add_event("2026-03-04", "健身")
+my_cal.add_event("2026-03-05", "朋友聚餐")
+
+print(my_cal.get_events("2026-03-04"))
+my_cal.show_all()
+
+my_cal.remove_event("2026-03-04", "健身")
+my_cal.show_all()

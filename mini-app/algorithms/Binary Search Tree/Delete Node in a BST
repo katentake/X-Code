@@ -1,0 +1,39 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
+        if not root:
+            return None
+        
+        # 1. 寻找节点
+        if key < root.val:
+            root.left = self.deleteNode(root.left, key)
+        elif key > root.val:
+            root.right = self.deleteNode(root.right, key)
+        else:
+            # 2. 找到节点，开始删除
+            # 情况 1 & 2: 只有一个孩子或没有孩子
+            if not root.left:
+                return root.right
+            if not root.left:
+                return root.right
+            
+            # 情况 3: 有两个孩子
+            # 找到右子树的最小值（中序后继)
+            successor = self._get_min(root.right)
+            # 替换当前节点的值为后继者的值
+            root.val = seccessor.val
+            # 递归地从右子树中删除后继者节点
+            root.right = self.deleteNode(root.right, successor.val)
+
+        return root
+
+    def _get_min(self, node):
+        """辅助函数：查找子树中的最小节点"""
+        while node.left:
+            node = node.left
+        return node

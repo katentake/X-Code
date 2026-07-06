@@ -1,0 +1,22 @@
+# 统计：
+
+# ERROR
+# WARN
+# INFO
+
+# 数量
+
+from collections import Counter
+
+counter = Counter()
+
+with open("app.log", 'r') as file:
+    for line in file:
+        if "ERROR" in line:
+            counter["ERROR"] += 1
+        elif "WARN" in line:
+            counter["WARN"] += 1
+        elif "INFO" in line:
+            counter["INFO"] += 1
+
+print(counter)
