@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  namespace: default
+  labels:
+    app: order-service
+spec:
+  replicas: 2 # 面试标配：至少2个副本，聊高可用（HA）和滚动更新免无损
+  selector:
+    matchLabels:
+      app: order-service # 必须和下面的 pod template label 严格匹配
+  template:
+    metadata:
+      labels:
+        app: order-service # 这就是 Pod 的标签
+    spec:
+      containers:
+      - name: order-container
+        image: terry/order-service:v1.0.0 # 假设你打包好的本地镜像
+        imagePullPolicy: IfNotPresent # 本地 kind 开发常用，优先用本地镜像
+        ports:
+        - containerPort: 5000
+          name: http-port
+        
+        # 💡 SRE 面试必杀技一：资源限制 (Resource Quotas)
+        resources:
+          requests:
+            cpu: "100m"      # 0.1 核，Scheduler 靠这个算哪个 Node 放得下
+            memory: "128Mi"
+          limits:
+            cpu: "500m"      # 压测时最高允许飚到 0.5 核
+            memory: "256Mi"  # 严格限制！超过就会触发 OOMKilled
+        
+        # 💡 SRE 面试必杀技二：健康检查 (Health Check Probes)
+        livenessProbe:       # 探测容器是否还活着（挂了就重启容器）
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:      # 探测容器是否准备好接收流量（没好就不给通过 Service 导流量）
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        # 💡 SRE 面试必杀技三：环境变量解耦 (ConfigMap/Secret)
+        env:
+        - name: DB_HOST
+          value: "postgres-service" # 后面我们会配这个 DB 服务的 Service 名
+        - name: REDIS_HOST
+          value: "redis-service"

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: default
+  labels:
+    app: payment-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+      - name: payment-container
+        image: mini-payment:v1.0.0 # 我们成功 load 进 kind 的 Go 优化镜像
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080      # ⚡️注意：Go 服务监听的是 8080
+          name: http-port
+        
+        resources:
+          requests:
+            cpu: "50m"             # Go 是编译型语言，日常开销比 Python 更小
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
+        
+        # 极简健康检查
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 10
+
+        # 秘钥环境变量预留
+        env:
+        - name: PAYMENT_API_KEY
+          value: "mock_secret_key_abc123"
