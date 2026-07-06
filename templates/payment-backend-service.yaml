@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service           # 注册进 CoreDNS 的域名为 http://payment-service
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: payment-service
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80                      # 依然对外暴露 80 端口，方便集群内其他服务统一调用
+    targetPort: 8080              # ⚡️精准映射到 Go 容器内的 8080

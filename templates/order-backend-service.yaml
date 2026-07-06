@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service             # 这个名字会直接注册进集群 CoreDNS，其他服务通过 http://order-service 访问
+  namespace: default
+spec:
+  type: ClusterIP                 # 仅限集群内部访问，保障有状态后端和内网微服务的安全
+  selector:
+    app: order-service            # ⚡️核心绑定线：勾搭上面 Deployment 创建出来的带有 app: order-service 标签的 Pod
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80                      # Service 暴露的端口，集群内部其他微服务访问它时敲 80
+    targetPort: 5000              # 对应 Flask 容器在 Dockerfile 里暴露的真正端口
