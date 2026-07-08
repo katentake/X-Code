@@ -1,0 +1,40 @@
+解法一：DFS + 相对坐标哈希
+
+class Solution:
+    def numDistinctIslands(self, grid: List[List[int]]) -> int:
+        if not grid:
+            return 0
+
+        rows, cols = len(grid), len(grid[0])
+        distinct_islands = set()
+
+        def dfs(r, c, start_r, start_c, curr_island):
+            # 边界及访问检查
+            if r < 0 or r >= rows or c < 0 or c >= cols or grid[r][c] == 0:
+                return 
+
+            grid[r][c] = 0  # 淹没陆地，防止重复访问
+            # 关键：计算相对于起点的相对坐标，并存入当前岛屿的形态列表
+            curr_islands.append((r - start_r, c - start_c))
+
+            # 向四个方向探索
+            dfs(r+1, c, start_r, start_c, curr_island)
+            dfs(r-1, c, start_r, start_c, curr_island)
+            dfs(r, c+1, start_r, start_c, curr_island)
+            dfs(r, c-1, start_r, start_c, curr_island)
+
+        for r in range(rows):
+            for c in range(cols):
+                curr_island = []  #把容器清空，准备记录这个新岛屿
+                # 以 (r, c) 本身作为基准原点传入
+                dfs(r, c, r, c, curr_island)
+                # 将列表转换为不可变的 tuple 存入集合去重
+                distinct_islands.add(tuple(curr_island))
+
+        return len(distinct_islands)
+
+TC: o(m*n)
+SC: o(m*n)
+
+
+            

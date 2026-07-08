@@ -1,0 +1,41 @@
+解法一：标准 BFS + 原地修改网格
+
+class Solution:
+    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
+        n = len(grid)
+        # 边界情况：如果起点或终点本身就是 1（阻塞），则无法通行
+        if grid[0][0] == 1 or grid[n-1][n-1] == 1:
+            return -1
+
+        # 队列存储：(行, 列, 当前路径长度)
+        # 从起点 (0, 0) 开始，初始路径长度为 1
+        queue = deque([(0, 0, 1)])
+        # 原地修改，将起点标记为已访问（变成 1）
+        grid[0][0] = 1
+        # 定义 8 个移动方向（包含上下左右和 4 个对角线方向）
+        directions = [
+            (-1, -1), (-1, 0), (-1, 1),
+            (0, -1),           (0, 1),
+            (1, -1),   (1, 1), (1, 1)
+        ]
+
+        while queue:
+            r, c, path = queue.popleft()
+            # 如果到达了右下角终点，直接返回当前的路径长度
+            if r == n-1 and c == n-1:
+                return path
+
+            # 遍历 8 个方向
+            for dr, dc in directions:
+                nr, nc = r+dr, c+dc
+                # 边界检查，且目标格子必须是 0（通路）
+                if 0 <= nr < n and 0 <= nc < n and grid[nr][nc] == 0:
+                    queue.append((nr, nc, path+1))
+                    # 进队列后立刻标记为已访问，防止被重复加入队列
+                    grid[nr][nc] = 1
+
+        return -1
+
+
+TC: O(n*n)
+SC: O(n*n)
