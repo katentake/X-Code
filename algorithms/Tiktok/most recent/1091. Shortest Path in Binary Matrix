@@ -39,3 +39,5 @@ class Solution:
 
 TC: O(n*n)
 SC: O(n*n)
+
+##follow up question: Leetcode 1293

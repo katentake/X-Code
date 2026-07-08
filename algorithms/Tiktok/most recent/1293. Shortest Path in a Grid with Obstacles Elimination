@@ -1,40 +1,44 @@
-#Method: deque + BFS
-
-from collections import deque
+#Method: deque + BFS 解法一：三维状态 BFS
 
 class Solution:
-    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
-        n = len(grid)
-        #边界情况：如果起点或是终点本身就是1(障碍物)，直接无解
-        if grid[0][0] == 1 or grid[n-1][n-1] == 1:
-            return -1
-        #队列存储：（行，列，当前长度）
-        #从起点（0,0）开始，初始长度为1
-        queue = deque([(0, 0, 1)])
-        #将起点标记为已访问（通过将其修改为1）
-        grid[0][0] = 1
-        #定义8个方向
-        directions = [
-            (-1, -1), (-1, 0), (-1, 1),
-            (0, -1),           (0, 1),
-            (1, -1), (1, 0),   (1,1)
-        ]
+    def shortestPath(self, grid: list[List[int]], k: int) -> int:
+        m, n = len(grid), len(grid[0])
+
+        # 优化剪枝：如果 k 足够大，直接走曼哈顿距离即可，不需要 BFS
+        if k > m + n -2:
+            return m+n-2
+
+        # 队列存储：(r, c, remain_k, steps) -> (行, 列, 剩余可消除数, 当前步数)
+        queue =deque([(0, 0, k, 0)])
+        # visited 集合记录：(r, c, remain_k)
+        visited = {(0, 0, k)}
+        # 题目规定只能上下左右移动
+        directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]
 
         while queue:
-            r, c, path = queue.popleft()
-            #如果到达了右下角终点，因为是BFS, 这必然是最短路径。直接返回
-            if r == n-1 and c == n-1:
-                retrun path
+            r, c, remain_k, path = queue.popleft()
+            # 到达右下角终点
+            if r == m-1 and c == n-1:
+                return path
             
             for dr, dc in directions:
                 nr, nc = r+dr, c+dc
-                #检查边界条件，并且下一个格子必须是0（通路）
-                if 0 <= nr < n and 0 <= nc < n and grid[nr][nc] == 0:
-                    #标记为已访问，防止重复入队
-                    grid[nr][nc] = 1
-                    queue.append((nr, nc, path+1))
+                # 边界检查
+                if 0 <= nr < m and 0 <= nc < n:
+                    # 计算如果走到下一个格子，会剩下多少个 k
+                    # 如果 grid[nr][nc] == 1 就会消耗一个 k，否则不消耗
+                    next_k = remain_k - grid[nr][nc]
+
+                    # 只有当次状态下还有消除机会(next_k >= 0)，且这个三维状态没被访问过
+                    if next_k >= 0 and (nr, nc, next_k) not in visited:
+                        visited.add((nr, nc, next_k))
+                        queue.append((nr, nc, next_k, path+1))
 
         return -1
 
-TC: O(n*n)
-SC: O(n*n)
+
+
+TC: O(m*n*k)
+SC: O(m*n*k)
+
+##Leetcode 1091变种题
