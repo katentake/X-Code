@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mini-production-platform
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/katentake/X-Code.git'
+    targetRevision: master
+    path: mini-k8s-platform         # 监听 Git 中该目录下的 K8s 清单变化
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: production           # 目标部署命名空间
+  syncPolicy:
+    automated: 
+      prune: true                   # 自动删除 Git 中已被移除的资源
+      selfHeal: true                # 开启自愈，防止手动 kubectl 修改导致的配置漂移
+    syncOptions:
+      - CreateNamespace=true        # 如果 production 命名空间不存在，自动创建
