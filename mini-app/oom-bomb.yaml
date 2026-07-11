@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: oom-bomb
+spec:
+  containers:
+  - name: memory-hog
+    image: vishnudardan/stress-ng
+    # 限制这个容器最多只能用 50Mi 内存
+    resources:
+      limits:
+        memory: "50Mi"
+      requests:
+        memory: "20Mi"
+    # 让 stress-ng 启动就直接申请 100Mi 内存（100Mi > 50Mi 限制）
+    args: ["--vm", "1", "--vm-bytes", "100M", "--vm-hang", "1"]

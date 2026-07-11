@@ -189,3 +189,15 @@ order:
 payment:
   replicaCount: 2
   image: "mini-payment:v1.0.0"
+
+redis:
+  image:
+    repository: redis
+    tag: 7.2-alpine
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bad-readiness-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bad-readiness
+  template:
+    metadata:
+      labels:
+        app: bad-readiness
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /not-found-page # 故意写一个不存在的路径，返回404
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 5

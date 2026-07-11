@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-affinity-pod
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: main
+        image: nginx:alpine
+      # ─── 亲和性配置 ───
+      affinity:
+        nodeAffinity:
+          # 1. 硬限制：Required (不满足就 Pending)
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/zone
+                operator: In
+                values:
+                - us-west-2a
+                - us-west-2b
+          
+          # 2. 软限制：Preferred (优先考虑，不满足也能运行)
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: hardware-type
+                operator: In
+                values:
+                - gpu
