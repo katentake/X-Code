@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/katentake/X-Code.git'
     targetRevision: master
-    path: mini-k8s-platform         # 监听 Git 中该目录下的 K8s 清单变化
+    path: mini-k8s-platform/deploy/apps/mini-app         # 监听 Git 中该目录下的 K8s 清单变化
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: production           # 目标部署命名空间
