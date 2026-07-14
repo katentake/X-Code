@@ -38,12 +38,12 @@ spec:
         - name: DB_PASSWORD
           value: "supersecretpwd"
         - name: REDIS_HOST
-          value: "mini-ecommerce-redis-svc"    # 从原本尾部 env 块合并过来的变量
+          value: "mini-production-platform-redis-svc"    # 从原本尾部 env 块合并过来的变量
         - name: REDIS_PORT
           value: "6379"
         # 如果你的应用代码只认一个完整的 URL（比如 Python/Go 常用的格式）：
         - name: REDIS_URL
-          value: "redis://mini-ecommerce-redis-svc:6379/0"
+          value: "redis://mini-production-platform-redis-svc:6379/0"
 
         # SRE 面试必杀：资源配额与限制 (QoS 级别属于 Burstable)
         resources:
