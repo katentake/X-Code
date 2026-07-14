@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/katentake/X-Code.git'
     targetRevision: master
-    path: mini-k8s-platform/deploy/apps/mini-app/charts  # 指向包含 Chart.yaml 的 Helm 目录 
+    path: mini-k8s-platform/deploy/apps/mini-app/charts/backend  # 指向包含 Chart.yaml 的 Helm 目录 
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: production           # 目标部署命名空间
