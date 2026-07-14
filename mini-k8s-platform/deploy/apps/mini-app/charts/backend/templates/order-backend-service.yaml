@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: order-service             # 这个名字会直接注册进集群 CoreDNS，其他服务通过 http://order-service 访问
-  namespace: default
+  namespace: {{ .Release.Namespace }} 
 spec:
   type: ClusterIP                 # 仅限集群内部访问，保障有状态后端和内网微服务的安全
   selector:
