@@ -3,10 +3,9 @@ from collections import Counter
 class Solution:
     def removeDuplicateLetters(self, s: str) -> str:
         # 统计每个字符的总出现次数
-        count = Counter(s)
-
-        stack = []
-        visited = set()
+        count = Counter(s) # count 给出底线：前面的大字符被踢走前，查查后面还有没有替补
+        stack = []         # stack 负责：新字符进栈时，能不能把前面大的字符踢走
+        visited = set()    # count 给出底线：前面的大字符被踢走前，查查后面还有没有替补
 
         for char in s:
             # 每遍历一个字符，它在后续字符串中的剩余次数就少一次
