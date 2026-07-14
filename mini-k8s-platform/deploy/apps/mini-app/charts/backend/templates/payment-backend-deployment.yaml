@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: payment-service
-  namespace: default
+  namespace:  {{ .Release.Namespace }} 
   labels:
     app: payment-service
 spec:
