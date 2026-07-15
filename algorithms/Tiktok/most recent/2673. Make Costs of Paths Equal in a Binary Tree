@@ -1,0 +1,17 @@
+class Solution:
+    def minIncrements(self, n: int, cost: List[int]) -> int:
+        res = 0
+
+        for i in range(n//2, 0, -1):
+            left_idx = 2*i-1
+            right_idx = 2*i
+
+            res += abs(cost[left_idx] - cost[right_idx])
+
+            cost[i-1] += max(cost[left_idx], cost[right_idx])
+
+
+        return res
+
+TS: O(N)
+SC: O(1)

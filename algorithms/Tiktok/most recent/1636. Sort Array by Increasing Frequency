@@ -1,0 +1,12 @@
+# 解法一：内置 Counter 结合自定义 sort 键
+class Solution:
+    def frequencySort(self, nums: List[int]) -> List[int]:
+        count = Counter(nums)
+        nums.sort(key=lambda x: (count[x], -x))
+
+        return nums
+
+
+TC: O(n log n)
+SC: O(n)
+

@@ -1,0 +1,28 @@
+class Solution:
+    def findShortestSubArray(self, nums: List[int]) -> int:
+        # left：记录每个元素第一次出现的索引位置
+        # right：记录每个元素最后一次出现的索引位置
+        # count：记录每个元素在数组中出现的总频次
+        left, right, count = {}, {}, {}
+
+        for idx, x in enumerate(nums):
+            if x not in left:  #如果 x 还没有在 left 字典中，说明这是它在数组中首次
+                left[x] = idx
+            right[x] = idx  #无论 x 是第几次出现，都直接将当前的索引 i 赋值给 right[x]。随着循环向后移动，right[x] 会不断被覆盖，当循环结束时，right[x] 保存的自然就是该元素最后一次出现的位置（末尾位置）
+            count[x] = count.get(x, 0) + 1  # count.get(x, 0) 表示获取 x 当前的频次，如果 x 还没出现过则默认为 0。然后在这个基础上 + 1，并更新回 count[x]
+
+        # 找到数组的度
+        degree = max(count.values())
+
+        # 计算相同度的最短子数组长度
+        ans = len(nums)
+        for x in count:
+            if count[x] == degree:
+                ans = min(ans, right[x], left[x]+1)
+
+        return ans
+
+
+TC: O(N)
+SC: O(N)
+
