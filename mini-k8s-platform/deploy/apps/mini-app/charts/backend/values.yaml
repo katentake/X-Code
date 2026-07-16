@@ -181,7 +181,7 @@ affinity: {}
 
 
 order:
-  replicaCount: 2
+  replicaCount: 3 
   image: "mini-order:v1.0.2"
   cpuRequest: "100m"
   memoryLimit: "256Mi"

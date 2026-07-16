@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"mini-production-platform","namespace":"argocd"},"spec":{"destination":{"namespace":"production","server":"https://kubernetes.default.svc"},"project":"default","source":{"path":"mini-k8s-platform/deploy/apps/mini-app/charts","repoURL":"https://github.com/katentake/X-Code.git","targetRevision":"master"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"syncOptions":["CreateNamespace=true"]}}}
+  creationTimestamp: "2026-07-11T07:20:00Z"
+  generation: 6
+  name: mini-production-platform
+  namespace: argocd
+  resourceVersion: "551364"
+  uid: 8ca97e8d-2df1-4cc2-94b7-0aece9ee1cfc
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: mini-k8s-platform/deploy/apps/mini-app/charts
+    repoURL: https://github.com/katentake/X-Code.git
+    targetRevision: master
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+status:
+  conditions:
+  - lastTransitionTime: "2026-07-11T07:20:00Z"
+    message: Application referencing project default which does not exist
+    type: InvalidSpecError
+  health:
+    lastTransitionTime: "2026-07-11T07:20:00Z"
+    status: Unknown
+  sync:
+    status: Unknown

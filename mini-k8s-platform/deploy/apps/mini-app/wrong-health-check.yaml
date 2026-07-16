@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bad-liveness-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bad-liveness
+  template:
+    metadata:
+      labels:
+        app: bad-liveness
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080 # 故意写错端口（应用实际是80）
+          initialDelaySeconds: 3
+          periodSeconds: 5
