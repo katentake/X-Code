@@ -6,7 +6,7 @@ metadata:
   labels:
     app: payment-service
 spec:
-  replicas: 2
+  replicas: {{ .Values.replicaCount | default 2 }} 
   selector:
     matchLabels:
       app: payment-service
