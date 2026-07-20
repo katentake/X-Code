@@ -1,32 +1,37 @@
-import collections
-import heapq
+#Method: hashmap + min_heap
 
 class WordFreq:
-    def __init__(self, word, freq):
+    def __init__(self, count: int, word: str):
+        self.count = count
         self.word = word
-        self.freq = freq
-    def __lt__(self, other):
-        # 最小堆弹出频率低的；频率相同时，弹出字典序大的（以便留下字典序小的）
-        if self.freq == other.freq:
+
+
+    def __lt__(other):
+        # 频次相同时，字典序大的优先级高（先被弹出，保留字典序更小的）
+        if self.count == other.count:
             return self.word > other.word
-        return self.freq < other.freq
+        # 频次不同时，频次小的优先级高（先被弹出）
+        return self.count < other.count
 
-class TopKWords:
-    def __init__(self):
-        self.counts = collections.Counter()
 
-    def add(self, word: str):
-        self.counts[word] += 1
+class Solution:
+    def topKFrequent(self, words: list[str], k: int) -> List[str]:
+        count = Counter(words)
+        min_heap = []
 
-    def topK(self, k: int):
-        heap = []
-        for word, freq in self.counts.items():
-            heapq.heappush(heap, WordFreq(word, freq))
-            if len(heap) > k:
-                heapq.heappop(heap)
+        for word, freq in count.items():
+            heapq.heappush(min_heap, WordFreq(freq, word))
+            if len(min_heap) > k:
+                heapq.pushpop(min_heap)
 
-        # 此时堆中留下的就是前 K 个，但顺序是倒序的
+        # 堆中剩下的 k 个元素，弹出时是从小到大的，需要逆序返回
         res = []
-        while heap:
-            res.append(heapq.heappop(heap).word)
+        while min_heap:
+            for word in min_heap:
+                res.append(heapq.heappop(min_heap).word)
+
         return res[::-1]
+
+TC: O(N log k)
+SC: O(N)
+    
