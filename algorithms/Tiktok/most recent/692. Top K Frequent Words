@@ -1,0 +1,32 @@
+import collections
+import heapq
+
+class WordFreq:
+    def __init__(self, word, freq):
+        self.word = word
+        self.freq = freq
+    def __lt__(self, other):
+        # 最小堆弹出频率低的；频率相同时，弹出字典序大的（以便留下字典序小的）
+        if self.freq == other.freq:
+            return self.word > other.word
+        return self.freq < other.freq
+
+class TopKWords:
+    def __init__(self):
+        self.counts = collections.Counter()
+
+    def add(self, word: str):
+        self.counts[word] += 1
+
+    def topK(self, k: int):
+        heap = []
+        for word, freq in self.counts.items():
+            heapq.heappush(heap, WordFreq(word, freq))
+            if len(heap) > k:
+                heapq.heappop(heap)
+
+        # 此时堆中留下的就是前 K 个，但顺序是倒序的
+        res = []
+        while heap:
+            res.append(heapq.heappop(heap).word)
+        return res[::-1]
