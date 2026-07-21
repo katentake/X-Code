@@ -1,3 +1,32 @@
 class Solution:
     def flatten(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        
+        if not node:
+            return None
+
+        dummy = Node(0, None, head, None)
+        prev = dummy
+        stack = [head]
+
+        while stack:
+            curr = stack.pop()
+
+            # 建立双向连接
+            prev.next = curr
+            curr.prev = prev
+
+            # 先入栈 next，后入栈 child（确保 child 先被 pop 处理）
+            if curr.next:
+                stack.append(curr.next)
+            if curr.child:
+                stack.append(curr.child)
+                curr.child = None  # 别忘记清空 child 指针
+
+            prev = curr
+
+        # 拆除 dummy 节点与 head 之间的反向连接
+        dummy.next.prev = None
+        return dummy.next
+
+TC: O(N)
+SC: O(N)
+
