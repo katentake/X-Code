@@ -29,10 +29,10 @@ SC: O(capacity)
 class ListNode:
 
   def __init__(self, key=0, value=0):
-    self.key = key
-    self.value = value
-    self.prev = None
-    self.next = None
+    self.key = key       # 存储的数据（如键）
+    self.value = value   # 存储的数据（如值）
+    self.prev = None     # 前驱指针：指向上一个节点
+    self.next = None     # 后继指针：指向下一个节点
 
 
 class LRUCache:
@@ -73,16 +73,16 @@ class LRUCache:
   # ===== 双向链表辅助操作函数 =====
 
   def _add_to_head(self, node: ListNode):
-    """将节点插入到伪头节点之后"""
-    node.prev = self.head       # ① 新节点的 prev 指向 head
-    node.next = self.head.next  # ② 新节点的 next 指向原本的第一个真实节点
-    self.head.next.prev = node  # ③ 原本第一个真实节点的 prev 指向新节点
-    self.head.next = node       # ④ head 的 next 指向新节点
+    #将新节点 new_node 插入到伪头节点 head 与第一个真实节点之间
+    new_node.prev = self.head       # ① 新节点的 prev 指向 head
+    new_node.next = self.head.next  # ② 新节点的 next 指向原本的第一个真实节点
+    self.head.next.prev = new_node  # ③ 原本第一个真实节点的 prev 指向新节点
+    self.head.next = new_node       # ④ head 的 next 指向新节点
 
   def _remove_node(self, node: ListNode):
     """从链表中移除指定节点"""
-    node.prev.next = node.next
-    node.next.prev = node.prev
+    node.prev.next = node.next  # 让上一个节点指向下一个节点
+    node.next.prev = node.prev  # 让下一个节点指向上一个节点
 
   def _move_to_head(self, node: ListNode):
     """将已知节点移动到头部"""
