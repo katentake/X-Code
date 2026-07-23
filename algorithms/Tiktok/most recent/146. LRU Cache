@@ -74,10 +74,10 @@ class LRUCache:
 
   def _add_to_head(self, node: ListNode):
     """将节点插入到伪头节点之后"""
-    node.prev = self.head
-    node.next = self.head.next
-    self.head.next.prev = node
-    self.head.next = node
+    node.prev = self.head       # ① 新节点的 prev 指向 head
+    node.next = self.head.next  # ② 新节点的 next 指向原本的第一个真实节点
+    self.head.next.prev = node  # ③ 原本第一个真实节点的 prev 指向新节点
+    self.head.next = node       # ④ head 的 next 指向新节点
 
   def _remove_node(self, node: ListNode):
     """从链表中移除指定节点"""
