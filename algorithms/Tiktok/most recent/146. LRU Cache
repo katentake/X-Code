@@ -72,7 +72,7 @@ class LRUCache:
 
   # ===== 双向链表辅助操作函数 =====
 
-  def _add_to_head(self, node: ListNode):
+  def _add_to_head(self, new_node: ListNode):
     #将新节点 new_node 插入到伪头节点 head 与第一个真实节点之间
     new_node.prev = self.head       # ① 新节点的 prev 指向 head
     new_node.next = self.head.next  # ② 新节点的 next 指向原本的第一个真实节点
