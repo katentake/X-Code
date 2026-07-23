@@ -21,3 +21,76 @@ class LRUCache:
 
 TC: O(1)
 SC: O(capacity)
+
+#####################################################
+#Hashmap + DoubleLinkedlist
+
+
+class ListNode:
+
+  def __init__(self, key=0, value=0):
+    self.key = key
+    self.value = value
+    self.prev = None
+    self.next = None
+
+
+class LRUCache:
+
+  def __init__(self, capacity: int):
+    self.capacity = capacity
+    self.cache = {}  # key -> ListNode
+
+    # 初始化伪头部和伪尾部节点
+    self.head = ListNode()
+    self.tail = ListNode()
+    self.head.next = self.tail
+    self.tail.prev = self.head
+
+  def get(self, key: int) -> int:
+    if key not in self.cache:
+      return -1
+    node = self.cache[key]
+    # 将访问过的节点移动到头部（表示最近使用）
+    self._move_to_head(node)
+    return node.value
+
+  def put(self, key: int, value: int) -> None:
+    if key in self.cache:
+      node = self.cache[key]
+      node.value = value
+      self._move_to_head(node)
+    else:
+      new_node = ListNode(key, value)
+      self.cache[key] = new_node
+      self._add_to_head(new_node)
+
+      # 超过容量时，删除最久未使用的节点（即尾节点的前一个）
+      if len(self.cache) > self.capacity:
+        removed_node = self._remove_tail()
+        del self.cache[removed_node.key]
+
+  # ===== 双向链表辅助操作函数 =====
+
+  def _add_to_head(self, node: ListNode):
+    """将节点插入到伪头节点之后"""
+    node.prev = self.head
+    node.next = self.head.next
+    self.head.next.prev = node
+    self.head.next = node
+
+  def _remove_node(self, node: ListNode):
+    """从链表中移除指定节点"""
+    node.prev.next = node.next
+    node.next.prev = node.prev
+
+  def _move_to_head(self, node: ListNode):
+    """将已知节点移动到头部"""
+    self._remove_node(node)
+    self._add_to_head(node)
+
+  def _remove_tail(self) -> ListNode:
+    """移除最久未使用的节点并返回"""
+    node = self.tail.prev
+    self._remove_node(node)
+    return node
