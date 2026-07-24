@@ -182,7 +182,7 @@ affinity: {}
 
 order:
   replicaCount: 2
-  image: "mini-order:v1.0.3"  # 👈 升级到打好了 gunicorn 的新镜像
+  image: "mini-order:v1.0.4"  
   cpuRequest: "100m"
   memoryLimit: "256Mi"
   # 👇 添加/覆盖探针配置
