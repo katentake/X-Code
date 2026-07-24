@@ -181,10 +181,27 @@ affinity: {}
 
 
 order:
-  replicaCount: 2 
-  image: "mini-order:v1.0.2"
+  replicaCount: 2
+  image: "mini-order:v1.0.3"  # 👈 升级到打好了 gunicorn 的新镜像
   cpuRequest: "100m"
   memoryLimit: "256Mi"
+  # 👇 添加/覆盖探针配置
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 5000
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5       # 👈 关键：从默认的 1s 调大到 5s，避免卡顿误杀
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 5000
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
 
 payment:
   replicaCount: 2
