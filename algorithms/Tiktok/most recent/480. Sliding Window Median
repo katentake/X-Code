@@ -1,0 +1,57 @@
+#Method: 有序列表 sortedList
+
+from sortedcontainers import SortedList 
+class Solution:
+    def medianSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        sliding_window = sortedList(nums[:k]) #建立第一个滑动窗口的有序状态
+        res = []
+
+        def get_median(): #定义中位数计算辅助函数
+            if k % 2 == 1: #如果窗口大小 $k$ 是奇数
+                return float(sliding_window[k // 2])
+            return (sliding_window[k // 2 - 1] + sliding_window[k // 2]) / 2.0
+
+        res.append(get_median()) #计算第一个窗口的中位数
+
+        for i in range(k, len(nums)):         #从索引 k 开始遍历数组直到末尾. nums[i] 是新进入窗口的元素，而 nums[i - k] 是离开窗口的元素。
+            sliding_window.add(nums[i])       #TC: # O(log k)
+            sliding_window.remove(nums[i-k])  #从 SortedList 中移除滑出窗口的旧元素 nums[i - k]  #TC: # O(log k)
+            res.append(get_median)     #重新计算当前窗口的中位数并追加到 res 中
+
+
+        return res 
+
+
+TC: O(n log k)
+SC: O(k)
+
+##返回整数的情况
+from typing import List
+from sortedcontainers import SortedList
+
+class Solution:
+    def medianSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        window = SortedList()
+        res = []
+        
+        for i in range(len(nums)):
+            # 1. 元素入窗
+            window.add(nums[i])
+            
+            # 2. 元素出窗
+            if i >= k:
+                window.remove(nums[i - k])
+            
+            # 3. 计算并保存当前窗口的中位数（整型）
+            if i >= k - 1:
+                if k % 2 == 1:
+                    res.append(window[k // 2])
+                else:
+                    # 使用 // 2 进行整除，确保结果为整数
+                    res.append((window[k // 2 - 1] + window[k // 2]) // 2)
+                    
+        return res
+
+
+TC: O(n log k)
+SC: O(k)
