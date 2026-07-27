@@ -56,6 +56,8 @@ class Solution:
 TC: O(n log k)
 SC: O(k)
 
+################# 
+#Method: 维护有序数组（Maintain Sorted Array）/ 二分插入
 from typing import List
 import bisect
 
