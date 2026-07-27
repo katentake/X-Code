@@ -1,0 +1,28 @@
+#Method: Backtracking & Pruning
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[int]:
+        #initial
+        candidates.sort()
+        res = []
+
+        def Backtrack(start, remain, combo): 
+            if remain == 0: # Base Case: found a valid combination
+                res.append(list(combo))
+                return
+
+            for i in range(start, len(candidates)):
+                # Pruning: since candidates is sorted, if current candidate > remain,
+                # all subsequent candidates will also be too large.
+                if candidates[i] > remain: 
+                    break 
+                combo.append(candidates[i])                  # 1. Choose
+                Backtrack(i, remain - candidates[i], combo)  # 2. Explore: pass 'i' (not 'i + 1') because we can reuse the same candidate
+                combo.pop()                                  # 3. Unchoose (Backtrack)
+
+        Backtrack(0, target, [])
+
+        return res 
+
+
+TC: O(N^{\frac{T}{M}})
+SC: O(\frac{T}{M})
