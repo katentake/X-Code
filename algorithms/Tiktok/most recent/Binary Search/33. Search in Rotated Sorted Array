@@ -1,0 +1,31 @@
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        #target not in the nums list
+        if not nums:
+            return -1
+
+        left, right = 0, len(nums)-1
+        while left <= right:
+            mid = (left + right) // 2
+            if nums[mid] == target:
+                return mid
+            # 1. 先判断【左半段】是不是有序区间
+            elif nums[left] <= nums[mid]:   
+                if nums[left] <= target < nums[mid]:  #target in left side 
+                    right = mid - 1 #保留左半边，缩小右边界
+                else:
+                    left = mid + 1  # 否则去右半边找
+            # 2. 否则【右半段】必定是有序区间
+            else:
+                if nums[mid] < target <= nums[right]: #target in right side 
+                    left = mid + 1  # 保留右半边，增大左边界
+                else:
+                    right = mid - 1  # 否则去左半边找
+
+        return -1
+
+
+TC: O(log n)
+SC: O(1)
+            
+        
