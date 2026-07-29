@@ -1,7 +1,10 @@
 # 解法一：内置 Counter 结合自定义 sort 键
 class Solution:
     def frequencySort(self, nums: List[int]) -> List[int]:
+        #1. 统计每个数字的频次
         count = Counter(nums)
+        #2. 进行排序
+        # count[x] 为频次， -x 频次按数值降序
         nums.sort(key=lambda x: (count[x], -x))
 
         return nums

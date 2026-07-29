@@ -17,6 +17,8 @@ class Solution:
             
         return count
 
+#same answer with LC: 930, with LC:1248 curr_sum += nums&1
+
 TC: O(n)
 SC: O(N)
 
