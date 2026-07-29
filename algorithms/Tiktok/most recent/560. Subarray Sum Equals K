@@ -1,0 +1,26 @@
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        count = 0
+        curr_sum = 0
+        # key: 前缀和, value: 该前缀和出现的次数
+        hashmap = {0: 1}  # 初始化 {0: 1} 处理从开头到当前位置恰好等于 k 的情况
+        
+        for num in nums:
+            curr_sum += num
+            
+            # 如果存在 curr_sum - k，说明存在若干个连续子数组的和等于 k
+            if curr_sum - k in hashmap:
+                count += hashmap[curr_sum - k]
+                
+            # 记录/更新当前前缀和出现的次数
+            hashmap[curr_sum] = hashmap.get(curr_sum, 0) + 1
+            
+        return count
+
+TC: O(n)
+SC: O(N)
+
+sol = Solution()
+count = sol.subarraySum(nums, k)
+print("input", nums, "k=2", k)
+print("output", count)
