@@ -1,0 +1,21 @@
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+    """
+    why use "defaultdict(list)"?
+    当你访问一个不存在的key时， 它会自动创建一个空列表， 省去了if key not in res: res[key] = []的判断逻辑
+    #Hash Table
+    #key: aet
+    #value: ["eat", "tea", "ate"]
+    """
+        res = defaultdict(list)
+
+        for s in strs:
+            # 将字符串按字符排序并重组为字符串，作为唯一 key
+            key = "".join(sorted(s))
+            res[key].append(s)  # 将原字符串加入对应 key 的分组中
+
+        return list(res.values())
+
+
+TC: O(N.K log K)
+TC: O(N.K) 
