@@ -153,9 +153,13 @@ readinessProbe:
     port: http
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+# ⚠️ minReplicas 必须 >= order.replicaCount / payment.replicaCount，否则 HPA 会不断把
+# 副本数拉回 minReplicas，和 Argo CD 的 selfHeal（拉回 Helm 里声明的 replicaCount）打架，
+# 造成两边来回拉扯的 flapping。目前 order/payment 都显式声明 replicaCount: 2，所以这里
+# 保持一致设成 2；以后要提高常驻副本数，记得两边一起改。
 autoscaling:
   enabled: true
-  minReplicas: 3
+  minReplicas: 2
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
@@ -206,6 +210,23 @@ order:
 payment:
   replicaCount: 2
   image: "mini-payment:v1.0.0"
+
+# 🔐 密钥管理
+# - secrets.enabled=false（默认，生产/GitOps 路径）：postgres-secret 和 payment-secret
+#   由 templates/sealed-secrets.yaml 里的 SealedSecret 提供，密文由
+#   mini-k8s-platform/scripts/seal-secrets.sh production 生成后手动填入，可安全提交 Git。
+#   控制器安装与私钥备份见 mini-k8s-platform/docs/sealed-secrets-key-management.md。
+# - secrets.enabled=true（本地练手）：改用下面这个明文 Secret 模板，方便在没有装
+#   sealed-secrets 控制器的本地 kind 集群里直接跑起来。真实值请通过
+#   `helm install --set secrets.xxx=...` 或独立的、被 .gitignore 排除的
+#   values-secret.yaml 注入，不要把明文写回这个文件再提交。
+secrets:
+  enabled: false
+  postgres:
+    user: ""
+    password: ""
+  payment:
+    apiKey: ""
 
 redis:
   image:

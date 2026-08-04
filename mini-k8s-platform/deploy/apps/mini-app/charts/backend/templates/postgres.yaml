@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres-db
   namespace: {{ .Release.Namespace }}
 spec:
+  serviceName: postgres-service
   replicas: 1
   selector:
     matchLabels:
@@ -20,18 +21,40 @@ spec:
         - name: POSTGRES_DB
           value: "ecommerce"
         - name: POSTGRES_USER
-          value: "terry"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
-          value: "supersecretpwd"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
         ports:
         - containerPort: 5432
+        volumeMounts:
+        - name: pg-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: pg-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
   namespace: {{ .Release.Namespace }}
+  annotations:
+    # clusterIP 是不可变字段，改成 Headless（None）没法用 kubectl apply 原地更新，
+    # 让 Argo CD 遇到这种字段直接 delete+recreate，而不是同步失败卡住。
+    argocd.argoproj.io/sync-options: Replace=true
 spec:
+  clusterIP: None
   ports:
   - port: 5432
     targetPort: 5432

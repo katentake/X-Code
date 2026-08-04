@@ -6,7 +6,7 @@ metadata:
   labels:
     app: payment-service
 spec:
-  replicas: {{ .Values.replicaCount | default 2 }} 
+  replicas: {{ .Values.payment.replicaCount | default 2 }}
   selector:
     matchLabels:
       app: payment-service
@@ -28,7 +28,10 @@ spec:
         # 💡 习惯上把环境变量放在这里，让容器基础配置更集中
         env:
         - name: PAYMENT_API_KEY
-          value: "mock_secret_key_abc123"
+          valueFrom:
+            secretKeyRef:
+              name: payment-secret
+              key: PAYMENT_API_KEY
 
         # SRE 面试必杀：资源配额限制
         resources:
