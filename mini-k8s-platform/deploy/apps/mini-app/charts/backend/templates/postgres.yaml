@@ -50,9 +50,10 @@ metadata:
   name: postgres-service
   namespace: {{ .Release.Namespace }}
   annotations:
-    # clusterIP 是不可变字段，改成 Headless（None）没法用 kubectl apply 原地更新，
-    # 让 Argo CD 遇到这种字段直接 delete+recreate，而不是同步失败卡住。
-    argocd.argoproj.io/sync-options: Replace=true
+    # clusterIP 是不可变字段，改成 Headless（None）没法用 kubectl apply/replace 原地更新
+    # （单独 Replace=true 仍然是 PUT，一样会被拒绝）。Force=true 和 Replace=true 一起用，
+    # 失败时才会真正 delete+recreate，而不是同步失败卡住。
+    argocd.argoproj.io/sync-options: Force=true,Replace=true
 spec:
   clusterIP: None
   ports:
