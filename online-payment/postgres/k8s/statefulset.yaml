@@ -21,13 +21,18 @@ spec:
         - containerPort: 5432
           name: dbport
         env:
-        # ⚡️生产环境这些应该进 Secret，这里为了极简练手直接写明
         - name: POSTGRES_DB
           value: "ecommerce"
         - name: POSTGRES_USER
-          value: "terry"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
-          value: "supersecretpwd"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
         
         resources:
           requests:

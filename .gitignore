@@ -1,0 +1,11 @@
+# Kubeconfigs — contain live cluster credentials (client-key-data), never commit
+kubeconfig
+*.kubeconfig
+**/kubeconfig
+
+# Local-only plaintext secret sources used as kubeseal input — never commit
+**/secret.yaml
+values-secret.yaml
+
+# Sealed Secrets controller master key backup — must be stored offline, never in git
+sealed-secrets-master-key-backup.yaml

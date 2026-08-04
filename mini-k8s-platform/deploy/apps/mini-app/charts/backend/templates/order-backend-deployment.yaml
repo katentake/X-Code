@@ -6,7 +6,7 @@ metadata:
   labels:
     app: order-service
 spec:
-  replicas: {{ .Values.replicaCount | default 2 }} 
+  replicas: {{ .Values.order.replicaCount | default 2 }}
   selector:
     matchLabels:
       app: order-service          # 必须严格匹配下面 Pod 模板的标签
@@ -34,9 +34,15 @@ spec:
         - name: DB_NAME
           value: "ecommerce"
         - name: DB_USER
-          value: "terry"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
         - name: DB_PASSWORD
-          value: "supersecretpwd"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
         - name: REDIS_HOST
           value: "mini-production-platform-redis-svc"    # 从原本尾部 env 块合并过来的变量
         - name: REDIS_PORT
@@ -56,14 +62,6 @@ spec:
 
         # SRE 面试必杀：双探针机制（零停机滚动升级的关键，已去除重复定义）
         livenessProbe:            # 进程死锁或假死时，K8s 会自动自动重启该容器
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 5  # 容器启动后等 5 秒再开始探测
-          periodSeconds: 10       # 每 10 秒探测一次
+          {{- toYaml .Values.order.livenessProbe | nindent 10 }}
         readinessProbe:           # 只有探测通过，Service 才会把 Pod IP 加进后端端点，防止 502
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          {{- toYaml .Values.order.readinessProbe | nindent 10 }}
