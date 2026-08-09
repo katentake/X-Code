@@ -1,0 +1,69 @@
+#Method: DFS approach this question
+
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+
+        #build helper function DFS
+        def dfs(r, c):
+            # Base cases: out of bounds or water/already visited cell
+            if r < 0 or r >= rows or c < 0 or c >= cols or grid[r][c] == 0:
+                return 0
+
+            grid[r][c] = 0
+
+            return 1 + dfs(r+1, c) + dfs(r-1, c) + dfs(r, c+1) + dfs(r, c-1)
+
+        max_area = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:
+                    max_area = max(max_area, dfs(r, c))
+
+        return max_area
+
+
+TC: O(M*N)
+SC: O(M*N)
+
+#Follow-up: "How to avoid recursion stack overflow for a very large grid?"
+#Switch from DFS (Recursion) to BFS (Queue Iteration) using collections.deque. TC O(min(M, N)) nodes in the queue at any given time.
+
+
+#BFS
+from collections import deque
+
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        max_area = 0
+
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:
+                    curr_area = 0
+                    queue = deque([(r, c)])
+                    grid[r][c] = 0  # 标记入队节点为已访问
+
+                    while queue:
+                        curr_r, curr_c = queue.popleft()
+                        curr_area += 1
+
+                        # 遍历相邻四个方向
+                        direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+                        for dr, dc in direction:
+                            nr, nc = curr_r + dr, curr_c + dc
+                            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                                grid[nr][nc] = 0  # 入队即标记，防止重复加入
+                                queue.append((nr, nc))
+
+                    max_area = max(max_area, curr_area)
+
+
+        return max_area
+
+
+TC: O(M*N)
+SC: 0(min(M*N))
+
+
