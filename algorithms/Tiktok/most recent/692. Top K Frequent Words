@@ -27,8 +27,7 @@ class Solution:
         # 堆中剩下的 k 个元素，弹出时是从小到大的，需要逆序返回
         res = []
         while min_heap:
-            for word in min_heap:
-                res.append(heapq.heappop(min_heap).word)
+            res.append(heapq.heappop(min_heap).word)
 
         return res[::-1]
 
