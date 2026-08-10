@@ -22,7 +22,7 @@ class Solution:
         for word, freq in count.items():
             heapq.heappush(min_heap, WordFreq(freq, word))
             if len(min_heap) > k:
-                heapq.pushpop(min_heap)
+                heapq.heappop(min_heap)
 
         # 堆中剩下的 k 个元素，弹出时是从小到大的，需要逆序返回
         res = []
