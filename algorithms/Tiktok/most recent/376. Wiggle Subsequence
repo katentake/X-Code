@@ -18,7 +18,7 @@ class Solution:
                 # 只有当捕捉到交替的变化时，才更新 prediff
                 prediff = curdiff
 
-        result res
+        return res
 
 TC: O(N)
 SC: O(1)
