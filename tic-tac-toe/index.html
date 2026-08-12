@@ -185,34 +185,38 @@
   }
   #whale {
     position: fixed;
-    top: 30%;
+    top: 28%;
     left: -25%;
-    font-size: 7rem;
-    line-height: 1;
+    width: 280px;
+    transform: translateX(-50%);
     opacity: 0;
     z-index: 1002;
     pointer-events: none;
+    transition: left 4.5s ease-in-out, opacity 0.6s ease;
   }
   #whale.swim {
-    animation: whaleSwim 7s ease-in-out forwards;
+    opacity: 1;
+    animation: whaleBob 2.4s ease-in-out infinite;
+  }
+  #whale svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 10px 14px rgba(0,0,0,0.35));
   }
   .whale-spray {
     position: absolute;
-    top: -0.3em;
-    left: 65%;
+    top: -8%;
+    left: 54%;
     font-size: 2.5rem;
     opacity: 0;
   }
   #whale.swim .whale-spray {
     animation: spraySquirt 0.7s ease-out infinite;
   }
-  @keyframes whaleSwim {
-    0%   { left: -25%; opacity: 1; transform: scaleX(-1) translateY(0); }
-    20%  { transform: scaleX(-1) translateY(-20px); }
-    40%  { transform: scaleX(-1) translateY(0); }
-    60%  { transform: scaleX(-1) translateY(-20px); }
-    80%  { transform: scaleX(-1) translateY(0); }
-    100% { left: 115%; opacity: 1; transform: scaleX(-1) translateY(0); }
+  @keyframes whaleBob {
+    0%, 100% { top: 28%; }
+    50%      { top: 24%; }
   }
   @keyframes spraySquirt {
     0%   { opacity: 0; transform: translateY(0) scale(0.6); }
@@ -243,7 +247,19 @@
     <div class="dino-emoji">🦖</div>
   </div>
   <div id="rocket">🚀<div class="rocket-trail"></div></div>
-  <div id="whale">🐳<div class="whale-spray">💦</div></div>
+  <div id="whale">
+    <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M35,80 C15,60 0,55 8,40 C22,52 32,58 42,64 C34,70 34,72 42,78 C32,84 32,88 40,100 C30,95 15,90 8,120 C0,105 15,100 35,80 Z" fill="#2f7dc2"/>
+      <path d="M35,80 C35,45 85,25 140,28 C190,30 230,50 252,68 C255,72 250,76 240,75 C230,90 205,100 175,103 C185,112 180,120 165,122 C150,124 140,116 135,108 C110,112 70,108 50,95 C40,90 35,86 35,80 Z" fill="#4aa8ea"/>
+      <path d="M55,90 C80,108 130,110 165,100 C140,112 90,113 65,100 C58,97 55,94 55,90 Z" fill="#cdeeff"/>
+      <path d="M120,95 C130,105 135,118 128,128 C118,120 112,108 112,98 Z" fill="#2f7dc2"/>
+      <ellipse cx="150" cy="26" rx="4" ry="2.5" fill="#1e2233"/>
+      <circle cx="205" cy="55" r="5" fill="#1e2233"/>
+      <circle cx="207" cy="53" r="1.6" fill="#ffffff"/>
+      <path d="M215,68 Q232,74 245,66" stroke="#1e2233" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="whale-spray">💦</div>
+  </div>
 
 <script>
   const boardEl = document.getElementById('board');
@@ -426,14 +442,47 @@
     }, { once: true });
   }
 
+  let whaleRunId = 0;
+
   function launchWhale() {
     const whale = document.getElementById('whale');
-    whale.classList.remove('swim');
-    void whale.offsetWidth; // restart animation if triggered again
+    const runId = ++whaleRunId; // invalidates any sequence already in flight
+    const stillCurrent = () => runId === whaleRunId;
+    const CROSS_MS = 4500;
+    const SPRAY_MS = 10000;
+
+    function placeInstantly(leftValue) {
+      whale.style.transition = 'none';
+      whale.style.left = leftValue;
+      void whale.offsetWidth;
+      whale.style.transition = 'left 4.5s ease-in-out, opacity 0.6s ease';
+    }
+
+    function swimTo(leftValue, onArrive) {
+      if (!stillCurrent()) return;
+      whale.style.left = leftValue;
+      setTimeout(() => stillCurrent() && onArrive(), CROSS_MS);
+    }
+
+    placeInstantly('-25%');
     whale.classList.add('swim');
-    whale.addEventListener('animationend', () => {
-      whale.classList.remove('swim');
-    }, { once: true });
+    void whale.offsetWidth;
+
+    swimTo('115%', () => {                    // pass 1
+      placeInstantly('-25%');
+      swimTo('115%', () => {                  // pass 2
+        placeInstantly('-25%');
+        swimTo('50%', () => {                 // pass 3: stop center stage
+          setTimeout(() => {                  // spray in place
+            if (!stillCurrent()) return;
+            swimTo('115%', () => {            // swim off and hide
+              whale.classList.remove('swim');
+              placeInstantly('-25%');
+            });
+          }, SPRAY_MS);
+        });
+      });
+    });
   }
 
   function showDino(winner) {
