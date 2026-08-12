@@ -28,7 +28,7 @@ class MyCircularQueue:
             return -1
         return self.queue[self.head]
 
-    def Rear(self) -> int:
+    def Rear(self) -> int: 
         if self.isEmpty():
             return -1
         # 队尾真实索引
