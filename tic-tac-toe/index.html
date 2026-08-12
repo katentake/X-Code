@@ -281,36 +281,63 @@
     render();
   }
 
-  // Mostly-optimal AI: usually plays the minimax-best move, but
-  // occasionally slips so a human can actually build a win streak.
+  // Kid-friendly AI: mostly plays random moves, occasionally blocks an
+  // obvious win so it feels alive, but always picks among moves that are
+  // provably safe — ones where no future sequence of play, however the
+  // game unfolds, can force the computer into a win. It can only draw
+  // or lose, never win.
   function pickComputerMove() {
     const empty = cells.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
-    if (Math.random() < 0.25) {
-      return empty[Math.floor(Math.random() * empty.length)];
+    const safeMoves = empty.filter(i => isSafeComputerMove(i));
+
+    if (Math.random() < 0.2) {
+      const block = findWinningMove(cells, HUMAN);
+      if (block !== null && (safeMoves.includes(block) || !safeMoves.length)) return block;
     }
-    return minimax(cells, COMPUTER).move;
+
+    const pool = safeMoves.length ? safeMoves : empty;
+    return pool[Math.floor(Math.random() * pool.length)];
   }
 
-  function minimax(boardArr, player) {
-    const result = checkResult(boardArr);
-    if (result) {
-      if (result.winner === COMPUTER) return { score: 1 };
-      if (result.winner === HUMAN) return { score: -1 };
-      return { score: 0 };
+  function isSafeComputerMove(i) {
+    cells[i] = COMPUTER;
+    const safe = computerCanAvoidWinning(HUMAN);
+    cells[i] = null;
+    return safe;
+  }
+
+  // True if, from the current board with the given player to move, the
+  // computer can guarantee (against any possible future play) that it
+  // will never complete a winning line.
+  function computerCanAvoidWinning(turn) {
+    const result = checkResult(cells);
+    if (result) return result.winner !== COMPUTER;
+    const empty = cells.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
+    if (turn === COMPUTER) {
+      return empty.some(i => {
+        cells[i] = COMPUTER;
+        const safe = computerCanAvoidWinning(HUMAN);
+        cells[i] = null;
+        return safe;
+      });
     }
-    const empty = boardArr.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
-    let bestMove = empty[0];
-    let bestScore = player === COMPUTER ? -Infinity : Infinity;
-    for (const i of empty) {
-      boardArr[i] = player;
-      const score = minimax(boardArr, player === COMPUTER ? HUMAN : COMPUTER).score;
-      boardArr[i] = null;
-      if (player === COMPUTER ? score > bestScore : score < bestScore) {
-        bestScore = score;
-        bestMove = i;
+    return empty.every(i => {
+      cells[i] = HUMAN;
+      const safe = computerCanAvoidWinning(COMPUTER);
+      cells[i] = null;
+      return safe;
+    });
+  }
+
+  function findWinningMove(cellsArr, player) {
+    for (const line of WIN_LINES) {
+      const values = line.map(i => cellsArr[i]);
+      const emptyIdx = line[values.indexOf(null)];
+      if (values.filter(v => v === player).length === 2 && values.includes(null)) {
+        return emptyIdx;
       }
     }
-    return { score: bestScore, move: bestMove };
+    return null;
   }
 
   function endGame(result) {
