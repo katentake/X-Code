@@ -148,40 +148,40 @@
   #rocket {
     position: fixed;
     left: 50%;
-    bottom: -15%;
+    bottom: -20%;
     transform: translateX(-50%);
-    font-size: 4rem;
+    font-size: 9rem;
     line-height: 1;
     opacity: 0;
     z-index: 1001;
     pointer-events: none;
   }
   #rocket.launch {
-    animation: rocketLaunch 1.8s cubic-bezier(.55,0,.85,.35) forwards;
+    animation: rocketLaunch 4.5s ease-in-out forwards;
   }
   .rocket-trail {
     position: absolute;
     top: 65%;
     left: 50%;
-    width: 10px;
+    width: 18px;
     height: 0;
     background: linear-gradient(to top, rgba(255,180,60,0.9), rgba(255,180,60,0));
     transform: translateX(-50%);
-    border-radius: 6px;
-    filter: blur(2px);
+    border-radius: 9px;
+    filter: blur(3px);
   }
   #rocket.launch .rocket-trail {
-    animation: trailGrow 1.8s ease-out forwards;
+    animation: trailGrow 4.5s ease-out forwards;
   }
   @keyframes rocketLaunch {
-    0%   { bottom: -15%; opacity: 1; transform: translateX(-50%) rotate(-8deg); }
+    0%   { bottom: -20%; opacity: 1; transform: translateX(-50%) rotate(-8deg); }
     10%  { transform: translateX(-50%) rotate(-2deg); }
     100% { bottom: 115%; opacity: 1; transform: translateX(-50%) rotate(-8deg); }
   }
   @keyframes trailGrow {
     0%   { height: 0; opacity: 0.9; }
-    80%  { height: 220px; opacity: 0.6; }
-    100% { height: 260px; opacity: 0; }
+    80%  { height: 380px; opacity: 0.6; }
+    100% { height: 440px; opacity: 0; }
   }
 </style>
 </head>
