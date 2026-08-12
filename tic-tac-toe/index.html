@@ -183,6 +183,43 @@
     80%  { height: 380px; opacity: 0.6; }
     100% { height: 440px; opacity: 0; }
   }
+  #whale {
+    position: fixed;
+    top: 30%;
+    left: -25%;
+    font-size: 7rem;
+    line-height: 1;
+    opacity: 0;
+    z-index: 1002;
+    pointer-events: none;
+  }
+  #whale.swim {
+    animation: whaleSwim 7s ease-in-out forwards;
+  }
+  .whale-spray {
+    position: absolute;
+    top: -0.3em;
+    left: 65%;
+    font-size: 2.5rem;
+    opacity: 0;
+  }
+  #whale.swim .whale-spray {
+    animation: spraySquirt 0.7s ease-out infinite;
+  }
+  @keyframes whaleSwim {
+    0%   { left: -25%; opacity: 1; transform: scaleX(-1) translateY(0); }
+    20%  { transform: scaleX(-1) translateY(-20px); }
+    40%  { transform: scaleX(-1) translateY(0); }
+    60%  { transform: scaleX(-1) translateY(-20px); }
+    80%  { transform: scaleX(-1) translateY(0); }
+    100% { left: 115%; opacity: 1; transform: scaleX(-1) translateY(0); }
+  }
+  @keyframes spraySquirt {
+    0%   { opacity: 0; transform: translateY(0) scale(0.6); }
+    30%  { opacity: 1; transform: translateY(-25px) scale(1); }
+    60%  { opacity: 0.6; transform: translateY(-42px) scale(1.1); }
+    100% { opacity: 0; transform: translateY(-55px) scale(0.8); }
+  }
 </style>
 </head>
 <body>
@@ -206,6 +243,7 @@
     <div class="dino-emoji">🦖</div>
   </div>
   <div id="rocket">🚀<div class="rocket-trail"></div></div>
+  <div id="whale">🐳<div class="whale-spray">💦</div></div>
 
 <script>
   const boardEl = document.getElementById('board');
@@ -372,6 +410,9 @@
     if (streak > 0 && streak % 3 === 0) {
       setTimeout(launchRocket, 400);
     }
+    if (streak > 0 && streak % 5 === 0) {
+      setTimeout(launchWhale, 400);
+    }
   }
 
   function launchRocket() {
@@ -382,6 +423,16 @@
     rocket.addEventListener('animationend', () => {
       rocket.classList.remove('launch');
       launchFireworks();
+    }, { once: true });
+  }
+
+  function launchWhale() {
+    const whale = document.getElementById('whale');
+    whale.classList.remove('swim');
+    void whale.offsetWidth; // restart animation if triggered again
+    whale.classList.add('swim');
+    whale.addEventListener('animationend', () => {
+      whale.classList.remove('swim');
     }, { once: true });
   }
 
