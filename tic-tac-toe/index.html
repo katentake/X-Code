@@ -145,20 +145,59 @@
     85%  { transform: translate(-50%, 0); opacity: 1; }
     100% { transform: translate(-50%, 100%); opacity: 0; }
   }
+  #rocket {
+    position: fixed;
+    left: 50%;
+    bottom: -15%;
+    transform: translateX(-50%);
+    font-size: 4rem;
+    line-height: 1;
+    opacity: 0;
+    z-index: 1001;
+    pointer-events: none;
+  }
+  #rocket.launch {
+    animation: rocketLaunch 1.8s cubic-bezier(.55,0,.85,.35) forwards;
+  }
+  .rocket-trail {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    width: 10px;
+    height: 0;
+    background: linear-gradient(to top, rgba(255,180,60,0.9), rgba(255,180,60,0));
+    transform: translateX(-50%);
+    border-radius: 6px;
+    filter: blur(2px);
+  }
+  #rocket.launch .rocket-trail {
+    animation: trailGrow 1.8s ease-out forwards;
+  }
+  @keyframes rocketLaunch {
+    0%   { bottom: -15%; opacity: 1; transform: translateX(-50%) rotate(-8deg); }
+    10%  { transform: translateX(-50%) rotate(-2deg); }
+    100% { bottom: 115%; opacity: 1; transform: translateX(-50%) rotate(-8deg); }
+  }
+  @keyframes trailGrow {
+    0%   { height: 0; opacity: 0.9; }
+    80%  { height: 220px; opacity: 0.6; }
+    100% { height: 260px; opacity: 0; }
+  }
 </style>
 </head>
 <body>
   <h1>Tic Tac Toe</h1>
-  <div id="status">X's turn</div>
+  <div id="status">Your turn</div>
   <div id="board"></div>
   <div id="controls">
-    <button class="action" id="resetBtn">Reset Board</button>
+    <button class="action" id="resetBtn">Play Again</button>
     <button class="action" id="scoresBtn">Reset Scores</button>
   </div>
   <div id="scoreboard">
-    <span>X wins: <span id="xScore">0</span></span>
-    <span>O wins: <span id="oScore">0</span></span>
+    <span>You: <span id="xScore">0</span></span>
+    <span>Computer: <span id="oScore">0</span></span>
     <span>Draws: <span id="drawScore">0</span></span>
+    <span>Win streak: <span id="streakScore">0</span></span>
   </div>
 
   <canvas id="fireworks"></canvas>
@@ -166,6 +205,7 @@
     <div class="dino-bubble">Congratulations, <span id="dinoWinner"></span>!</div>
     <div class="dino-emoji">🦖</div>
   </div>
+  <div id="rocket">🚀<div class="rocket-trail"></div></div>
 
 <script>
   const boardEl = document.getElementById('board');
@@ -175,7 +215,10 @@
   const xScoreEl = document.getElementById('xScore');
   const oScoreEl = document.getElementById('oScore');
   const drawScoreEl = document.getElementById('drawScore');
+  const streakScoreEl = document.getElementById('streakScore');
 
+  const HUMAN = 'X';
+  const COMPUTER = 'O';
   const WIN_LINES = [
     [0,1,2],[3,4,5],[6,7,8],
     [0,3,6],[1,4,7],[2,5,8],
@@ -183,9 +226,10 @@
   ];
 
   let cells = Array(9).fill(null);
-  let current = 'X';
   let gameOver = false;
+  let boardLocked = false;
   let scores = { X: 0, O: 0, draw: 0 };
+  let winStreak = 0;
 
   function render() {
     boardEl.innerHTML = '';
@@ -193,51 +237,125 @@
       const btn = document.createElement('button');
       btn.className = 'cell' + (val ? ' ' + val.toLowerCase() : '');
       btn.textContent = val || '';
-      btn.disabled = !!val || gameOver;
+      btn.disabled = !!val || gameOver || boardLocked;
       btn.addEventListener('click', () => handleMove(i));
       boardEl.appendChild(btn);
     });
   }
 
-  function checkWinner() {
+  function checkResult(cellsArr) {
     for (const line of WIN_LINES) {
       const [a, b, c] = line;
-      if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
-        return { winner: cells[a], line };
+      if (cellsArr[a] && cellsArr[a] === cellsArr[b] && cellsArr[a] === cellsArr[c]) {
+        return { winner: cellsArr[a], line };
       }
     }
-    if (cells.every(c => c)) return { winner: 'draw', line: [] };
+    if (cellsArr.every(c => c)) return { winner: 'draw', line: [] };
     return null;
   }
 
   function handleMove(i) {
-    if (gameOver || cells[i]) return;
-    cells[i] = current;
-    const result = checkWinner();
+    if (gameOver || boardLocked || cells[i]) return;
+    cells[i] = HUMAN;
+    const result = checkResult(cells);
     if (result) {
-      gameOver = true;
-      if (result.winner === 'draw') {
-        statusEl.textContent = "It's a draw!";
-        scores.draw++;
-        drawScoreEl.textContent = scores.draw;
-      } else {
-        statusEl.textContent = `${result.winner} wins!`;
-        scores[result.winner]++;
-        (result.winner === 'X' ? xScoreEl : oScoreEl).textContent = scores[result.winner];
-        celebrate(result.winner);
-      }
-      render();
-      result.line.forEach(idx => boardEl.children[idx].classList.add('win'));
+      endGame(result);
       return;
     }
-    current = current === 'X' ? 'O' : 'X';
-    statusEl.textContent = `${current}'s turn`;
+    boardLocked = true;
+    statusEl.textContent = "Computer's turn";
+    render();
+    setTimeout(computerMove, 500);
+  }
+
+  function computerMove() {
+    const move = pickComputerMove();
+    cells[move] = COMPUTER;
+    const result = checkResult(cells);
+    boardLocked = false;
+    if (result) {
+      endGame(result);
+      return;
+    }
+    statusEl.textContent = 'Your turn';
     render();
   }
 
-  function celebrate(winner) {
+  // Mostly-optimal AI: usually plays the minimax-best move, but
+  // occasionally slips so a human can actually build a win streak.
+  function pickComputerMove() {
+    const empty = cells.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
+    if (Math.random() < 0.25) {
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+    return minimax(cells, COMPUTER).move;
+  }
+
+  function minimax(boardArr, player) {
+    const result = checkResult(boardArr);
+    if (result) {
+      if (result.winner === COMPUTER) return { score: 1 };
+      if (result.winner === HUMAN) return { score: -1 };
+      return { score: 0 };
+    }
+    const empty = boardArr.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
+    let bestMove = empty[0];
+    let bestScore = player === COMPUTER ? -Infinity : Infinity;
+    for (const i of empty) {
+      boardArr[i] = player;
+      const score = minimax(boardArr, player === COMPUTER ? HUMAN : COMPUTER).score;
+      boardArr[i] = null;
+      if (player === COMPUTER ? score > bestScore : score < bestScore) {
+        bestScore = score;
+        bestMove = i;
+      }
+    }
+    return { score: bestScore, move: bestMove };
+  }
+
+  function endGame(result) {
+    gameOver = true;
+    boardLocked = false;
+    if (result.winner === 'draw') {
+      statusEl.textContent = "It's a draw!";
+      scores.draw++;
+      drawScoreEl.textContent = scores.draw;
+      winStreak = 0;
+    } else if (result.winner === HUMAN) {
+      statusEl.textContent = 'You win!';
+      scores.X++;
+      xScoreEl.textContent = scores.X;
+      winStreak++;
+      streakScoreEl.textContent = winStreak;
+      celebrate(winStreak);
+    } else {
+      statusEl.textContent = 'Computer wins!';
+      scores.O++;
+      oScoreEl.textContent = scores.O;
+      winStreak = 0;
+      streakScoreEl.textContent = winStreak;
+    }
+    render();
+    result.line.forEach(idx => boardEl.children[idx].classList.add('win'));
+  }
+
+  function celebrate(streak) {
     launchFireworks();
-    showDino(winner);
+    showDino('You');
+    if (streak > 0 && streak % 3 === 0) {
+      setTimeout(launchRocket, 400);
+    }
+  }
+
+  function launchRocket() {
+    const rocket = document.getElementById('rocket');
+    rocket.classList.remove('launch');
+    void rocket.offsetWidth; // restart animation if triggered again
+    rocket.classList.add('launch');
+    rocket.addEventListener('animationend', () => {
+      rocket.classList.remove('launch');
+      launchFireworks();
+    }, { once: true });
   }
 
   function showDino(winner) {
@@ -315,17 +433,19 @@
 
   function resetBoard() {
     cells = Array(9).fill(null);
-    current = 'X';
     gameOver = false;
-    statusEl.textContent = "X's turn";
+    boardLocked = false;
+    statusEl.textContent = 'Your turn';
     render();
   }
 
   function resetScores() {
     scores = { X: 0, O: 0, draw: 0 };
+    winStreak = 0;
     xScoreEl.textContent = 0;
     oScoreEl.textContent = 0;
     drawScoreEl.textContent = 0;
+    streakScoreEl.textContent = 0;
   }
 
   resetBtn.addEventListener('click', resetBoard);
