@@ -251,6 +251,19 @@
   let boardLocked = false;
   let scores = { X: 0, O: 0, draw: 0 };
   let winStreak = 0;
+  let hardMode = false;
+  let autoResetTimer = null;
+
+  // Computer's chance of actually trying to win a given round, rather
+  // than playing the kid-friendly draw-or-lose style. Ramps up once the
+  // human is on a long win streak so the game stays a little fresh.
+  function currentMachineWinChance() {
+    return winStreak > 10 ? 0.2 : 0.1;
+  }
+
+  function rollDifficulty() {
+    hardMode = Math.random() < currentMachineWinChance();
+  }
 
   function render() {
     boardEl.innerHTML = '';
@@ -302,12 +315,16 @@
     render();
   }
 
+  function pickComputerMove() {
+    return hardMode ? minimaxMove() : pickKindComputerMove();
+  }
+
   // Kid-friendly AI: mostly plays random moves, occasionally blocks an
   // obvious win so it feels alive, but always picks among moves that are
   // provably safe — ones where no future sequence of play, however the
   // game unfolds, can force the computer into a win. It can only draw
   // or lose, never win.
-  function pickComputerMove() {
+  function pickKindComputerMove() {
     const empty = cells.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
     const safeMoves = empty.filter(i => isSafeComputerMove(i));
 
@@ -318,6 +335,34 @@
 
     const pool = safeMoves.length ? safeMoves : empty;
     return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  // Full-strength AI used for the rare round the computer is allowed to
+  // actually try to win: classic minimax, optimal play.
+  function minimaxMove() {
+    return minimax(COMPUTER).move;
+  }
+
+  function minimax(turn) {
+    const result = checkResult(cells);
+    if (result) {
+      if (result.winner === COMPUTER) return { score: 1 };
+      if (result.winner === HUMAN) return { score: -1 };
+      return { score: 0 };
+    }
+    const empty = cells.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
+    let bestMove = empty[0];
+    let bestScore = turn === COMPUTER ? -Infinity : Infinity;
+    for (const i of empty) {
+      cells[i] = turn;
+      const score = minimax(turn === COMPUTER ? HUMAN : COMPUTER).score;
+      cells[i] = null;
+      if (turn === COMPUTER ? score > bestScore : score < bestScore) {
+        bestScore = score;
+        bestMove = i;
+      }
+    }
+    return { score: bestScore, move: bestMove };
   }
 
   function isSafeComputerMove(i) {
@@ -385,6 +430,7 @@
     }
     render();
     result.line.forEach(idx => boardEl.children[idx].classList.add('win'));
+    autoResetTimer = setTimeout(resetBoard, 1600);
   }
 
   function celebrate(streak) {
@@ -526,10 +572,12 @@
   }
 
   function resetBoard() {
+    clearTimeout(autoResetTimer);
     cells = Array(9).fill(null);
     gameOver = false;
     boardLocked = false;
     statusEl.textContent = 'Your turn';
+    rollDifficulty();
     render();
   }
 
@@ -545,6 +593,7 @@
   resetBtn.addEventListener('click', resetBoard);
   scoresBtn.addEventListener('click', resetScores);
 
+  rollDifficulty();
   render();
 </script>
 </body>
