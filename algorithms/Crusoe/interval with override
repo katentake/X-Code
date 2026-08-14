@@ -1,0 +1,77 @@
+def apply_override(usages: list[list[int]], override: list[list[int]]) -> list[list[int]]:
+    res = []
+    override_start, override_end = override
+
+    for usages_start, usages_end in usages:
+        #case 1: not override
+        if usages_end <= override_start or usages_start >= override_end:
+            res.append([usages_start, usages_end])
+        else: #case 2: override
+            if usages_start < override_start:  #left side
+                res.append([usages_start, override_start])
+            else:  #right side
+                usages_end > override_end:
+                res.append([override_end, usages_end])
+
+    return res
+
+
+TC: O(N)
+SC: O(N)
+
+#Follow up: Multiple Non-overlapping Overrides
+
+def apply_multiple_overrides(usages: list[list[int]], overrides: list[list[int]]) -> list[list[int]]:
+    res = []
+    i, j = 0, 0
+    m, n = len(usages), len(overrides)
+    # 拷贝一份当前 usage 避免修改原数据，或者用变量保存当前处理的 start/end
+    curr_start, curr_end = usages[0] if m > 0 else (0, 0)
+
+    while i < m:
+        # 如果 override 已经遍历完，剩下的 usages 直接放入结果
+        if j >= n:
+            res.append([curr_start, curr_end])
+            i += 1
+            if i < m:
+                curr_start, curr_end = usages[i]
+            continue
+
+        override_start, override_end = overrides[j]
+
+        # 1. 当前 usage 完全在 override 左侧
+        if curr_end <= override_start:
+            res.append([curr_start, curr_end])
+            i += 1
+            if i < m:
+                curr_start, curr_end = usages[i]
+
+        # 2. 当前 usage 完全在 override 右侧
+        elif curr_start >= override_end:
+            j += 1 # 换下一个 override 继续与当前的 usage 比对
+
+        # 3. 存在重叠
+        else:
+            # 保留未被覆盖的左半部分
+            if curr_start < override_start:
+                res.append([curr_start, override_start])
+            # 更新当前 usage 的起点为 override 的终点（裁切掉被覆盖的部分）
+            curr_start = max(curr_start, override_end)
+
+            # 如果截断后 usage 已失效，推进到下一个 usage
+            if curr_start >= curr_end:
+                i += 1
+                if i < m:
+                    curr_start, curr_end = usages[i]
+
+    return res
+
+
+TC: O(M+N)
+SC: O(M+N)
+
+进一步讨论：若 Override 乱序或存在重叠？
+如果面试官追问：“如果 Override 本身是乱序的，或者 Override 之间可能相互重叠，怎么处理？
+”合并 Overrides：先对 overrides 按照 start 排序，然后用一趟 $O(M \log M)$ 的 区间合并（Merge Intervals） 算法将重叠的 Overrides 融合成若干互不重叠的无缝大区间。
+应用双指针：合并后，再套用上面的线性算法 O(N + M) 求解。
+总复杂度：时间 O(M \log M + N)$，空间 O(M)$。
