@@ -1,0 +1,30 @@
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        adj = defaultdict(list)
+        for course, prereq in prerequisites:
+            adj[prereq].append(course)
+
+        # 0: Unvisited, 1: Visiting, 2: Visited
+        state = [0]*numCourses
+
+        def has_cycle(node: int) -> bool:
+            if state[node] == 1: #遇到递归栈中的节点， 说明有环
+                return True 
+            if state[node] == 2: # 已验证安全， 直接返回
+                return False
+
+            state[node] = 1 # 标记为正在访问
+
+            for neighor in adj[node]:
+                if has_cycle(neighor):
+                    return True
+
+            state[node] = 2 # 标记为完全访问完成
+            return False
+
+        for i in range(numCourses):
+            if state[i] == 0:
+                if has_cycle(i):
+                    return False
+
+        return True
