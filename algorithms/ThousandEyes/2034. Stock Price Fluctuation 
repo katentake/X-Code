@@ -1,0 +1,37 @@
+class StockPrice:
+
+    def __init__(self):
+        self.timestamp_to_price = {}
+        self.max_timestamp = 0
+        self.min_heap = []  # stores (price, timestamp)
+        self.max_heap = []  # stores (-price, timestamp)
+
+    def update(self, timestamp: int, price: int) -> None:
+        self.timestamp_to_price[timestamp] = price
+        self.max_timestamp = max(self.max_timestamp, timestamp)
+
+        heapq.heappush(self.min_heap, (price, timestamp))
+        heapq.heappush(self.max_heap, (-price, timestamp))
+
+    def current(self) -> int:
+        return self.timestamp_to_price[self.max_timestamp]
+
+    def maximum(self) -> int:
+        # Lazy deletion: remove stale records
+        while -self.max_heap[0][0] != self.timestamp_to_price[self.max_heap[0][1]]:
+            heapq.heappop(self.max_heap)
+        return -self.max_heap[0][0]
+
+    def minimum(self) -> int:
+        # Lazy deletion: remove stale records
+        while self.min_heap[0][0] != self.timestamp_to_price[self.min_heap[0][1]]:
+            heapq.heappop(self.min_heap)
+        return self.min_heap[0][0]
+
+
+TC:
+update: O(log N)
+current: O(1)
+min/max: O(log N)
+
+SC: O(N)
