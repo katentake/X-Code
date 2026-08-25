@@ -1,0 +1,23 @@
+class Solution:
+    def intervalIntersection(self, firstList: List[List[int]], secondList: List[List[int]]) -> List[List[int]]:
+        i, j = 0, 0
+        res = []
+
+        while i < len(firstList) and j < len(secondList):
+            start_a, end_a = firstList[i]
+            start_b, end_b = secondList[j]
+            startInter = max(start_a, start_b)
+            end_inter = min(end_a, end_b)
+
+            if startInter <= end_inter:  #判断两区间是否有交集重叠，起点不大于终点时，说明重叠有效
+                res.append([startInter, end_inter])
+            if end_a < end_b:
+                i += 1
+            else:
+                j += 1
+
+        return res
+
+TC: O(M+N)
+SC: O(1)
+

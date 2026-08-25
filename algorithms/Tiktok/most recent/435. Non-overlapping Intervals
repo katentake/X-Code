@@ -1,0 +1,23 @@
+#Method: Greedy approach
+
+class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
+        if not interval:
+            return 0
+
+        intervals.sort(key=lambda x: x[1])
+        res = 0
+        prev_end = float('-inf)
+
+        for start, end in intervals:
+            # no overlap intervals 起点大于等于前一个区间的终点
+            if start >= prev_end:
+                prev_end = end
+            else:
+                #overlap， 需要移除
+                res += 1
+
+        return res 
+
+TC: O(n log n)
+SC: O(1)/ O(N) depends timsort implementation
