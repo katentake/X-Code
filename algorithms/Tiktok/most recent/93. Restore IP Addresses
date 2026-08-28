@@ -1,0 +1,43 @@
+# Backtrack + DFS
+
+class Solution:
+    def restoreIPAddresses(self, s: str) -> List[str]:
+        res = []
+
+        # 1. 快速特判：IP 地址字符数必须在 4 到 12 之间
+        if len(s) < 4 or len(s) > 12:
+            return res
+
+        def backtrack(start_idx: int, path: List[str]):
+            # 2. 剪枝：剩余字符数不符合剩余段数的长度要求
+            remaining_chars = len(s) - start_idx
+            remaining_segments = 4 - len(path)
+            if remaining_chars < remaining_segments*1 or remaining_chars > remaining_segments*3:
+                return
+
+            # 3. 递归终止条件：已经凑齐 4 段且刚好用完所有字符
+            if len(path) == 4:
+                res.append(".".join(path))
+                return
+
+            # 4. 尝试分割长度为 1, 2, 3 的子串
+            for length in range(1, 4):
+                if start_idx + length > len(s):
+                    break
+
+                segment = s[start_idx:start_idx + length]
+
+                # 检查前导零：如果第一位是 '0'，只能作为单独的 "0"，不能扩展到两位或三位
+                if len(segment) > 1 and segment[0] == '0':
+                    break
+                
+                # 检查数值范围是否在 [0, 255]
+                if int(segment) <= 255:
+                    backtrack(start_idx+length, path + [segment])
+
+        backtrack(0, [])
+        return res
+
+
+TC: O(1)
+SC: O(1)
