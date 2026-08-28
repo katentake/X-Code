@@ -1,0 +1,33 @@
+class Solution:
+    def calculate(self, s: str) -> int:
+        if not s:
+            return 0
+        
+        stack, num, sign = [], 0, "+"
+
+        for i in range(len(s)):
+            char = s[i]
+            #累加数字（处理多位数的情况）
+            if char.isdigit():  #判断当前字符 char 是否是一个数字字符（0 - 9）
+                num = num*10 + int(char)
+
+            #如果是运算符或者是字符串末尾，开始结算
+            if (not char.isdigit() and char != ' ') or i == len(s)-1:
+                if sign == "+":
+                    stack.append(num)
+                elif sign == "-":
+                    stack.append(-num)
+                elif sign == "*":
+                    stack.append(stack.pop()*num)
+                elif sign == "/":
+                    prev = stack.pop()
+                    stack.append(int(prev/num))
+                
+                #重置数字，更新当前运算符
+                sign = char
+                num = 0
+
+        return sum(stack)
+
+#TC: O(N) 
+#SC: O(N) 
