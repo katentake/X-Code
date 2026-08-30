@@ -17,7 +17,7 @@ class LRUCache:
             self.cache.move_to_end(key)
         self.cache[key] = value
         if len(self.cache) > self.capacity:
-            self.cache.popitems(last=False)
+            self.cache.popitem(last=False)
 
 TC: O(1)
 SC: O(capacity)
