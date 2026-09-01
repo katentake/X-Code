@@ -1,0 +1,29 @@
+class Solution:
+    def createBinaryTree(self, descriptions: List[List[int]]) -> Optional[TreeNode]:
+        nodes = {}
+        child = set()
+
+        for p_val, c_val, is_left in descriptions:
+            # 1. 动态创建节点
+            if p_val not in nodes:
+                nodes[p_val] = TreeNode(p_val)
+            if c_val not in nodes:
+                nodes[c_val] = TreeNode(c_val)
+
+            # 2. 连接左右子树
+            if is_left:
+                nodes[p_val].left = nodes[c_val]
+            else:
+                nodes[p_val].right = nodes[c_val]
+
+            # 3. 记录子节点
+            child.add(c_val)
+
+        # 4. 寻找不在 children 里的 parent 作为 root
+        for p_val, _, _ in descriptions:
+            if p_val not in child:
+                return nodes[p_val]
+
+
+TC: O(N)
+SC: O(N)
