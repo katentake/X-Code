@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic Tac Toe</title>
+<style>
+  :root {
+    --bg: #1e1e2f;
+    --cell-bg: #2a2a40;
+    --cell-hover: #35354f;
+    --accent: #6c5ce7;
+    --x-color: #00cec9;
+    --o-color: #fd79a8;
+    --text: #f1f1f6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+  #status {
+    font-size: 1.1rem;
+    min-height: 1.5rem;
+  }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 8px;
+  }
+  .cell {
+    background: var(--cell-bg);
+    border: none;
+    border-radius: 12px;
+    font-size: 3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    color: var(--text);
+  }
+  .cell:hover:not(:disabled) {
+    background: var(--cell-hover);
+    transform: scale(1.03);
+  }
+  .cell:disabled {
+    cursor: default;
+  }
+  .cell.x { color: var(--x-color); }
+  .cell.o { color: var(--o-color); }
+  .cell.win {
+    background: var(--accent);
+    color: var(--text);
+  }
+  #controls {
+    display: flex;
+    gap: 0.75rem;
+  }
+  button.action {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  button.action:hover {
+    filter: brightness(1.1);
+  }
+  #scoreboard {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.95rem;
+    opacity: 0.85;
+  }
+  #fireworks {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    display: none;
+  }
+  #dinoPopup {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  #dinoPopup.show {
+    animation: dinoPop 3s ease forwards;
+  }
+  .dino-bubble {
+    background: var(--text);
+    color: #222;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+    white-space: nowrap;
+    position: relative;
+  }
+  .dino-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px 8px 0 8px;
+    border-style: solid;
+    border-color: var(--text) transparent transparent transparent;
+  }
+  .dino-emoji {
+    font-size: 5rem;
+    filter: drop-shadow(0 6px 6px rgba(0,0,0,0.4));
+  }
+  @keyframes dinoPop {
+    0%   { transform: translate(-50%, 100%); opacity: 0; }
+    15%  { transform: translate(-50%, -14px); opacity: 1; }
+    28%  { transform: translate(-50%, 6px); }
+    40%  { transform: translate(-50%, -4px); }
+    50%  { transform: translate(-50%, 0); }
+    85%  { transform: translate(-50%, 0); opacity: 1; }
+    100% { transform: translate(-50%, 100%); opacity: 0; }
+  }
+  #rocket {
+    position: fixed;
+    left: 50%;
+    bottom: -20%;
+    transform: translateX(-50%);
+    font-size: 9rem;
+    line-height: 1;
+    opacity: 0;
+    z-index: 1001;
+    pointer-events: none;
+  }
+  #rocket.launch {
+    animation: rocketLaunch 4.5s ease-in-out forwards;
+  }
+  .rocket-trail {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    width: 18px;
+    height: 0;
+    background: linear-gradient(to top, rgba(255,180,60,0.9), rgba(255,180,60,0));
+    transform: translateX(-50%);
+    border-radius: 9px;
+    filter: blur(3px);
+  }
+  #rocket.launch .rocket-trail {
+    animation: trailGrow 4.5s ease-out forwards;
+  }
+  @keyframes rocketLaunch {
+    0%   { bottom: -20%; opacity: 1; transform: translateX(-50%) rotate(-8deg); }
+    10%  { transform: translateX(-50%) rotate(-2deg); }
+    100% { bottom: 115%; opacity: 1; transform: translateX(-50%) rotate(-8deg); }
+  }
+  @keyframes trailGrow {
+    0%   { height: 0; opacity: 0.9; }
+    80%  { height: 380px; opacity: 0.6; }
+    100% { height: 440px; opacity: 0; }
+  }
+  #whale {
+    position: fixed;
+    top: 28%;
+    left: -25%;
+    font-size: 18rem;
+    line-height: 1;
+    transform: translateX(-50%) scaleX(-1);
+    opacity: 0;
+    z-index: 1002;
+    pointer-events: none;
+    transition: left 4.5s ease-in-out, opacity 0.6s ease;
+  }
+  #whale.swim {
+    opacity: 1;
+    animation: whaleBob 2.4s ease-in-out infinite;
+  }
+  @keyframes whaleBob {
+    0%, 100% { top: 28%; }
+    50%      { top: 24%; }
+  }
+</style>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <div id="status">Your turn</div>
+  <div id="board"></div>
+  <div id="controls">
+    <button class="action" id="resetBtn">Play Again</button>
+    <button class="action" id="scoresBtn">Reset Scores</button>
+  </div>
+  <div id="scoreboard">
+    <span>You: <span id="xScore">0</span></span>
+    <span>Computer: <span id="oScore">0</span></span>
+    <span>Draws: <span id="drawScore">0</span></span>
+    <span>Win streak: <span id="streakScore">0</span></span>
+  </div>
+
+  <canvas id="fireworks"></canvas>
+  <div id="dinoPopup">
+    <div class="dino-bubble">Congratulations, <span id="dinoWinner"></span>!</div>
+    <div class="dino-emoji">🦖</div>
+  </div>
+  <div id="rocket">🚀<div class="rocket-trail"></div></div>
+  <div id="whale">🐳</div>
+
+<script>
+  const boardEl = document.getElementById('board');
+  const statusEl = document.getElementById('status');
+  const resetBtn = document.getElementById('resetBtn');
+  const scoresBtn = document.getElementById('scoresBtn');
+  const xScoreEl = document.getElementById('xScore');
+  const oScoreEl = document.getElementById('oScore');
+  const drawScoreEl = document.getElementById('drawScore');
+  const streakScoreEl = document.getElementById('streakScore');
+
+  const HUMAN = 'X';
+  const COMPUTER = 'O';
+  const WIN_LINES = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  let cells = Array(9).fill(null);
+  let gameOver = false;
+  let boardLocked = false;
+  let scores = { X: 0, O: 0, draw: 0 };
+  let winStreak = 0;
+  let hardMode = false;
+  let autoResetTimer = null;
+
+  // Computer's chance of actually trying to win a given round, rather
+  // than playing the kid-friendly draw-or-lose style. Ramps up once the
+  // human is on a long win streak so the game stays a little fresh.
+  function currentMachineWinChance() {
+    return winStreak > 10 ? 0.2 : 0.1;
+  }
+
+  function rollDifficulty() {
+    hardMode = Math.random() < currentMachineWinChance();
+  }
+
+  function render() {
+    boardEl.innerHTML = '';
+    cells.forEach((val, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'cell' + (val ? ' ' + val.toLowerCase() : '');
+      btn.textContent = val || '';
+      btn.disabled = !!val || gameOver || boardLocked;
+      btn.addEventListener('click', () => handleMove(i));
+      boardEl.appendChild(btn);
+    });
+  }
+
+  function checkResult(cellsArr) {
+    for (const line of WIN_LINES) {
+      const [a, b, c] = line;
+      if (cellsArr[a] && cellsArr[a] === cellsArr[b] && cellsArr[a] === cellsArr[c]) {
+        return { winner: cellsArr[a], line };
+      }
+    }
+    if (cellsArr.every(c => c)) return { winner: 'draw', line: [] };
+    return null;
+  }
+
+  function handleMove(i) {
+    if (gameOver || boardLocked || cells[i]) return;
+    cells[i] = HUMAN;
+    const result = checkResult(cells);
+    if (result) {
+      endGame(result);
+      return;
+    }
+    boardLocked = true;
+    statusEl.textContent = "Computer's turn";
+    render();
+    setTimeout(computerMove, 500);
+  }
+
+  function computerMove() {
+    const move = pickComputerMove();
+    cells[move] = COMPUTER;
+    const result = checkResult(cells);
+    boardLocked = false;
+    if (result) {
+      endGame(result);
+      return;
+    }
+    statusEl.textContent = 'Your turn';
+    render();
+  }
+
+  function pickComputerMove() {
+    return hardMode ? minimaxMove() : pickKindComputerMove();
+  }
+
+  // Kid-friendly AI: mostly plays random moves, occasionally blocks an
+  // obvious win so it feels alive, but always picks among moves that are
+  // provably safe — ones where no future sequence of play, however the
+  // game unfolds, can force the computer into a win. It can only draw
+  // or lose, never win.
+  function pickKindComputerMove() {
+    const empty = cells.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
+    const safeMoves = empty.filter(i => isSafeComputerMove(i));
+
+    if (Math.random() < 0.2) {
+      const block = findWinningMove(cells, HUMAN);
+      if (block !== null && (safeMoves.includes(block) || !safeMoves.length)) return block;
+    }
+
+    const pool = safeMoves.length ? safeMoves : empty;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  // Full-strength AI used for the rare round the computer is allowed to
+  // actually try to win: classic minimax, optimal play.
+  function minimaxMove() {
+    return minimax(COMPUTER).move;
+  }
+
+  function minimax(turn) {
+    const result = checkResult(cells);
+    if (result) {
+      if (result.winner === COMPUTER) return { score: 1 };
+      if (result.winner === HUMAN) return { score: -1 };
+      return { score: 0 };
+    }
+    const empty = cells.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
+    let bestMove = empty[0];
+    let bestScore = turn === COMPUTER ? -Infinity : Infinity;
+    for (const i of empty) {
+      cells[i] = turn;
+      const score = minimax(turn === COMPUTER ? HUMAN : COMPUTER).score;
+      cells[i] = null;
+      if (turn === COMPUTER ? score > bestScore : score < bestScore) {
+        bestScore = score;
+        bestMove = i;
+      }
+    }
+    return { score: bestScore, move: bestMove };
+  }
+
+  function isSafeComputerMove(i) {
+    cells[i] = COMPUTER;
+    const safe = computerCanAvoidWinning(HUMAN);
+    cells[i] = null;
+    return safe;
+  }
+
+  // True if, from the current board with the given player to move, the
+  // computer can guarantee (against any possible future play) that it
+  // will never complete a winning line.
+  function computerCanAvoidWinning(turn) {
+    const result = checkResult(cells);
+    if (result) return result.winner !== COMPUTER;
+    const empty = cells.reduce((acc, v, i) => { if (!v) acc.push(i); return acc; }, []);
+    if (turn === COMPUTER) {
+      return empty.some(i => {
+        cells[i] = COMPUTER;
+        const safe = computerCanAvoidWinning(HUMAN);
+        cells[i] = null;
+        return safe;
+      });
+    }
+    return empty.every(i => {
+      cells[i] = HUMAN;
+      const safe = computerCanAvoidWinning(COMPUTER);
+      cells[i] = null;
+      return safe;
+    });
+  }
+
+  function findWinningMove(cellsArr, player) {
+    for (const line of WIN_LINES) {
+      const values = line.map(i => cellsArr[i]);
+      const emptyIdx = line[values.indexOf(null)];
+      if (values.filter(v => v === player).length === 2 && values.includes(null)) {
+        return emptyIdx;
+      }
+    }
+    return null;
+  }
+
+  function endGame(result) {
+    gameOver = true;
+    boardLocked = false;
+    if (result.winner === 'draw') {
+      statusEl.textContent = "It's a draw!";
+      scores.draw++;
+      drawScoreEl.textContent = scores.draw;
+      winStreak = 0;
+    } else if (result.winner === HUMAN) {
+      statusEl.textContent = 'You win!';
+      scores.X++;
+      xScoreEl.textContent = scores.X;
+      winStreak++;
+      streakScoreEl.textContent = winStreak;
+      celebrate(winStreak);
+    } else {
+      statusEl.textContent = 'Computer wins!';
+      scores.O++;
+      oScoreEl.textContent = scores.O;
+      winStreak = 0;
+      streakScoreEl.textContent = winStreak;
+    }
+    render();
+    result.line.forEach(idx => boardEl.children[idx].classList.add('win'));
+    autoResetTimer = setTimeout(resetBoard, 1600);
+  }
+
+  function celebrate(streak) {
+    launchFireworks();
+    showDino('You');
+    if (streak > 0 && streak % 3 === 0) {
+      setTimeout(launchRocket, 400);
+    }
+    if (streak > 0 && streak % 5 === 0) {
+      setTimeout(launchWhale, 400);
+    }
+  }
+
+  function launchRocket() {
+    const rocket = document.getElementById('rocket');
+    rocket.classList.remove('launch');
+    void rocket.offsetWidth; // restart animation if triggered again
+    rocket.classList.add('launch');
+    rocket.addEventListener('animationend', () => {
+      rocket.classList.remove('launch');
+      launchFireworks();
+    }, { once: true });
+  }
+
+  let whaleRunId = 0;
+
+  function launchWhale() {
+    const whale = document.getElementById('whale');
+    const runId = ++whaleRunId; // invalidates any sequence already in flight
+    const stillCurrent = () => runId === whaleRunId;
+    const CROSS_MS = 4500;
+    const SPRAY_MS = 10000;
+
+    function placeInstantly(leftValue) {
+      whale.style.transition = 'none';
+      whale.style.left = leftValue;
+      void whale.offsetWidth;
+      whale.style.transition = 'left 4.5s ease-in-out, opacity 0.6s ease';
+    }
+
+    function swimTo(leftValue, onArrive) {
+      if (!stillCurrent()) return;
+      whale.style.left = leftValue;
+      setTimeout(() => stillCurrent() && onArrive(), CROSS_MS);
+    }
+
+    placeInstantly('-25%');
+    whale.classList.add('swim');
+    void whale.offsetWidth;
+
+    swimTo('115%', () => {                    // pass 1
+      placeInstantly('-25%');
+      swimTo('115%', () => {                  // pass 2
+        placeInstantly('-25%');
+        swimTo('50%', () => {                 // pass 3: stop center stage
+          setTimeout(() => {                  // spray in place
+            if (!stillCurrent()) return;
+            swimTo('115%', () => {            // swim off and hide
+              whale.classList.remove('swim');
+              placeInstantly('-25%');
+            });
+          }, SPRAY_MS);
+        });
+      });
+    });
+  }
+
+  function showDino(winner) {
+    const popup = document.getElementById('dinoPopup');
+    document.getElementById('dinoWinner').textContent = winner;
+    popup.classList.remove('show');
+    void popup.offsetWidth; // restart animation if triggered again
+    popup.classList.add('show');
+    popup.addEventListener('animationend', () => popup.classList.remove('show'), { once: true });
+  }
+
+  function launchFireworks() {
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.display = 'block';
+
+    const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#1dd1a1', '#ff9ff3', '#54a0ff'];
+    const particles = [];
+
+    function burst(x, y) {
+      const count = 40;
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count;
+        const speed = 2 + Math.random() * 3;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    for (let i = 0; i < 4; i++) {
+      setTimeout(() => {
+        burst(
+          canvas.width * (0.2 + Math.random() * 0.6),
+          canvas.height * (0.2 + Math.random() * 0.35)
+        );
+      }, i * 350);
+    }
+
+    const start = Date.now();
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.03;
+        p.alpha -= 0.012;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      if (Date.now() - start < 2500 || particles.length > 0) {
+        requestAnimationFrame(animate);
+      } else {
+        canvas.style.display = 'none';
+      }
+    }
+    animate();
+  }
+
+  function resetBoard() {
+    clearTimeout(autoResetTimer);
+    cells = Array(9).fill(null);
+    gameOver = false;
+    boardLocked = false;
+    statusEl.textContent = 'Your turn';
+    rollDifficulty();
+    render();
+  }
+
+  function resetScores() {
+    scores = { X: 0, O: 0, draw: 0 };
+    winStreak = 0;
+    xScoreEl.textContent = 0;
+    oScoreEl.textContent = 0;
+    drawScoreEl.textContent = 0;
+    streakScoreEl.textContent = 0;
+  }
+
+  resetBtn.addEventListener('click', resetBoard);
+  scoresBtn.addEventListener('click', resetScores);
+
+  rollDifficulty();
+  render();
+</script>
+</body>
+</html>
