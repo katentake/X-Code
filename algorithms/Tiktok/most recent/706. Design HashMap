@@ -1,4 +1,4 @@
-#Method: Separate Chaining
+#Method: Separate Chaining with buckets
 class MyHashMap:
 
     def __init__(self):
