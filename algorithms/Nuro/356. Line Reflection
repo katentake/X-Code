@@ -1,0 +1,26 @@
+#hashset
+
+class Solution:
+    def isReflected(self, points: list[list[int]]) -> bool:
+        if not points:
+            return True
+
+        # 1. 寻找最小和最大 X 坐标，确定对称轴两侧的总和
+        min_x = min(p[0] for p in points)
+        max_x = max(p[0] for p in points)
+        target_sum = min_x + max_x
+
+        # 2. 将点转为 tuple 存入 set（去重且支持 O(1) 查找）
+        hash_set = {p[0], p[1] for p in points}
+
+        # 3. 校验每个点的镜像点 (target_sum - x, y) 是否存在
+        for x, y in hash_set:
+            reflected_point = (target_sum - x, y)
+            if reflected_point not in hash_set:
+                return False
+
+        return True
+
+
+TC: O(N)
+SC: O(N)
