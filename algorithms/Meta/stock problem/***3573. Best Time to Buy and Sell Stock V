@@ -1,0 +1,42 @@
+#Method: DP
+#free: no transaction
+#hold_normal: normal transaction
+#hold_short: short selling
+
+class Solution:
+    def maximumProfit(self, prices: list[int], k: int) -> int:
+        # free[j]: 完成了 j 次交易，且当前空仓的最大收益
+        free = [0] + [-float('inf)] * k 
+        # hold_normal[j]: 正在进行第 j 次普通交易（已买入）的最大收益
+        hold_normal = [-float('inf)] * k 
+        # hold_short[j]: 正在进行第 j 次做空交易（已卖出）的最大收益
+        hold_short = [-float('inf)] * k 
+
+        for p in prices:
+            next_free = list(free)
+            next_hold_normal = list(hold_normal)
+            next_hold_short = list(hold_short)
+
+            for j in range(k):
+                # 1. 尝试在今天开启第 j 次交易
+                if free[j] != -float(inf):
+                    next_hold_normal[j] = max(next_hold_normal[j], free[j] - p)
+                    next_hold_short[j] = max(next_hold_short[j], free[j] + p)
+
+                # 2. 尝试在今天平仓完成第 j 次交易（收益加到 next_free[j + 1]）
+                if hold_normal[j] != -float('inf):
+                    next_free[j+1] = max(next_free[j+1], next_hold_normal[j] + p)
+                
+                if hold_short[j] != -float('inf):
+                    next_free[j+1] = max(next_free[j+1], next_hold_short[j] - p)
+
+            free = next_free
+            hold_normal = next_hold_normal
+            hold_short = next_hold_short
+
+        # 最多交易 k 次，取完成 0..k 次交易后的最大收益
+        return max(free)
+
+
+TC: O(N*k)
+SC: O(k)   
