@@ -1,23 +1,22 @@
-from typing import Optional
-
 class Solution:
-    def cloneGraph(self, node: Optional['Node']) -> Optional[''Node]:
-        visited = dict() #key = node; values = copied node
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        visited = {}
+        if not node:
+            return None
 
-        def dfs(self, "Node", visited: dict) -> 'Node':
-            if not node: return None
+        def dfs(curr_node):
+            if curr_node in visited:
+                return visited[curr_node]
 
-            if node in visited: # 1. 检查是否访问过
-                return visited[node]
+            copy_node = Node(curr_node.val)
+            visited[curr_node] = copy_node
 
-            # 2. 【关键修正】先创建副本并存入字典，再递归处理邻居
-            node_copy = Node(node.val)
-            visited[node] = node_copy
+            for neighbor in curr_node.neighbors:
+                copy_node.neighbors.append(dfs(neighbor))
 
-            # 3. 递归克隆邻居
-            for neighbor in node.neighbors:
-                # 递归返回的是邻居的副本，直接加入到副本的邻居列表中
-                node_copy.neighbors.append(dfs(neighbor, visited))
-            return node_copy
+            return copy_node
 
-        return dfs(node, visited)
+        return dfs(node)
+
+TC: O(V+E)
+SC: O(V)

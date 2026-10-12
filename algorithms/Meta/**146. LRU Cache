@@ -1,0 +1,70 @@
+#Method: Hashmap + DoubleLinkedlist
+
+class ListNode:
+
+    def __init__(self, key=0. value=0):
+        self.key = key
+        self.value = value
+        self.prev = None
+        self.next = None
+
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = {}
+        #初始化虚拟头尾节点
+        self.head = ListNode()
+        self.tail = ListNode()
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        node = self.cache[key]
+        self._move_to_head(node)
+        return node.value
+
+    def put(self, key: int, value: int):
+        if key in self.cache:
+            node = self.cache[key]
+            node.value = value #更新值
+            self._move_to_head(node)
+        else:
+            new_node = ListNode(key, value)
+            self.cache[key] = new_node
+            self._add_to_head(new_node)
+
+            if len(self.cache) > self.capacity:
+                remove_node = self.remove_tail()
+                del self.cache[remove_node.key]
+
+
+############### helper founction ##################
+    def _add_to_head(self, new_node: ListNode):
+        #将一个新节点插入到双向链表的头部（即head哨兵节点的正后方）
+        new_node.prev = self.head.next
+        new_node.next = self.head.next
+        self.head.next.prev = new_node
+        self.head.next = new_node
+
+    def _move_to_head(self, node: ListNode):
+        #当一个现有节点被访问时，需要把它刷新到链表头部
+        self.remove_node(node)
+        self._add_to_head(node)
+
+    def remove_node(self, node: ListNode):
+        #从双向链表中彻底摘除一个已知存在的节点node
+        node.next.prev = node.prev
+        node.prev.next = node.next
+
+    def remove_tail(self) -> ListNode:
+        #当超出容量时，剔除最久未使用的节点，并将其返回
+        node = self.tail.prev
+        self.remove_node(node)
+        return node
+
+TC: O(1)
+SC: O(capacity)
+
