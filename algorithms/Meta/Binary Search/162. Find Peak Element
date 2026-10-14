@@ -11,3 +11,6 @@ class Solution:
                 right = mid
 
         return left #当left == right时，返回left就是峰值
+
+TC: O(log n)
+SC: O(1)
