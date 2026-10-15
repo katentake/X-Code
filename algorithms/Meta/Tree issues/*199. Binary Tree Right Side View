@@ -1,3 +1,4 @@
+#Method: DFS (root -> right -> left)
 class Solution:
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
         res = []
