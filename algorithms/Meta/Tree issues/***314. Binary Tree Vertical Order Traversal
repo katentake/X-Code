@@ -34,9 +34,9 @@ SC: O(N)
     def verticalOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
         if not root:
             return
-
+        
         queue = deque([(root, 0)])
-        column_table[col].append(node.val)
+        column_table = defaultdict(list)
         min_col = max_col = 0
 
         while queue:
