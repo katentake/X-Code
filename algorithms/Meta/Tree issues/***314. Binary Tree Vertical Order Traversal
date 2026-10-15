@@ -1,0 +1,32 @@
+#Method: BFS
+
+class Solution:
+    def verticalOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if not root:
+            return
+        
+        column_table = defaultdict(list) # 键为列号，值为该列的所有节点值
+        queue =deque([(root, 0)])  # 队列中存储 (node, col)
+
+        min_col = max_col = 0
+
+        while queue:
+            node, col = queue.popleft()
+            if node:
+                column_table[col].append(node.val)
+                # 记录最小和最大列号，方便后续直接遍历输出
+                min_col = min(min_col, col)
+                max_col = max(max_col, col)
+
+                # 左右子节点入队，列号分别减1和加1
+                if node.left:
+                    queue.append((node.left, col-1))
+                if node.right:
+                    queue.append((node.right, col+1))
+
+        # 按照列号从小到大收集结果
+        return [column_table[col] for col in range(min_col, max_col)+1]
+
+
+TC: O(N)
+SC: O(N)
