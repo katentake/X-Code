@@ -1,0 +1,38 @@
+解法一：DFS + 相对坐标哈希
+
+class Solution:
+    def numDistinctIslands(self, grid: List[List[int]]) -> int:
+        if not grid:
+            return 0
+
+        distinct_islands = set()
+        rows, cols = len(grid), len(grid[0])
+
+        def dfs(r, c, r-r0, c-c0, curr_islands):
+            # 标记当前陆地为已访问（修改为 '0'）
+            grid[r][c] = '0'
+            # 记录相对于起始点 (r0, c0) 的偏移量，作为形状签名
+            curr_islands.append((r-r0, c-c0))
+
+            directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+
+            for dr, dc in directions:
+                nr, nc = r+dr, c+dc
+                if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == '1':
+                    dfs(nr, nc, r0, c0, curr_islands)
+
+        for r in range(rows):
+            for c in range(cols):
+                # 只有遇到真正的陆地时才开始统计，避免将空元组 () 加入 set
+                curr_islands = [] 
+                dfs(r, c, r, c, curr_islands)
+                distinct_islands.add(tuple(curr_islands))
+
+        return len(distinct_islands)
+
+TC: O(M*N)
+SC: O(M*N)
+
+
+
+            
