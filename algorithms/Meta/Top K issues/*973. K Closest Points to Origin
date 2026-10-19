@@ -1,0 +1,16 @@
+#Method: min_heap
+
+class Solution:
+    def kClostest(self, points: list[list[int]]) -> list[list[int]]:
+        min_heap = []
+
+        for x, y in points:
+            sq = x*x + y*y
+            if len(min_heap) < k:
+                heapq.heappush(min_heap, (sq, [x, y]))
+
+        return [heapq.heappop(min_heap)[1] for _ in range(k)]
+
+
+TC: O(N*log N)
+SC: O(N)
