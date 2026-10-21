@@ -1,0 +1,16 @@
+#Method: two pointer
+
+class Solution:
+    def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
+        a, b = p, q 
+        # 当两个指针没有相遇时，一路向上走
+        while a != b:
+            # a 走到头后，跳到 q 从头再走；否则继续往上找 parent
+            a = a.parent if a else q 
+            # b 走到头后，跳到 p 从头再走；否则继续往上找 parent
+            b = b.parent if b else p 
+
+        return a 
+
+TC: O(N)
+SC: O(1)
