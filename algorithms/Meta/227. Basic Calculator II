@@ -19,14 +19,17 @@ class Solution:
                 elif sign == "-":
                     stack.append(num)
                 elif sign == "*":
-                    stack.append(num)
+                    stack.append(num*stack.pop())
                 elif sign == "/":
                     #注意pyhton的负数整除行为，这里需要向零截断
-                    stack.append(num)
-                    prev = stack.pop()
-                    stack.append(int(prev/num))
+                    stack.append(int(stack.pop()/num))
                 #重置数字，更新当前运算符
                 sign = char
                 num = 0
 
         return sum(stack)
+
+
+TC: O(N)
+SC: O(1)
+
