@@ -17,7 +17,7 @@ class Solution:
                 if sign == "+":
                     stack.append(num)
                 elif sign == "-":
-                    stack.append(num)
+                    stack.append(-num)
                 elif sign == "*":
                     stack.append(num*stack.pop())
                 elif sign == "/":
