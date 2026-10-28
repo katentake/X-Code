@@ -1,0 +1,28 @@
+#Method: hashmap
+
+collections import defaultdict
+typing import List
+
+
+class Solution:
+    def shiftStrings(self, strings: List[str]) -> List[List[str]]:
+        groups = defaultdict(list)
+
+        for s in strings:
+            # 计算第一个字符相对于 'a' 的偏移量
+            shift = ord(s[0] - ord('a'))
+
+            # 生成标准化的 key：所有字符整体向前平移 shift 位
+            key = []
+            for c in s:
+                # 减去 shift，加上 26 防止负数，对 26 取模保证在 'a'-'z' 循环
+                normalized_char = chr((ord(c) - ord('a') - shift + 26) % 26 + ord('a'))
+                key.append(normalized_char)
+
+            groups["".join(key)].append(s)
+
+        return list(groups.values())
+
+TC: O(N*K)
+SC: O(N*K)
+
