@@ -1,0 +1,64 @@
+#Method: double hashmap + OrderedDict(双哈希表 + 有序字典)
+
+from collections import defaultdict, OrderedDict
+
+class LFUCache:
+
+    def __init__(sefl, capacity: int):
+        self.capacity = capacity
+        self.cache = {}  # key -> [value, freq]
+        self.min_freq = 0
+        self.freq_to_keys = defaultdict(OrderedDict)  # freq -> OrderedDict(key -> None)
+
+    
+    def _update_freq(self, key: int):
+        # 1. 获取当前 key 的频次
+        va, freq = self.cache[key]
+
+        # 2. 从旧的频次链表中移除该 key
+        del self.freq_to_keys[freq][key]
+
+        # 如果旧频次链表空了，且恰好是 min_freq，则 min_freq 必须 +1
+        if not self.freq_to_keys[freq]:
+            del self.freq_to_keys[freq]
+            if self.min_freq == freq:
+                self.min_freq += 1
+
+        # 3. 将 key 放入新频次（freq + 1）的链表中
+        self.freq_to_keys[freq+1][key] = None
+        self.cache[key] = [val, freq+1]
+
+    
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self._update_freq(key)
+        return self.cache[key][0]
+
+    
+    def put(self, key: int, value: int) -> None:
+        if self.capacity <= 0:
+            return
+
+        # 如果 key 已存在，更新值并提升频次
+        if key in self.cache:
+            self.cache[key][0] = value
+            self._update_freq(key)
+            return
+
+        # 如果 key 不存在且容量已满，需要淘汰 LFU / LRU 项
+        if len(self.cache) >= self.capacity:
+            # popitem(last=False) 弹出 OrderedDict 中最早插入（最久未使用）的项
+            evict_key, _ = self.freq_to_keys[self.min_freq].popitem(last=False)
+            if not self.freq_to_keys[self.min_freq]:
+                del self.freq_to_keys[self.min_freq]
+            del self.cache[evict_key]
+
+        # 插入新 key，初始频次为 1
+        self.cache[key] = [value, 1]
+        self.freq_to_keys[1][key] = None
+        # 新元素加入后，全局最小频次必然重置为 1
+        self.min_freq = 1
+
+TC: O(1)
+SC: O(capacity)
