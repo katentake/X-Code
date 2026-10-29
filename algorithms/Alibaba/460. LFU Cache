@@ -15,12 +15,14 @@ class LFUCache:
         # 1. 获取当前 key 的频次
         val, freq = self.cache[key]
 
-        # 2. 从旧的频次链表中移除该 key
+        # 2. 先把具体的 key 从对应的频次有序字典里删掉
         del self.freq_to_keys[freq][key]
 
-        # 如果旧频次链表空了，且恰好是 min_freq，则 min_freq 必须 +1
+        # 检查删完后，这个频次桶是不是空了
         if not self.freq_to_keys[freq]:
+            # 如果空了，就把整个频次桶从外层字典里彻底移除
             del self.freq_to_keys[freq]
+            # 如果刚删掉的正好是当前的最小频次，说明这个频次断档了，min_freq 需要升级
             if self.min_freq == freq:
                 self.min_freq += 1
 
