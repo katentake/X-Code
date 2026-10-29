@@ -34,8 +34,8 @@ class LFUCache:
     def get(self, key: int) -> int:
         if key not in self.cache:
             return -1
-        self._update_freq(key)
-        return self.cache[key][0]
+        self._update_freq(key) #更新key的频次
+        return self.cache[key][0] #返回值
 
     
     def put(self, key: int, value: int) -> None:
