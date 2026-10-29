@@ -13,7 +13,7 @@ class LFUCache:
     
     def _update_freq(self, key: int):
         # 1. 获取当前 key 的频次
-        va, freq = self.cache[key]
+        val, freq = self.cache[key]
 
         # 2. 从旧的频次链表中移除该 key
         del self.freq_to_keys[freq][key]
