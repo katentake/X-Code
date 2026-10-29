@@ -63,3 +63,12 @@ class LRUCache:
 
 TC: O(1)
 SC: O(capacity)
+
+
+Test case:
+lru = LRUCache(2)
+
+print(lru.put(1, 1))
+print(lru.out(2, 2))
+print(lru.get(1))
+print(lru.put(3, 3))

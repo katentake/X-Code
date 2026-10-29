@@ -62,3 +62,8 @@ class LFUCache:
 
 TC: O(1)
 SC: O(capacity)
+
+
+#test case
+lfu = LFUCache(2)
+print(lfu.)
