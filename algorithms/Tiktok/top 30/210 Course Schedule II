@@ -1,0 +1,27 @@
+#Method: BFS
+
+class Solution:
+    def findOrder(self, numCourses: int, prerequisites: list[list[int]]) -> list[int]:
+        in_degree = [0] * numCourses
+        adj = [[] for _ in range(numCourses)] 
+
+        # b -> a：修完 b 才能修 a
+        for a, b in prerequisites:
+            adj[b].append(a)
+            in_degree[a] += 1
+
+        queue = deque(i for i in range(numCourses) if in_degree[i] ==0)
+        order = []
+
+        while queue:
+            curr = queue.popleft()
+            order.append(curr)
+            for nxt in adj[curr]:
+                in_degree[nxt] -= 1
+                if in_degree[nxt] == 0:
+                    queue.append(nxt)
+
+        return order if len(order) == numCourses else []
+
+TC: O(V+E)
+SC: O(V+E)
