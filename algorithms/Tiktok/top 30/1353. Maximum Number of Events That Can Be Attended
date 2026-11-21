@@ -1,0 +1,35 @@
+#Method: greedy+min_heap
+
+class Solution:
+    def maxEvents(self, events: list[list[int]]) -> int:
+        events.sort(key=lambda x: x[0])
+        min_heap = []
+        res = 0
+        i = 0
+        day = 0
+
+        while i < len(events) or min_heap:
+            # 若当前没有待选活动，直接跳到下一个活动的开始日期，避免空转
+            if not min_heap:
+                day = events[i][0]
+
+            # 将今天及之前已经开始的活动结束日入堆
+            while i < len(events) and events[i][0] <= day:
+                heapq.heappush(min_heap, events[i][1])
+                i += 1
+
+            # 移除已经过期的活动（endDay < day）
+            while min_heap and min_heap[0] < day:
+                heapq.heappop(min_heap)
+
+            # 贪心：参加结束最早的一个活动
+            if min_heap:
+                heapq.heappop(min_heap)
+                res += 1
+
+            day += 1
+
+        return res
+
+TC: O(NlogN)
+SC: O(N)
