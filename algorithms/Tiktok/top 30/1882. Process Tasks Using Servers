@@ -1,5 +1,36 @@
-#Method: 
+#Method: min_heap
 
 class Solution:
     def assignTasks(self, servers: list[int], tasks: list[int]) -> list[int]:
-        
+        # 空闲堆: (weight, index)
+        free = [(w, i) for w, i in enumerate(servers)]
+        heapq.heapify(free)
+
+        # 忙碌堆: (free_time, weight, index)
+        busy = []
+        res = []
+        t = 0
+
+        for j, duration in enumerate(tasks):
+            # 1. 时间至少推进到第 j 秒
+            t = max(t, j)
+
+            # 2. 如果此时没有空闲服务器，时间必须快进到最早释放的那台服务器的时间
+            if not free:
+                t = busy[0][0]
+
+            # 3. 将所有在 t 时刻及之前释放的服务器全部移回空闲堆
+            while busy and busy[0][0] <= t:
+                _, w, i = heapq.heappop(busy)
+                heapq.heappush(free, (w, i))
+
+            # 4. 取出优先级最高的空闲服务器执行当前任务
+            w, i = heapq.heappop(free)
+            res.append(i)
+            heapq.heappush(busu, (t + duration, w, i))
+
+        return res
+
+
+TC: O((m+n)logn)
+SC: O(N)
