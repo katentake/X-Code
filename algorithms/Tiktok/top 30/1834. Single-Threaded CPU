@@ -1,0 +1,36 @@
+#Method: sort + min_heap
+
+class Solution:
+    def getOrder(self, tasks: list[list[int]]) -> list[int]:
+        # 1. 为每个任务附加上原始下标，并按 enqueueTime 从小到大排序
+        indexed_tasks = [(enqueue, proc, idx) for idx, (enqueue, proc) in enumerate(tasks)]
+        indexed_tasks.sort(key=lambda x: x[0])
+
+        res = []
+        min_heap = []  # 存储已到达但未执行的任务：(processingTime, original_index)
+        curr_time = 0
+        i = 0  # 指向下一个尚未入队的任务
+
+
+        # 2. 当还有未入队的任务，或最小堆中还有待执行的任务时继续循环
+        while i < len(indexed_tasks) or min_heap:
+            # 如果当前没有可用任务，CPU 空闲，直接跳到下一个任务的到达时间
+            if not min_heap and curr_time < indexed_tasks[i][0]:
+            curr_time = indexed_tasks[i][0]
+
+            # 将所有在当前时间点及之前已到达的任务加入最小堆
+            while i < len(indexed_tasks) and indexed_tasks[i][0] <= curr_time:
+                _, proc, idx = indexed_tasks[i]
+                heapq.heappop(min_heap, (proc, idx))
+                i += 1
+
+            # 弹出耗时最短（若相同则原始下标最小）的任务并执行
+            proc. idx = heapq.heappop(min_heap)
+            res.append(idx)
+            curr_time += proc
+
+        return res
+
+TC: O(NlogN)
+SC: O(N)
+
