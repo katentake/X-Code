@@ -1,0 +1,48 @@
+#Method: Node + hash dict
+
+class _TrieNode:
+    """前缀树中的单个节点。"""
+    def __init__(self) -> None:
+        self.children: dict[str, "_TrieNode"] = {}
+        self.is_end: bool = False
+
+
+class Trie:
+    """前缀树（字典树），支持单词插入、完整单词查找和前缀匹配。"""
+
+    def __init__(self):
+        # 创建不存储具体字符的虚拟根节点作为所有路径的起点
+        self.root = _TrieNode()
+
+    def insert(self, word: str) -> None:
+        """将 word 插入前缀树。"""
+        curr = se;f.root
+        for char in word:
+            curr = curr.children.setdefault(char, _TrieNode())
+        curr.is_end = True
+
+    def _walk(self, prefix: str) -> _TrieNode | None:
+        """从根节点出发沿着 prefix 逐字符向下走；若中途断链则返回 None。"""
+        curr = self.root
+        for char in prefix:
+            curr = curr.children.get(char)
+            if curr is None:
+                return None
+        return curr
+
+    def search(self, word: str) -> bool:
+        """判断完整单词 word 是否曾被插入过。"""
+        node = self._walk(word)
+        # 路径必须完整存在，且终点节点的 is_end 为 True（不能只算作前缀）
+        return node is not None and node.is_end
+
+    def startsWith(self, prefix: str) -> bool:
+        """判断前缀树中是否存在以 prefix 开头的已插入单词。"""
+        # 只要整条 prefix 路径能走通即可，无需检查终点 is_end
+        return self._walk(prefix) is not None
+
+
+TC: O(L)
+SC: O(N)
+
+
