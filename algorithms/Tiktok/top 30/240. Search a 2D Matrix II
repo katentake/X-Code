@@ -1,0 +1,25 @@
+#Method:
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]]) -> bool:
+        #not a matrix
+        if not matrix or not matrix[0]:
+            return False
+
+        rows, cols = len(matrix), len(matrix[0])
+
+        row = 0
+        col = cols -1
+
+        while row < rows and col < cols:
+            if matrix[row][col] == target:
+                return True
+            elif matrix[row][col] > target:
+                col -= 1
+            else:
+                row += 1
+
+        return False
+
+TC: O(M*N)
+SC: O(1)
